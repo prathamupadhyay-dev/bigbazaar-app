@@ -1,0 +1,285 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Switch, ScrollView, SafeAreaView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../constants/colors';
+import Typography from '../../constants/typography';
+import Spacing from '../../constants/spacing';
+
+interface FilterModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onOpenSort: () => void;
+}
+
+export default function FilterModal({ visible, onClose, onOpenSort }: FilterModalProps) {
+  const [alwaysUseLocations, setAlwaysUseLocations] = useState(false);
+  const [pickupChecked, setPickupChecked] = useState(true);
+  const [shippingChecked, setShippingChecked] = useState(true);
+
+  // Addresses mock
+  const addresses = [
+    { id: 1, text: '5340 Brookpark Road, Cleveland, OH', checked: true },
+    { id: 2, text: '1550 Commerce Drive, Stow, OH', checked: false },
+    { id: 3, text: '8748 Ridge Road, North Royalton, OH', checked: false },
+    { id: 4, text: '8901 E Pleasant Valley Road, Independence, OH', checked: true },
+    { id: 5, text: '28801 Euclid Avenue, Wickliffe, OH', checked: true },
+  ];
+
+  return (
+    <Modal visible={visible} animationType="slide" transparent={true}>
+      <View style={styles.overlay}>
+        <View style={styles.modalContent}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={onClose} style={styles.iconBtn}>
+              <Ionicons name="close" size={24} color={Colors.textSecondary} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Filter</Text>
+            <TouchableOpacity>
+              <Text style={styles.headerRight}>Reset</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={styles.scrollContent}>
+            {/* Retail Price */}
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Retail Price</Text>
+                <Ionicons name="chevron-up" size={20} color={Colors.disabled} />
+              </View>
+              <View style={styles.priceInputs}>
+                <View style={styles.priceInputBox}>
+                  <Text style={styles.priceInputText}>From <Text style={styles.priceValue}>$1</Text></Text>
+                </View>
+                <View style={styles.priceInputBox}>
+                  <Text style={styles.priceInputText}>To <Text style={styles.priceValue}>$2000+</Text></Text>
+                </View>
+              </View>
+              {/* Fake Slider */}
+              <View style={styles.sliderMock}>
+                <View style={styles.sliderTrack} />
+                <View style={[styles.sliderThumb, { left: 0 }]} />
+                <View style={[styles.sliderThumb, { right: 0 }]} />
+              </View>
+            </View>
+
+            {/* Sorting */}
+            <TouchableOpacity style={styles.sectionHeader} onPress={onOpenSort}>
+              <Text style={styles.sectionTitle}>Sorting</Text>
+              <Ionicons name="chevron-forward" size={20} color={Colors.disabled} />
+            </TouchableOpacity>
+
+            {/* Delivery Method */}
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Delivery Method</Text>
+                <Ionicons name="chevron-up" size={20} color={Colors.disabled} />
+              </View>
+              
+              <View style={styles.checkboxRow}>
+                <TouchableOpacity style={styles.checkbox} onPress={() => setPickupChecked(!pickupChecked)}>
+                  {pickupChecked ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
+                </TouchableOpacity>
+                <Text style={styles.checkboxLabel}>Local pickup</Text>
+              </View>
+
+              {pickupChecked && (
+                <View style={styles.addressesContainer}>
+                  {addresses.map(addr => (
+                    <View key={addr.id} style={styles.addressRow}>
+                      <TouchableOpacity style={styles.checkbox}>
+                        {addr.checked ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
+                      </TouchableOpacity>
+                      <Text style={styles.addressText}>{addr.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <View style={[styles.checkboxRow, { marginTop: Spacing.md }]}>
+                <TouchableOpacity style={styles.checkbox} onPress={() => setShippingChecked(!shippingChecked)}>
+                  {shippingChecked ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
+                </TouchableOpacity>
+                <Text style={styles.checkboxLabel}>Shipping is available</Text>
+              </View>
+            </View>
+
+            {/* Always use locations */}
+            <View style={styles.toggleRow}>
+              <Text style={styles.toggleLabel}>Always use the selected locations</Text>
+              <Switch
+                value={alwaysUseLocations}
+                onValueChange={setAlwaysUseLocations}
+                trackColor={{ false: Colors.border, true: Colors.primary }}
+                thumbColor={Colors.white}
+              />
+            </View>
+          </ScrollView>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.applyBtn} onPress={onClose}>
+              <Text style={styles.applyBtnText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    height: '90%',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  iconBtn: {
+    padding: Spacing.xs,
+  },
+  headerTitle: {
+    ...Typography.heading2,
+    fontSize: 18,
+    color: Colors.textPrimary,
+  },
+  headerRight: {
+    ...Typography.body,
+    color: Colors.primary,
+    fontWeight: '500',
+  },
+  scrollContent: {
+    flex: 1,
+  },
+  section: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+    paddingBottom: Spacing.md,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  sectionTitle: {
+    ...Typography.body,
+    color: Colors.primary,
+    fontSize: 16,
+  },
+  priceInputs: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.lg,
+    marginTop: Spacing.md,
+  },
+  priceInputBox: {
+    flex: 1,
+    backgroundColor: '#F1F5F9',
+    borderRadius: 8,
+    padding: Spacing.md,
+    marginHorizontal: Spacing.xs,
+    alignItems: 'center',
+  },
+  priceInputText: {
+    ...Typography.body,
+    color: Colors.textSecondary,
+  },
+  priceValue: {
+    color: Colors.primary,
+    fontWeight: '600',
+  },
+  sliderMock: {
+    position: 'relative',
+    height: 30,
+    justifyContent: 'center',
+    marginHorizontal: Spacing.xl,
+    marginTop: Spacing.lg,
+    marginBottom: Spacing.md,
+  },
+  sliderTrack: {
+    height: 4,
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+    width: '100%',
+  },
+  sliderThumb: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.white,
+    borderWidth: 3,
+    borderColor: Colors.primary,
+    position: 'absolute',
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.lg,
+    marginTop: Spacing.sm,
+  },
+  checkbox: {
+    marginRight: Spacing.sm,
+  },
+  checkboxLabel: {
+    ...Typography.bodyBold,
+    color: Colors.textPrimary,
+  },
+  addressesContainer: {
+    paddingLeft: Spacing.xl + Spacing.lg,
+    marginTop: Spacing.sm,
+  },
+  addressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  addressText: {
+    ...Typography.body,
+    color: Colors.textPrimary,
+    flex: 1,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: Spacing.lg,
+    marginBottom: Spacing.xl,
+  },
+  toggleLabel: {
+    ...Typography.body,
+    color: Colors.textPrimary,
+  },
+  footer: {
+    padding: Spacing.lg,
+    paddingBottom: Spacing.xl,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+  },
+  applyBtn: {
+    backgroundColor: Colors.primary,
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  applyBtnText: {
+    ...Typography.button,
+    color: Colors.white,
+    fontSize: 16,
+  },
+});
