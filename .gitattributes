@@ -1,0 +1,6 @@
+package-lock.json linguist-generated=true
+package.json linguist-language=JSON
+app.json linguist-language=JSON
+tsconfig.json linguist-language=JSON
+*.tsx linguist-language=TypeScript
+*.ts linguist-language=TypeScript
