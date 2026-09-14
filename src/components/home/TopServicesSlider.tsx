@@ -14,8 +14,8 @@ export const TopServicesSlider: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { watchlist, toggleWatchlist } = useApp();
 
-  // Pick top 4 services to show in slider
-  const topServices = MOCK_SERVICES.slice(0, 4);
+  // Pick top services to show in slider
+  const topServices = MOCK_SERVICES.filter(item => item.itemType === 'service');
 
   const handlePress = (item: ServiceItemData) => {
     navigation.navigate('ServiceDetails', { item: item as any });

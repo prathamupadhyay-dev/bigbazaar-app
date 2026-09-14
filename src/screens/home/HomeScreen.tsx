@@ -42,7 +42,8 @@ export default function HomeScreen() {
         <View style={styles.body}>
           <AdBanner />
           <TopServicesSlider />
-          <ServiceGridList />
+          <Text style={[styles.sectionTitle, { marginTop: Spacing.lg }]}>Featured Products</Text>
+          <ServiceGridList typeFilter="product" />
           <ReviewSlider />
         </View>
       </Animated.ScrollView>
@@ -94,6 +95,11 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
+  },
+  sectionTitle: {
+    ...Typography.heading2,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.sm,
   },
   tooltipContainer: {
     position: 'absolute',
