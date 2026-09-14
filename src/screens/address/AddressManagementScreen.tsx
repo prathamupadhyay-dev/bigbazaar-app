@@ -38,7 +38,7 @@ export const AddressManagementScreen: React.FC = () => {
             <Text style={styles.defaultBadge}>Default delivery method</Text>
           </View>
           <Text style={styles.methodValue}>
-            2892 Andover Circle, Willoughby Hills, OH,{'\n'}44092
+            123 Main Street, Downtown Avenue, New York,{'\n'}10001
           </Text>
         </View>
 

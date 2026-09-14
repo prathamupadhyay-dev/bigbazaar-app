@@ -18,11 +18,11 @@ export default function FilterModal({ visible, onClose, onOpenSort }: FilterModa
 
   // Addresses mock
   const addresses = [
-    { id: 1, text: '5340 Brookpark Road, Cleveland, OH', checked: true },
-    { id: 2, text: '1550 Commerce Drive, Stow, OH', checked: false },
-    { id: 3, text: '8748 Ridge Road, North Royalton, OH', checked: false },
-    { id: 4, text: '8901 E Pleasant Valley Road, Independence, OH', checked: true },
-    { id: 5, text: '28801 Euclid Avenue, Wickliffe, OH', checked: true },
+    { id: 1, text: '123 Main Street, New York, NY', checked: true },
+    { id: 2, text: '456 Elm Street, San Francisco, CA', checked: false },
+    { id: 3, text: '789 Oak Avenue, Austin, TX', checked: false },
+    { id: 4, text: '101 Pine Road, Seattle, WA', checked: true },
+    { id: 5, text: '202 Maple Drive, Chicago, IL', checked: true },
   ];
 
   return (

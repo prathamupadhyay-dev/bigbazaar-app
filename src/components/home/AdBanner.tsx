@@ -11,8 +11,8 @@ const CARD_WIDTH = width - 32;
 
 const ADS = [
   { id: '1', image: require('../../assets/images/banner4.jpg'), offsetStyle: {} },
-  { id: '2', image: require('../../assets/images/banner5.jpg'), offsetStyle: { width: '135%', left: 0 } },
-  { id: '3', image: require('../../assets/images/banner6.jpg'), offsetStyle: { width: '135%', left: 0 } },
+  { id: '2', image: require('../../assets/images/banner5.jpg'), offsetStyle: { width: '145%', left: 0 } },
+  { id: '3', image: require('../../assets/images/banner6.jpg'), offsetStyle: { width: '155%', left: 0 } },
 ];
 
 export const AdBanner: React.FC = () => {
