@@ -10,9 +10,9 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 32;
 
 const ADS = [
-  { id: '1', image: require('../../assets/images/banner1.png') },
-  { id: '2', image: require('../../assets/images/banner2.png') },
-  { id: '3', image: require('../../assets/images/banner3.png') },
+  { id: '1', image: require('../../assets/images/banner4.jpg') },
+  { id: '2', image: require('../../assets/images/banner5.jpg') },
+  { id: '3', image: require('../../assets/images/banner6.jpg') },
 ];
 
 export const AdBanner: React.FC = () => {
