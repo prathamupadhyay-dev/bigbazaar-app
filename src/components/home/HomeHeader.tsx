@@ -67,9 +67,6 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
 
         {/* Secondary Action Icons */}
         <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.iconBtn} onPress={onTypePress}>
-            <Ionicons name="grid-outline" size={20} color={getTypeIconColor()} />
-          </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={handleSavedSearchesPress}>
             <Ionicons name="heart-outline" size={20} color={Colors.textPrimary} />
           </TouchableOpacity>

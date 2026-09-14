@@ -17,9 +17,6 @@ export default function HomeScreen() {
   // Modals state
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
-  const [typeModalVisible, setTypeModalVisible] = useState(false);
-  
-  const [typeFilter, setTypeFilter] = useState<'all' | 'product' | 'service'>('all');
   
   // Tooltip state
   const [showTooltip, setShowTooltip] = useState(true);
@@ -29,8 +26,6 @@ export default function HomeScreen() {
       <HomeHeader 
         scrollY={scrollY} 
         onFilterPress={() => setFilterVisible(true)} 
-        onTypePress={() => setTypeModalVisible(true)}
-        typeFilter={typeFilter}
       />
 
       <Animated.ScrollView
@@ -44,7 +39,7 @@ export default function HomeScreen() {
       >
         <View style={styles.body}>
           <AdBanner />
-          <ServiceGridList typeFilter={typeFilter} />
+          <ServiceGridList />
         </View>
       </Animated.ScrollView>
 
@@ -80,37 +75,6 @@ export default function HomeScreen() {
         visible={sortVisible} 
         onClose={() => setSortVisible(false)} 
       />
-
-      {/* Type Filter Modal (Drop up) */}
-      <Modal
-        visible={typeModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setTypeModalVisible(false)}
-      >
-        <View style={StyleSheet.absoluteFill}>
-          <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setTypeModalVisible(false)} />
-          <View style={styles.typeSheet}>
-            <View style={styles.typeSheetHandle} />
-            <Text style={styles.typeSheetTitle}>Filter by Type</Text>
-            
-            <TouchableOpacity style={styles.typeOption} onPress={() => { setTypeFilter('all'); setTypeModalVisible(false); }}>
-              <Text style={[styles.typeOptionText, typeFilter === 'all' && styles.typeOptionActive]}>All Items</Text>
-              {typeFilter === 'all' && <Ionicons name="checkmark" size={20} color="#0F172A" />}
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.typeOption} onPress={() => { setTypeFilter('product'); setTypeModalVisible(false); }}>
-              <Text style={[styles.typeOptionText, typeFilter === 'product' && { color: '#0A84FF' }]}>Products Only</Text>
-              {typeFilter === 'product' && <Ionicons name="checkmark" size={20} color="#0A84FF" />}
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.typeOption} onPress={() => { setTypeFilter('service'); setTypeModalVisible(false); }}>
-              <Text style={[styles.typeOptionText, typeFilter === 'service' && { color: '#EAB308' }]}>Services Only</Text>
-              {typeFilter === 'service' && <Ionicons name="checkmark" size={20} color="#EAB308" />}
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </ScreenContainer>
   );
 }

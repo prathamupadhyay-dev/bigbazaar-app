@@ -93,13 +93,6 @@ export const ServiceItemCard: React.FC<ServiceItemCardProps> = ({
             </View>
           )}
 
-          {/* Frosted Floating Pill Badge */}
-          <View style={[styles.categoryBadge, isProduct && { backgroundColor: 'rgba(219, 234, 254, 0.9)' }]}>
-            <Ionicons name={isProduct ? "cube-outline" : "construct-outline"} size={12} color={isProduct ? "#1E40AF" : "#854D0E"} />
-            <Text style={[styles.categoryText, isProduct && { color: '#1E40AF' }]}>
-              {isProduct ? 'Product' : 'Service'}
-            </Text>
-          </View>
         </View>
 
         <View style={styles.contentContainer}>

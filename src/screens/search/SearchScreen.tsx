@@ -29,8 +29,6 @@ export default function SearchScreen() {
 
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
-  const [typeModalVisible, setTypeModalVisible] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<'all' | 'product' | 'service'>('all');
 
   useEffect(() => {
     if (initialQuery) {
@@ -89,17 +87,9 @@ export default function SearchScreen() {
   };
 
   const results = MOCK_SERVICES.filter(i => {
-    const matchesQuery = i.title.toLowerCase().includes(submittedQuery.toLowerCase()) || 
-                         i.category.toLowerCase().includes(submittedQuery.toLowerCase());
-    const matchesType = typeFilter === 'all' || i.itemType === typeFilter;
-    return matchesQuery && matchesType;
+    return i.title.toLowerCase().includes(submittedQuery.toLowerCase()) || 
+           i.category.toLowerCase().includes(submittedQuery.toLowerCase());
   }).sort((a, b) => a.title.localeCompare(b.title));
-
-  const getTypeIconColor = () => {
-    if (typeFilter === 'service') return '#EAB308';
-    if (typeFilter === 'product') return Colors.primary;
-    return Colors.textSecondary;
-  };
 
   return (
     <ScreenContainer noPadding style={{ backgroundColor: Colors.white }}>
@@ -134,9 +124,6 @@ export default function SearchScreen() {
         {/* Filter icons, only shown when there's a search term or results */}
         {query.length > 0 && (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity style={styles.filterBtn} onPress={() => setTypeModalVisible(true)}>
-              <Ionicons name="grid-outline" size={24} color={getTypeIconColor()} />
-            </TouchableOpacity>
             <TouchableOpacity style={styles.filterBtn} onPress={() => setFilterVisible(true)}>
               <Ionicons name="options-outline" size={24} color={Colors.textSecondary} />
             </TouchableOpacity>
@@ -228,36 +215,6 @@ export default function SearchScreen() {
         onClose={() => setSortVisible(false)} 
       />
 
-      {/* Type Filter Modal (Drop up) */}
-      <Modal
-        visible={typeModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setTypeModalVisible(false)}
-      >
-        <View style={StyleSheet.absoluteFill}>
-          <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setTypeModalVisible(false)} />
-          <View style={styles.typeSheet}>
-            <View style={styles.typeSheetHandle} />
-            <Text style={styles.typeSheetTitle}>Filter by Type</Text>
-            
-            <TouchableOpacity style={styles.typeOption} onPress={() => { setTypeFilter('all'); setTypeModalVisible(false); }}>
-              <Text style={[styles.typeOptionText, typeFilter === 'all' && styles.typeOptionActive]}>All Items</Text>
-              {typeFilter === 'all' && <Ionicons name="checkmark" size={20} color={Colors.textPrimary} />}
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.typeOption} onPress={() => { setTypeFilter('product'); setTypeModalVisible(false); }}>
-              <Text style={[styles.typeOptionText, typeFilter === 'product' && { color: Colors.primary }]}>Products Only</Text>
-              {typeFilter === 'product' && <Ionicons name="checkmark" size={20} color={Colors.primary} />}
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.typeOption} onPress={() => { setTypeFilter('service'); setTypeModalVisible(false); }}>
-              <Text style={[styles.typeOptionText, typeFilter === 'service' && { color: '#EAB308' }]}>Services Only</Text>
-              {typeFilter === 'service' && <Ionicons name="checkmark" size={20} color="#EAB308" />}
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </ScreenContainer>
   );
 }
