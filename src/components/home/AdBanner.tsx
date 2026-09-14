@@ -10,9 +10,9 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 32;
 
 const ADS = [
-  { id: '1', image: require('../../assets/images/banner4.jpg') },
-  { id: '2', image: require('../../assets/images/banner5.jpg') },
-  { id: '3', image: require('../../assets/images/banner6.jpg') },
+  { id: '1', image: require('../../assets/images/banner4.jpg'), offsetStyle: {} },
+  { id: '2', image: require('../../assets/images/banner5.jpg'), offsetStyle: { width: '135%', left: 0 } },
+  { id: '3', image: require('../../assets/images/banner6.jpg'), offsetStyle: { width: '135%', left: 0 } },
 ];
 
 export const AdBanner: React.FC = () => {
@@ -82,7 +82,7 @@ export const AdBanner: React.FC = () => {
           >
             <Image 
               source={ad.image} 
-              style={styles.bannerImage} 
+              style={[styles.bannerImage, ad.offsetStyle as any]} 
               resizeMode="cover"
             />
           </TouchableOpacity>
