@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/colors';
 import HomeScreen from '../screens/home/HomeScreen';
 import WatchlistScreen from '../screens/watchlist/WatchlistScreen';
-import BookingsScreen from '../screens/bookings/BookingsScreen';
 import BucketScreen from '../screens/bucket/BucketScreen';
 import AccountScreen from '../screens/account/AccountScreen';
 import { MainTabParamList } from './types';
@@ -68,9 +67,6 @@ export default function MainTabNavigator() {
             case 'Watchlist':
               iconName = focused ? 'star' : 'star-outline';
               break;
-            case 'Bookings':
-              iconName = focused ? 'calendar' : 'calendar-outline';
-              break;
             case 'Cart':
               iconName = focused ? 'cart' : 'cart-outline';
               break;
@@ -108,11 +104,6 @@ export default function MainTabNavigator() {
         name="Account"
         component={AccountScreen}
         options={{ tabBarLabel: 'Account' }}
-      />
-      <Tab.Screen
-        name="Bookings"
-        component={BookingsScreen}
-        options={{ tabBarLabel: 'Bookings' }} 
       />
       <Tab.Screen
         name="Cart"

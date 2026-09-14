@@ -48,6 +48,7 @@ export const AccountScreen: React.FC = () => {
       >
         <View style={styles.menuList}>
           {renderMenuItem('person-outline', 'My Details', () => navigation.navigate('EditProfile'))}
+          {renderMenuItem('calendar-outline', 'My Bookings', () => navigation.navigate('Bookings'))}
           {renderMenuItem('cube-outline', 'Delivery Methods', () => navigation.navigate('AddressManagement'))}
           {renderMenuItem('card-outline', 'Payment Methods', () => navigation.navigate('PaymentManagement'))}
           {renderMenuItem('receipt-outline', 'Receipts', () => navigation.navigate('Receipts'))}

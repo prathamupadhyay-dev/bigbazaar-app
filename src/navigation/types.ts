@@ -3,7 +3,6 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 export type MainTabParamList = {
   Home: undefined;
   Watchlist: undefined;
-  Bookings: undefined;
   Cart: undefined;
   Account: undefined;
 };
@@ -11,6 +10,7 @@ export type MainTabParamList = {
 export type RootStackParamList = {
   Welcome: undefined;
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
+  Bookings: undefined;
   EditProfile: undefined;
   ServiceBooking: { categoryName?: string; subCategoryName?: string } | undefined;
   AddressManagement: undefined;
