@@ -10,33 +10,9 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 32;
 
 const ADS = [
-  {
-    id: '1',
-    category: 'Service',
-    title: 'Certified Experts',
-    subtitle: 'Top-rated professionals for your home',
-    bgColor: '#EFF6FF', // Blue-50
-    accentColor: '#2563EB', // Blue-600
-    icon: 'shield-checkmark',
-  },
-  {
-    id: '2',
-    category: 'Product',
-    title: 'Lightning Fast',
-    subtitle: 'Get your products delivered today',
-    bgColor: '#FEF2F2', // Red-50
-    accentColor: '#DC2626', // Red-600
-    icon: 'flash',
-  },
-  {
-    id: '3',
-    category: 'Deals',
-    title: 'No Hidden Fees',
-    subtitle: '100% transparent pricing guarantees',
-    bgColor: '#F0FDF4', // Green-50
-    accentColor: '#16A34A', // Green-600
-    icon: 'pricetag',
-  },
+  { id: '1', image: require('../../assets/images/banner1.png') },
+  { id: '2', image: require('../../assets/images/banner2.png') },
+  { id: '3', image: require('../../assets/images/banner3.png') },
 ];
 
 export const AdBanner: React.FC = () => {
@@ -101,20 +77,14 @@ export const AdBanner: React.FC = () => {
         {ADS.map((ad) => (
           <TouchableOpacity
             key={ad.id}
-            style={[styles.card, { width: CARD_WIDTH, backgroundColor: ad.bgColor }]}
+            style={[styles.card, { width: CARD_WIDTH }]}
             activeOpacity={0.9}
-            onPress={() => (navigation as any).navigate('Search', { query: ad.category })}
           >
-            <View style={styles.cardContent}>
-              <View style={styles.textContainer}>
-                <Text style={[styles.adCategory, { color: ad.accentColor }]}>{ad.category.toUpperCase()}</Text>
-                <Text style={styles.adTitle}>{ad.title}</Text>
-                <Text style={styles.adSubtitle}>{ad.subtitle}</Text>
-              </View>
-              <View style={[styles.iconCircle, { backgroundColor: ad.accentColor + '15' }]}>
-                <Ionicons name={ad.icon as any} size={42} color={ad.accentColor} />
-              </View>
-            </View>
+            <Image 
+              source={ad.image} 
+              style={styles.bannerImage} 
+              resizeMode="cover"
+            />
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -139,43 +109,13 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.md,
   },
   card: {
-    height: 140, 
+    height: 180, // slightly taller for image banners
     borderRadius: 16, 
     overflow: 'hidden',
   },
-  cardContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: Spacing.lg,
-  },
-  textContainer: {
-    flex: 1,
-    paddingRight: Spacing.md,
-  },
-  adCategory: {
-    ...Typography.captionBold,
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  },
-  adTitle: {
-    ...Typography.heading2,
-    color: '#0F172A',
-    fontSize: 20,
-    marginBottom: 4,
-  },
-  adSubtitle: {
-    ...Typography.body,
-    color: '#475569',
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  iconCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
+  bannerImage: {
+    width: '100%',
+    height: '100%',
   },
   pagination: {
     flexDirection: 'row',

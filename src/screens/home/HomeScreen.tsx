@@ -5,6 +5,8 @@ import ScreenContainer from '../../components/ScreenContainer';
 import HomeHeader from '../../components/home/HomeHeader';
 import AdBanner from '../../components/home/AdBanner';
 import ServiceGridList from '../../components/home/ServiceGridList';
+import TopServicesSlider from '../../components/home/TopServicesSlider';
+import ReviewSlider from '../../components/home/ReviewSlider';
 import FilterModal from '../search/FilterModal';
 import SortModal from '../search/SortModal';
 import Colors from '../../constants/colors';
@@ -39,7 +41,9 @@ export default function HomeScreen() {
       >
         <View style={styles.body}>
           <AdBanner />
+          <TopServicesSlider />
           <ServiceGridList />
+          <ReviewSlider />
         </View>
       </Animated.ScrollView>
 
