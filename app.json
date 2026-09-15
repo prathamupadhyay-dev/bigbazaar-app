@@ -4,15 +4,15 @@
     "slug": "mybigbazzar",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/client-logo-zoomed.png",
+    "icon": "./src/assets/images/client-logo-transparent.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./src/assets/images/client-logo-transparent.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
@@ -22,9 +22,9 @@
       "favicon": "./assets/favicon.png"
     },
     "splash": {
-      "image": "./src/assets/images/client-logo-zoomed.png",
+      "image": "./src/assets/images/client-logo-transparent.png",
       "resizeMode": "contain",
-      "backgroundColor": "#fefefe"
+      "backgroundColor": "#ffffff"
     }
   }
 }
