@@ -9,6 +9,7 @@ import TopServicesSlider from '../../components/home/TopServicesSlider';
 import ReviewSlider from '../../components/home/ReviewSlider';
 import FilterModal from '../search/FilterModal';
 import SortModal from '../search/SortModal';
+import LocationSheet from '../../components/home/LocationSheet';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
@@ -19,6 +20,7 @@ export default function HomeScreen() {
   // Modals state
   const [filterVisible, setFilterVisible] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
+  const [locationVisible, setLocationVisible] = useState(false);
   
   // Tooltip state
   const [showTooltip, setShowTooltip] = useState(true);
@@ -28,6 +30,7 @@ export default function HomeScreen() {
       <HomeHeader 
         scrollY={scrollY} 
         onFilterPress={() => setFilterVisible(true)} 
+        onLocationPress={() => setLocationVisible(true)}
       />
 
       <Animated.ScrollView
@@ -80,6 +83,11 @@ export default function HomeScreen() {
         visible={sortVisible} 
         onClose={() => setSortVisible(false)} 
       />
+
+      <LocationSheet
+        visible={locationVisible}
+        onClose={() => setLocationVisible(false)}
+      />
     </ScreenContainer>
   );
 }
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
   },
   tooltipContainer: {
     position: 'absolute',
-    top: 55, 
+    top: 90, 
     right: 35, 
     alignItems: 'flex-end',
     zIndex: 999,

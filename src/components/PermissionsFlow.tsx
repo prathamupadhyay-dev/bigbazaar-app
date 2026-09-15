@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity, Platform, Alert } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
+import OnboardingCarousel from './OnboardingCarousel';
 import Colors from '../constants/colors';
 import Typography from '../constants/typography';
 import Spacing from '../constants/spacing';
@@ -11,7 +12,7 @@ const HAS_COMPLETED_PERMISSIONS_KEY = '@has_completed_permissions_flow';
 
 export const PermissionsFlow: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [step, setStep] = useState<'LOCATION' | 'PUSH' | 'SLIDES'>('LOCATION');
 
   useEffect(() => {
     checkFirstLoad();
@@ -22,8 +23,6 @@ export const PermissionsFlow: React.FC = () => {
       const hasCompleted = await AsyncStorage.getItem(HAS_COMPLETED_PERMISSIONS_KEY);
       if (hasCompleted !== 'true') {
         setIsVisible(true);
-        // Add a slight delay before triggering the location permission
-        // so it doesn't interrupt the splash screen abruptly
         setTimeout(() => {
           requestLocationPermission();
         }, 1000);
@@ -37,7 +36,6 @@ export const PermissionsFlow: React.FC = () => {
     try {
       await AsyncStorage.setItem(HAS_COMPLETED_PERMISSIONS_KEY, 'true');
       setIsVisible(false);
-      setShowNotificationModal(false);
     } catch (e) {
       console.error('Error saving async storage', e);
     }
@@ -45,68 +43,76 @@ export const PermissionsFlow: React.FC = () => {
 
   const requestLocationPermission = async () => {
     try {
-      // Native location prompt
       await Location.requestForegroundPermissionsAsync();
     } catch (e) {
       console.error('Location permission error', e);
     } finally {
-      // After location is answered (or denied), show the custom notification modal
-      setShowNotificationModal(true);
+      setStep('PUSH');
     }
   };
 
   const handleGiveNotificationPermission = async () => {
     try {
-      // expo-notifications causes Expo Go to crash on Android in SDK 53+.
-      // We simulate the native permission prompt for the sake of the UI flow.
       Alert.alert(
         'Allow Big Bazaar to send you notifications?',
         '',
         [
-          { text: "Don't allow", style: 'cancel', onPress: () => markCompleted() },
-          { text: 'Allow', onPress: () => markCompleted() }
+          { text: "Don't allow", style: 'cancel', onPress: () => setStep('SLIDES') },
+          { text: 'Allow', onPress: () => setStep('SLIDES') }
         ]
       );
     } catch (e) {
       console.error('Notification permission error', e);
-      markCompleted();
+      setStep('SLIDES');
     }
   };
 
   const handleLater = () => {
-    markCompleted();
+    setStep('SLIDES');
   };
 
-  if (!isVisible || !showNotificationModal) {
+  if (!isVisible) {
     return null;
   }
 
-  return (
-    <Modal visible={true} transparent={true} animationType="slide">
-      <View style={styles.overlay}>
-        <View style={styles.bottomSheet}>
-          {/* Notification Icon */}
-          <View style={styles.iconContainer}>
-            <Ionicons name="notifications-outline" size={32} color={Colors.textPrimary} />
-            <View style={styles.badge} />
-          </View>
-          
-          <Text style={styles.title}>Push Notifications</Text>
-          <Text style={styles.description}>
-            Stay informed with order updates, promotional offers, and platform communications.
-          </Text>
+  if (step === 'SLIDES') {
+    return (
+      <Modal visible={true} transparent={false} animationType="fade">
+        <OnboardingCarousel onComplete={markCompleted} />
+      </Modal>
+    );
+  }
 
-          <TouchableOpacity style={styles.primaryButton} onPress={handleGiveNotificationPermission}>
-            <Text style={styles.primaryButtonText}>GIVE PERMISSION</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.secondaryButton} onPress={handleLater}>
-            <Text style={styles.secondaryButtonText}>LATER, TAKE ME BACK</Text>
-          </TouchableOpacity>
+  if (step === 'PUSH') {
+    return (
+      <Modal visible={true} transparent={true} animationType="slide">
+        <View style={styles.overlay}>
+          <View style={styles.bottomSheet}>
+            {/* Notification Icon */}
+            <View style={styles.iconContainer}>
+              <Ionicons name="notifications-outline" size={32} color={Colors.textPrimary} />
+              <View style={styles.badge} />
+            </View>
+            
+            <Text style={styles.title}>Push Notifications</Text>
+            <Text style={styles.description}>
+              Stay informed with order updates, promotional offers, and platform communications.
+            </Text>
+
+            <TouchableOpacity style={styles.primaryButton} onPress={handleGiveNotificationPermission}>
+              <Text style={styles.primaryButtonText}>GIVE PERMISSION</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.secondaryButton} onPress={handleLater}>
+              <Text style={styles.secondaryButtonText}>LATER, TAKE ME BACK</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </Modal>
-  );
+      </Modal>
+    );
+  }
+
+  return null;
 };
 
 const styles = StyleSheet.create({

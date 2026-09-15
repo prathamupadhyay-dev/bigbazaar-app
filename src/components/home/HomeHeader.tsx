@@ -13,9 +13,10 @@ interface HomeHeaderProps {
   scrollY?: Animated.Value;
   onTypePress?: () => void;
   typeFilter?: 'all' | 'product' | 'service';
+  onLocationPress?: () => void;
 }
 
-export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, onTypePress, typeFilter = 'all' }) => {
+export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, onTypePress, typeFilter = 'all', onLocationPress }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleSearchPress = () => {
@@ -33,9 +34,9 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
   // If scrollY is provided, we can animate the height or padding
   const headerHeight = scrollY ? scrollY.interpolate({
     inputRange: [0, 100],
-    outputRange: [70, 50],
+    outputRange: [105, 85],
     extrapolate: 'clamp'
-  }) : 70;
+  }) : 105;
 
   const searchPillScale = scrollY ? scrollY.interpolate({
     inputRange: [0, 100],
@@ -51,6 +52,23 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
 
   return (
     <Animated.View style={[styles.headerWrapper, { height: headerHeight }]}>
+      
+      {/* Location Row */}
+      <View style={styles.locationRow}>
+        <TouchableOpacity style={styles.locationBtn} onPress={onLocationPress}>
+          <Ionicons name="location-sharp" size={16} color="#334155" />
+          <Text style={styles.locationText} numberOfLines={1}>
+            Deliver to PRRM+G7P - Shubham Palac...
+          </Text>
+          <Ionicons name="chevron-down" size={14} color="#64748B" style={{marginLeft: 2}} />
+        </TouchableOpacity>
+        
+        <View style={styles.uptoTag}>
+          <Text style={styles.uptoTagText}>upto ₹100</Text>
+          <Ionicons name="pricetag" size={12} color="#059669" style={{marginLeft: 4}} />
+        </View>
+      </View>
+
       <Animated.View style={[styles.topRow, { transform: [{ scale: searchPillScale }] }]}>
         
         {/* Pill Search Bar */}
@@ -90,7 +108,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 0,
     zIndex: 10,
-    elevation: 0, // removed heavy shadow
+    elevation: 0,
+    paddingTop: 10,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  locationBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
+  },
+  locationText: {
+    ...Typography.bodyBold,
+    fontSize: 13,
+    color: '#334155',
+    marginLeft: 4,
+    marginRight: 2,
+    flexShrink: 1,
+  },
+  uptoTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ECFDF5', // Light green
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#D1FAE5',
+  },
+  uptoTagText: {
+    ...Typography.caption,
+    color: '#059669', // Emerald 600
+    fontWeight: 'bold',
   },
   topRow: {
     flexDirection: 'row',
