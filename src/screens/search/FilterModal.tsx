@@ -70,50 +70,37 @@ export default function FilterModal({ visible, onClose, onOpenSort }: FilterModa
               <Ionicons name="chevron-forward" size={20} color={Colors.disabled} />
             </TouchableOpacity>
 
-            {/* Delivery Method */}
+            {/* Categories */}
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Delivery Method</Text>
+                <Text style={styles.sectionTitle}>Categories</Text>
                 <Ionicons name="chevron-up" size={20} color={Colors.disabled} />
               </View>
-              
-              <View style={styles.checkboxRow}>
-                <TouchableOpacity style={styles.checkbox} onPress={() => setPickupChecked(!pickupChecked)}>
-                  {pickupChecked ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
-                </TouchableOpacity>
-                <Text style={styles.checkboxLabel}>Local pickup</Text>
-              </View>
-
-              {pickupChecked && (
-                <View style={styles.addressesContainer}>
-                  {addresses.map(addr => (
-                    <View key={addr.id} style={styles.addressRow}>
-                      <TouchableOpacity style={styles.checkbox}>
-                        {addr.checked ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
-                      </TouchableOpacity>
-                      <Text style={styles.addressText}>{addr.text}</Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              <View style={[styles.checkboxRow, { marginTop: Spacing.md }]}>
-                <TouchableOpacity style={styles.checkbox} onPress={() => setShippingChecked(!shippingChecked)}>
-                  {shippingChecked ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
-                </TouchableOpacity>
-                <Text style={styles.checkboxLabel}>Shipping is available</Text>
+              <View style={styles.chipContainer}>
+                {['Men', 'Women', 'Kids', 'Beauty', 'Home'].map((cat, idx) => (
+                  <TouchableOpacity key={idx} style={[styles.chip, idx === 1 && styles.chipActive]}>
+                    <Text style={[styles.chipText, idx === 1 && styles.chipTextActive]}>{cat}</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
             </View>
 
-            {/* Always use locations */}
-            <View style={styles.toggleRow}>
-              <Text style={styles.toggleLabel}>Always use the selected locations</Text>
-              <Switch
-                value={alwaysUseLocations}
-                onValueChange={setAlwaysUseLocations}
-                trackColor={{ false: Colors.border, true: Colors.primary }}
-                thumbColor={Colors.white}
-              />
+            {/* Brands */}
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Brands</Text>
+                <Ionicons name="chevron-up" size={20} color={Colors.disabled} />
+              </View>
+              <View style={styles.checkboxContainer}>
+                {['Nike', 'Puma', 'Adidas', 'Levi\'s', 'H&M'].map((brand, idx) => (
+                  <View key={idx} style={styles.checkboxRow}>
+                    <TouchableOpacity style={styles.checkbox}>
+                      {idx < 2 ? <Ionicons name="checkbox" size={24} color={Colors.primary} /> : <Ionicons name="square-outline" size={24} color={Colors.disabled} />}
+                    </TouchableOpacity>
+                    <Text style={styles.checkboxLabel}>{brand}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
           </ScrollView>
 
@@ -228,41 +215,44 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
     position: 'absolute',
   },
-  checkboxRow: {
+  chipContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
     paddingHorizontal: Spacing.lg,
     marginTop: Spacing.sm,
   },
-  checkbox: {
+  chip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#F1F5F9',
     marginRight: Spacing.sm,
+    marginBottom: Spacing.sm,
   },
-  checkboxLabel: {
-    ...Typography.bodyBold,
-    color: Colors.textPrimary,
+  chipActive: {
+    backgroundColor: Colors.primary,
   },
-  addressesContainer: {
-    paddingLeft: Spacing.xl + Spacing.lg,
-    marginTop: Spacing.sm,
+  chipText: {
+    ...Typography.body,
+    color: Colors.textSecondary,
   },
-  addressRow: {
+  chipTextActive: {
+    color: Colors.white,
+    fontWeight: 'bold',
+  },
+  checkboxContainer: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.sm,
+  },
+  checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Spacing.md,
   },
-  addressText: {
-    ...Typography.body,
-    color: Colors.textPrimary,
-    flex: 1,
+  checkbox: {
+    marginRight: Spacing.md,
   },
-  toggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: Spacing.lg,
-    marginBottom: Spacing.xl,
-  },
-  toggleLabel: {
+  checkboxLabel: {
     ...Typography.body,
     color: Colors.textPrimary,
   },

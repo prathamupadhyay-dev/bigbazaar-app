@@ -171,6 +171,31 @@ export default function SearchScreen() {
                   <Text style={styles.emptyText}>No recent searches</Text>
                 </View>
               )}
+
+              {/* Trending Categories */}
+              <View style={{ paddingHorizontal: Spacing.lg, marginTop: Spacing.lg, marginBottom: Spacing.sm }}>
+                <Text style={{ ...Typography.captionBold, color: Colors.textSecondary }}>TRENDING CATEGORIES</Text>
+              </View>
+              <View style={styles.pillContainer}>
+                {['Sneakers', 'Dresses', 'Watches', 'Handbags', 'Activewear', 'Jeans'].map((cat, idx) => (
+                  <TouchableOpacity key={idx} style={styles.pill} onPress={() => handleRecentSearchPress(cat)}>
+                    <Text style={styles.pillText}>{cat}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Popular Brands */}
+              <View style={{ paddingHorizontal: Spacing.lg, marginTop: Spacing.lg, marginBottom: Spacing.sm }}>
+                <Text style={{ ...Typography.captionBold, color: Colors.textSecondary }}>POPULAR BRANDS</Text>
+              </View>
+              <View style={styles.pillContainer}>
+                {['Nike', 'Puma', 'Adidas', 'Levi\'s', 'Zara', 'H&M'].map((brand, idx) => (
+                  <TouchableOpacity key={idx} style={styles.pill} onPress={() => handleRecentSearchPress(brand)}>
+                    <Text style={styles.pillText}>{brand}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <View style={{ height: 100 }} />
             </ScrollView>
           </View>
         ) : (
@@ -296,6 +321,23 @@ const styles = StyleSheet.create({
   },
   closeBtn: {
     padding: Spacing.xs,
+  },
+  pillContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: Spacing.lg,
+  },
+  pill: {
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: Spacing.sm,
+    marginBottom: Spacing.sm,
+  },
+  pillText: {
+    ...Typography.body,
+    color: Colors.textPrimary,
   },
   listContainer: {
     padding: Spacing.md,
