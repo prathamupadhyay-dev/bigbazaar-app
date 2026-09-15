@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     height: 400, // Covers the top portion of the screen
   },
   scrollContent: {
-    paddingBottom: 100, // Extra padding for the floating tab bar
+    paddingBottom: 40,
     flexGrow: 1,
   },
   body: {

@@ -20,42 +20,27 @@ export default function MainTabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      tabBar={(props) => (
-        <View style={styles.tabBarWrapper} pointerEvents="box-none">
-          <LinearGradient
-            colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.9)', 'rgba(255,255,255,1)']}
-            locations={[0, 0.6, 1]}
-            style={styles.fadeOverlay}
-            pointerEvents="none"
-          />
-          <BottomTabBar {...props} />
-        </View>
-      )}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: '#0A84FF', // Big Bazaar premium blue
         tabBarInactiveTintColor: Colors.textSecondary,
         tabBarStyle: {
-          position: 'absolute',
-          bottom: 24,
-          left: 20,
-          right: 20,
-          elevation: 10,
+          height: 60,
           backgroundColor: Colors.white,
-          borderRadius: 30,
-          height: 70,
-          paddingBottom: 10,
-          paddingTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: '#E2E8F0',
+          elevation: 8,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 10 },
-          shadowOpacity: 0.1,
-          shadowRadius: 20,
-          borderTopWidth: 0,
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 4,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '700',
-          marginBottom: 4,
+          fontSize: 11,
+          fontWeight: '600',
+          marginTop: 2,
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
@@ -107,21 +92,6 @@ export default function MainTabNavigator() {
 }
 
 const styles = StyleSheet.create({
-  tabBarWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 130, // tall enough to cover the tab bar and the fade area
-    justifyContent: 'flex-end',
-  },
-  fadeOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 120, // fade height
-  },
   bucketIconWrapper: {
     position: 'relative',
     alignItems: 'center',
