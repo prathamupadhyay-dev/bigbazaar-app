@@ -31,6 +31,12 @@ export default function HomeScreen() {
 
   return (
     <ScreenContainer noPadding style={styles.container}>
+      {/* Root fixed gradient that the transparent top elements reveal */}
+      <LinearGradient 
+        colors={['#E6F4FE', '#FFFFFF']} 
+        style={styles.absoluteGradient}
+      />
+
       <HomeHeader 
         scrollY={scrollY} 
         onFilterPress={() => setFilterVisible(true)} 
@@ -47,18 +53,9 @@ export default function HomeScreen() {
         )}
         scrollEventThrottle={16}
       >
-        <View>
-          <LinearGradient 
-            colors={['#E6F4FE', '#FFFFFF']} // Light blue matching brand
-            style={styles.gradientTop}
-          >
-            <View style={styles.headerSpacer} />
-          </LinearGradient>
-
-          <View style={styles.topSection}>
-            <AdBanner />
-            <TopServicesSlider />
-          </View>
+        <View style={styles.topSection}>
+          <AdBanner />
+          <TopServicesSlider />
         </View>
 
         <FilterChipsBar scrollY={scrollY} />
@@ -119,24 +116,29 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white, // Pure white for the rest of the screen
+    backgroundColor: Colors.white,
+  },
+  absoluteGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 400, // Covers the top portion of the screen
   },
   scrollContent: {
     paddingBottom: 100, // Extra padding for the floating tab bar
-  },
-  gradientTop: {
-    width: '100%',
-  },
-  headerSpacer: {
-    height: 100, // Approximate height of HomeHeader
+    flexGrow: 1,
   },
   body: {
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
+    backgroundColor: Colors.white,
+    minHeight: 800, // Ensures the white background covers the rest of the page when scrolled up
   },
   topSection: {
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
+    backgroundColor: 'transparent',
   },
   sectionTitle: {
     ...Typography.heading2,

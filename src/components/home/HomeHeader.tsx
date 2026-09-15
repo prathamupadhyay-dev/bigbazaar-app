@@ -103,10 +103,6 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     paddingHorizontal: Spacing.md,
     justifyContent: 'center',
     borderBottomWidth: 0,
