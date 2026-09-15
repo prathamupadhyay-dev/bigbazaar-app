@@ -14,6 +14,10 @@ export const TopServicesSlider: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { watchlist, toggleWatchlist } = useApp();
 
+  const handleViewAll = () => {
+    navigation.navigate('AllItems', { type: 'service' } as any);
+  };
+
   // Pick top services to show in slider
   const topServices = MOCK_SERVICES.filter(item => item.itemType === 'service');
 
@@ -33,7 +37,7 @@ export const TopServicesSlider: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>Top Services</Text>
-        <TouchableOpacity onPress={() => (navigation as any).navigate('Search', { filterType: 'service' })}>
+        <TouchableOpacity onPress={handleViewAll}>
           <Text style={styles.viewAllText}>View All</Text>
         </TouchableOpacity>
       </View>

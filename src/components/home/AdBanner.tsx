@@ -36,7 +36,7 @@ export const AdBanner: React.FC = () => {
       });
       
       setActiveIndex(nextIndex);
-    }, 4000); 
+    }, 2500); 
   };
 
   useEffect(() => {

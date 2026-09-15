@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Animated, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import ScreenContainer from '../../components/ScreenContainer';
 import HomeHeader from '../../components/home/HomeHeader';
 import AdBanner from '../../components/home/AdBanner';
@@ -17,6 +18,7 @@ import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   // Modals state
@@ -50,16 +52,22 @@ export default function HomeScreen() {
           style={styles.gradientTop}
         >
           <View style={styles.headerSpacer} />
-          <View style={styles.topSection}>
-            <AdBanner />
-            <TopServicesSlider />
-          </View>
         </LinearGradient>
+
+        <View style={styles.topSection}>
+          <AdBanner />
+          <TopServicesSlider />
+        </View>
 
         <FilterChipsBar scrollY={scrollY} />
 
         <View style={styles.body}>
-          <Text style={[styles.sectionTitle, { marginTop: Spacing.lg }]}>Featured Products</Text>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Featured Products</Text>
+            <TouchableOpacity onPress={() => (navigation as any).navigate('AllItems', { type: 'product' })}>
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
           <ServiceGridList typeFilter="product" />
           <ReviewSlider />
         </View>
@@ -131,7 +139,18 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...Typography.heading2,
     color: Colors.textPrimary,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: Spacing.lg,
     marginBottom: Spacing.sm,
+  },
+  viewAllText: {
+    ...Typography.bodyBold,
+    color: Colors.primary,
+    fontSize: 14,
   },
   tooltipContainer: {
     position: 'absolute',

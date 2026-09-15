@@ -16,6 +16,7 @@ export type RootStackParamList = {
   PaymentManagement: undefined;
   HelpSupport: undefined;
   Search: { query?: string; autoFocusSaved?: boolean } | undefined;
+  AllItems: { type: 'product' | 'service' | 'all' };
   ServiceDetails: { item: any };
   Notifications: undefined;
   SavedSearches: undefined;

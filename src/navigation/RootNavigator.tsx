@@ -34,6 +34,7 @@ export default function RootNavigator() {
       <Stack.Screen name="PaymentManagement" component={PaymentManagementScreen} />
       <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
+      <Stack.Screen name="AllItems" component={require('../screens/search/AllItemsScreen').default} />
       <Stack.Screen 
         name="ServiceDetails" 
         component={ServiceDetailsScreen} 
