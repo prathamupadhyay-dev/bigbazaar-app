@@ -16,10 +16,15 @@ export default function ServiceDetailsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { item } = (route.params as any) || {};
-  const { watchlist, toggleWatchlist } = useApp();
+  const { watchlist, toggleWatchlist, addToBucket } = useApp();
   
   const [imageExpanded, setImageExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Product specifics
+  const [selectedSize, setSelectedSize] = useState('M');
+  const [selectedColor, setSelectedColor] = useState('Blue');
+  const [quantity, setQuantity] = useState(1);
 
   // Mount animation values
   const mountOpacity = React.useRef(new Animated.Value(0.85)).current;
@@ -52,6 +57,22 @@ export default function ServiceDetailsScreen() {
 
   const handleSave = () => {
     toggleWatchlist(item.id);
+  };
+
+  const handleBuyNow = () => {
+    addToBucket({
+      serviceId: item.id,
+      serviceName: item.title,
+      categoryName: item.category || 'General',
+      subCategoryName: item.itemType,
+      price: parseFloat(item.price.replace(/[^0-9.]/g, '')),
+      quantity: quantity,
+      size: item.itemType === 'product' ? selectedSize : undefined,
+      color: item.itemType === 'product' ? selectedColor : undefined,
+      imageUrl: item.imageUrl,
+    });
+    // Navigate to Cart (Bucket)
+    (navigation as any).navigate('Cart');
   };
 
   const images = [item.imageUrl, item.imageUrl, item.imageUrl]; // Mock 3 images
@@ -144,6 +165,37 @@ export default function ServiceDetailsScreen() {
           </View>
         </View>
 
+        {/* Product Variants */}
+        {item.itemType === 'product' && (
+          <View style={styles.variantsSection}>
+            <Text style={styles.variantTitle}>Size</Text>
+            <View style={styles.variantRow}>
+              {['S', 'M', 'L', 'XL'].map((size) => (
+                <TouchableOpacity
+                  key={size}
+                  style={[styles.variantBox, selectedSize === size && styles.variantBoxSelected]}
+                  onPress={() => setSelectedSize(size)}
+                >
+                  <Text style={[styles.variantText, selectedSize === size && styles.variantTextSelected]}>{size}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text style={[styles.variantTitle, { marginTop: Spacing.md }]}>Color</Text>
+            <View style={styles.variantRow}>
+              {['Blue', 'Black', 'White', 'Red'].map((color) => (
+                <TouchableOpacity
+                  key={color}
+                  style={[styles.variantBox, selectedColor === color && styles.variantBoxSelected]}
+                  onPress={() => setSelectedColor(color)}
+                >
+                  <Text style={[styles.variantText, selectedColor === color && styles.variantTextSelected]}>{color}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
+
         {/* Address */}
         <View style={styles.addressSection}>
           <Text style={styles.addressText}>1550 Commerce Drive, Stow, OH 44224 USA</Text>
@@ -181,11 +233,28 @@ export default function ServiceDetailsScreen() {
       <View style={styles.footer}>
         <View style={styles.priceContainer}>
           <Text style={styles.priceText}>{item.price}</Text>
-          {item.itemType === 'service' && <Text style={styles.priceSubtitle}>Estimated total</Text>}
-          {item.itemType === 'product' && <Text style={styles.priceSubtitle}>Plus taxes & shipping</Text>}
+          <Text style={styles.priceSubtitle}>{item.itemType === 'product' ? 'Plus taxes' : 'Estimated total'}</Text>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, item.itemType === 'product' ? styles.ctaProduct : styles.ctaService]}>
-          <Text style={styles.ctaButtonText}>{item.itemType === 'product' ? 'Buy Now' : 'Book Now'}</Text>
+        <View style={styles.qtyContainer}>
+          <TouchableOpacity 
+            style={styles.qtyBtn} 
+            onPress={() => setQuantity(Math.max(1, quantity - 1))}
+          >
+            <Ionicons name="remove" size={20} color={Colors.textPrimary} />
+          </TouchableOpacity>
+          <Text style={styles.qtyText}>{quantity}</Text>
+          <TouchableOpacity 
+            style={styles.qtyBtn} 
+            onPress={() => setQuantity(quantity + 1)}
+          >
+            <Ionicons name="add" size={20} color={Colors.textPrimary} />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity 
+          style={[styles.ctaButton, item.itemType === 'product' ? styles.ctaProduct : styles.ctaService]}
+          onPress={handleBuyNow}
+        >
+          <Text style={styles.ctaButtonText}>{item.itemType === 'product' ? 'Add to Cart' : 'Book Now'}</Text>
         </TouchableOpacity>
       </View>
 
@@ -448,17 +517,17 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.border,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     paddingBottom: Spacing.lg,
   },
   priceContainer: {
+    flex: 1, // Take available space on left
     justifyContent: 'center',
   },
   priceText: {
-    ...Typography.heading1,
-    fontSize: 28,
+    ...Typography.heading2,
+    fontSize: 22,
     color: Colors.textPrimary,
   },
   priceSubtitle: {
@@ -466,10 +535,60 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: 12,
   },
+  qtyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 8,
+    marginRight: Spacing.md,
+  },
+  qtyBtn: {
+    padding: Spacing.sm,
+  },
+  qtyText: {
+    ...Typography.bodyBold,
+    paddingHorizontal: Spacing.sm,
+  },
+  variantsSection: {
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  variantTitle: {
+    ...Typography.bodyBold,
+    marginBottom: Spacing.sm,
+  },
+  variantRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  variantBox: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginRight: Spacing.sm,
+  },
+  variantBoxSelected: {
+    borderColor: Colors.primary,
+    backgroundColor: '#F0F7FF',
+  },
+  variantText: {
+    ...Typography.body,
+    color: Colors.textSecondary,
+  },
+  variantTextSelected: {
+    color: Colors.primary,
+    fontWeight: 'bold',
+  },
   ctaButton: {
-    paddingHorizontal: 40,
+    paddingHorizontal: Spacing.xl,
     paddingVertical: 14,
     borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   ctaProduct: {
     backgroundColor: '#0A84FF', // Blue for Product

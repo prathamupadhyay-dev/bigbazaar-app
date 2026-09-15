@@ -36,11 +36,15 @@ export interface BucketItem {
   categoryName: string;
   subCategoryName: string;
   price: number;
-  timeSlot: string;
-  serviceDate: string;
-  paymentChoice: 'Prepaid' | 'Cash on Delivery';
+  timeSlot?: string;
+  serviceDate?: string;
+  paymentChoice?: 'Prepaid' | 'Cash on Delivery';
   problemDescription?: string;
   quantity: number;
+  // Product specific fields
+  size?: string;
+  color?: string;
+  imageUrl?: string;
 }
 
 export interface BookingItem {
@@ -441,8 +445,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       serviceName: primaryItem.serviceName,
       subCategoryName: primaryItem.subCategoryName,
       category: primaryItem.categoryName || 'General',
-      scheduledDate: primaryItem.serviceDate,
-      scheduledTimeSlot: primaryItem.timeSlot,
+      scheduledDate: primaryItem.serviceDate || 'Not specified',
+      scheduledTimeSlot: primaryItem.timeSlot || 'Not specified',
       providerName: 'Assigned Certified Partner',
       providerContact: '+1 555-0199',
       providerRating: 4.9,

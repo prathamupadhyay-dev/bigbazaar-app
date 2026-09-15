@@ -11,15 +11,14 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 export const BucketScreen: React.FC = () => {
-  const { watchlist, toggleWatchlist } = useApp();
+  const { watchlist, toggleWatchlist, bucket, removeFromBucket, getBucketTotals } = useApp();
   const navigation = useNavigation();
 
-  const handlePress = (item: ServiceItemData) => {
-    (navigation as any).navigate('ServiceDetails', { item });
+  const handlePress = (item: any) => {
+    // Actually we'd navigate to ServiceDetails with the original item
   };
 
-
-  const mockCartItems: ServiceItemData[] = []; // Empty state
+  const { total } = getBucketTotals();
 
   return (
     <ScreenContainer noPadding>
@@ -28,20 +27,22 @@ export const BucketScreen: React.FC = () => {
       </View>
       <View style={styles.content}>
         <FlatList
-          data={mockCartItems}
+          data={bucket}
           keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
           contentContainerStyle={styles.listContainer}
           renderItem={({ item }) => (
-            <View style={styles.cardWrapper}>
-              <ServiceItemCard
-                item={item}
-                isSaved={watchlist.includes(item.id)}
-                onPress={handlePress}
-                onBookPress={handlePress}
-                onSavePress={() => toggleWatchlist(item.id)}
-              />
+            <View style={styles.cartItem}>
+              <View style={styles.cartImgPlaceholder} />
+              <View style={styles.cartItemDetails}>
+                <Text style={styles.cartItemTitle}>{item.serviceName}</Text>
+                {item.size && item.color && (
+                  <Text style={styles.cartItemVariant}>Size: {item.size}, Color: {item.color}</Text>
+                )}
+                <Text style={styles.cartItemPrice}>${item.price} x {item.quantity}</Text>
+              </View>
+              <TouchableOpacity onPress={() => removeFromBucket(item.id)}>
+                <Ionicons name="trash-outline" size={24} color={Colors.error} />
+              </TouchableOpacity>
             </View>
           )}
           ListEmptyComponent={
@@ -53,6 +54,17 @@ export const BucketScreen: React.FC = () => {
           }
         />
       </View>
+      {bucket.length > 0 && (
+        <View style={styles.checkoutFooter}>
+          <View>
+            <Text style={styles.checkoutTotalLabel}>Total</Text>
+            <Text style={styles.checkoutTotalValue}>${total}</Text>
+          </View>
+          <TouchableOpacity style={styles.checkoutBtn}>
+            <Text style={styles.checkoutBtnText}>Checkout</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </ScreenContainer>
   );
 };
@@ -65,8 +77,8 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     paddingBottom: Spacing.md,
     backgroundColor: Colors.white,
-    borderBottomWidth: 0,
-    elevation: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
   headerTitle: {
     ...Typography.heading2,
@@ -75,17 +87,48 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8FAFC',
   },
   listContainer: {
     padding: Spacing.md,
     flexGrow: 1,
   },
-  row: {
-    justifyContent: 'space-between',
+  cartItem: {
+    flexDirection: 'row',
+    backgroundColor: Colors.white,
+    padding: Spacing.md,
+    borderRadius: 12,
+    marginBottom: Spacing.md,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  cardWrapper: {
-    width: '48.5%',
+  cartImgPlaceholder: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: '#E2E8F0',
+    marginRight: Spacing.md,
+  },
+  cartItemDetails: {
+    flex: 1,
+  },
+  cartItemTitle: {
+    ...Typography.bodyBold,
+    color: Colors.textPrimary,
+  },
+  cartItemVariant: {
+    ...Typography.caption,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  cartItemPrice: {
+    ...Typography.bodyBold,
+    color: Colors.primary,
+    marginTop: 4,
   },
   emptyContainer: {
     flex: 1,
@@ -103,6 +146,34 @@ const styles = StyleSheet.create({
     ...Typography.body,
     color: '#94A3B8', 
     fontSize: 14,
+  },
+  checkoutFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: Spacing.lg,
+    backgroundColor: Colors.white,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+  },
+  checkoutTotalLabel: {
+    ...Typography.caption,
+    color: Colors.textSecondary,
+  },
+  checkoutTotalValue: {
+    ...Typography.heading2,
+    fontSize: 22,
+    color: Colors.textPrimary,
+  },
+  checkoutBtn: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: 14,
+    borderRadius: 8,
+  },
+  checkoutBtnText: {
+    ...Typography.button,
+    color: Colors.white,
   },
 });
 
