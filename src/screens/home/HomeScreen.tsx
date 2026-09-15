@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Animated, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import ScreenContainer from '../../components/ScreenContainer';
 import HomeHeader from '../../components/home/HomeHeader';
 import AdBanner from '../../components/home/AdBanner';
@@ -44,10 +45,16 @@ export default function HomeScreen() {
         )}
         scrollEventThrottle={16}
       >
-        <View style={styles.topSection}>
-          <AdBanner />
-          <TopServicesSlider />
-        </View>
+        <LinearGradient 
+          colors={['#E6F4FE', '#FFFFFF']} // Light blue matching brand
+          style={styles.gradientTop}
+        >
+          <View style={styles.headerSpacer} />
+          <View style={styles.topSection}>
+            <AdBanner />
+            <TopServicesSlider />
+          </View>
+        </LinearGradient>
 
         <FilterChipsBar scrollY={scrollY} />
 
@@ -102,10 +109,16 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.white, // Pure white for the rest of the screen
   },
   scrollContent: {
     paddingBottom: 100, // Extra padding for the floating tab bar
+  },
+  gradientTop: {
+    width: '100%',
+  },
+  headerSpacer: {
+    height: 100, // Approximate height of HomeHeader
   },
   body: {
     paddingHorizontal: Spacing.md,

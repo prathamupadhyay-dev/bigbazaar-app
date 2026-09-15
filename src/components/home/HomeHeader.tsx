@@ -45,8 +45,14 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
     (navigation as any).navigate('Account');
   };
 
+  const headerBgColor = scrollY ? scrollY.interpolate({
+    inputRange: [0, 80],
+    outputRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)'],
+    extrapolate: 'clamp'
+  }) : 'transparent';
+
   return (
-    <View style={styles.headerWrapper}>
+    <Animated.View style={[styles.headerWrapper, { backgroundColor: headerBgColor }]}>
       
       {/* Location Row */}
       <View style={styles.locationRow}>
@@ -91,13 +97,16 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
         </View>
 
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    backgroundColor: Colors.white, // Since we reverted app to white, keep header white to blend
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     paddingHorizontal: Spacing.md,
     justifyContent: 'center',
     borderBottomWidth: 0,
