@@ -18,6 +18,8 @@ export type RootStackParamList = {
   Search: { query?: string; autoFocusSaved?: boolean } | undefined;
   AllItems: { type: 'product' | 'service' | 'all' };
   ServiceDetails: { item: any };
+  Checkout: undefined;
+  OrderSuccess: { orderId: string };
   Notifications: undefined;
   SavedSearches: undefined;
   FAQ: undefined;

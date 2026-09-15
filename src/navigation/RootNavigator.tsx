@@ -40,6 +40,8 @@ export default function RootNavigator() {
         component={ServiceDetailsScreen} 
         options={{ animation: 'fade' }} 
       />
+      <Stack.Screen name="Checkout" component={require('../screens/checkout/CheckoutScreen').default} />
+      <Stack.Screen name="OrderSuccess" component={require('../screens/checkout/OrderSuccessScreen').default} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="SavedSearches" component={SavedSearchesScreen} />
       <Stack.Screen name="FAQ" component={require('../screens/support/FAQScreen').default} />

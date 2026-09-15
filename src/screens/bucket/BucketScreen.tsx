@@ -60,7 +60,7 @@ export const BucketScreen: React.FC = () => {
             <Text style={styles.checkoutTotalLabel}>Total</Text>
             <Text style={styles.checkoutTotalValue}>${total}</Text>
           </View>
-          <TouchableOpacity style={styles.checkoutBtn}>
+          <TouchableOpacity style={styles.checkoutBtn} onPress={() => (navigation as any).navigate('Checkout')}>
             <Text style={styles.checkoutBtnText}>Checkout</Text>
           </TouchableOpacity>
         </View>
