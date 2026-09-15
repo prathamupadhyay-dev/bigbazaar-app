@@ -4,7 +4,7 @@
     "slug": "mybigbazzar",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/images/client-logo.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -20,6 +20,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "splash": {
+      "image": "./src/assets/images/client-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     }
   }
 }
