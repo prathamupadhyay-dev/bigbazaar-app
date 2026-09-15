@@ -47,16 +47,18 @@ export default function HomeScreen() {
         )}
         scrollEventThrottle={16}
       >
-        <LinearGradient 
-          colors={['#E6F4FE', '#FFFFFF']} // Light blue matching brand
-          style={styles.gradientTop}
-        >
-          <View style={styles.headerSpacer} />
-        </LinearGradient>
+        <View>
+          <LinearGradient 
+            colors={['#E6F4FE', '#FFFFFF']} // Light blue matching brand
+            style={styles.gradientTop}
+          >
+            <View style={styles.headerSpacer} />
+          </LinearGradient>
 
-        <View style={styles.topSection}>
-          <AdBanner />
-          <TopServicesSlider />
+          <View style={styles.topSection}>
+            <AdBanner />
+            <TopServicesSlider />
+          </View>
         </View>
 
         <FilterChipsBar scrollY={scrollY} />
