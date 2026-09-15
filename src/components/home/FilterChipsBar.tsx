@@ -23,6 +23,11 @@ export const FilterChipsBar: React.FC<Props> = ({ scrollY }) => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.chip}>
+          <Text style={styles.chipText}>Sort</Text>
+          <Ionicons name="swap-vertical" size={14} color="#1E293B" style={styles.icon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.chip}>
           <Text style={styles.chipText}>Categories</Text>
           <Ionicons name="chevron-down" size={14} color="#1E293B" style={styles.icon} />
         </TouchableOpacity>
