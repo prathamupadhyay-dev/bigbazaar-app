@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
-import * as Notifications from 'expo-notifications';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/colors';
 import Typography from '../constants/typography';
@@ -58,11 +57,18 @@ export const PermissionsFlow: React.FC = () => {
 
   const handleGiveNotificationPermission = async () => {
     try {
-      // Show native notification prompt
-      await Notifications.requestPermissionsAsync();
+      // expo-notifications causes Expo Go to crash on Android in SDK 53+.
+      // We simulate the native permission prompt for the sake of the UI flow.
+      Alert.alert(
+        'Allow Big Bazaar to send you notifications?',
+        '',
+        [
+          { text: "Don't allow", style: 'cancel', onPress: () => markCompleted() },
+          { text: 'Allow', onPress: () => markCompleted() }
+        ]
+      );
     } catch (e) {
       console.error('Notification permission error', e);
-    } finally {
       markCompleted();
     }
   };
