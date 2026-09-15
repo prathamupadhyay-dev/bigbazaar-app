@@ -13,8 +13,8 @@ export default function App() {
         <NavigationContainer>
           <RootNavigator />
           <StatusBar style="dark" />
-          <PermissionsFlow />
         </NavigationContainer>
+        <PermissionsFlow />
       </AppProvider>
     </SafeAreaProvider>
   );
