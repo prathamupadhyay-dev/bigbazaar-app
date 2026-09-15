@@ -8,6 +8,15 @@ import Spacing from '../../constants/spacing';
 
 export const MOCK_SERVICES: ServiceItemData[] = [
   {
+    id: 'p1',
+    title: 'Nike Air Jordan 1 Retro',
+    imageUrl: 'https://loremflickr.com/400/400/sneakers',
+    price: '$180.00',
+    timeEstimate: '3 days',
+    category: 'Fashion',
+    itemType: 'product'
+  },
+  {
     id: 's1',
     title: 'Expert Plumbing Repair & Leak Fix',
     imageUrl: 'https://loremflickr.com/400/400/plumber',
@@ -15,6 +24,15 @@ export const MOCK_SERVICES: ServiceItemData[] = [
     timeEstimate: '2h',
     category: 'Plumbing',
     itemType: 'service'
+  },
+  {
+    id: 'p4',
+    title: 'Apple Watch Series 9 GPS',
+    imageUrl: 'https://loremflickr.com/400/400/watch',
+    price: '$399.00',
+    timeEstimate: '1 day',
+    category: 'Electronics',
+    itemType: 'product'
   },
   {
     id: 's2',
@@ -26,20 +44,29 @@ export const MOCK_SERVICES: ServiceItemData[] = [
     itemType: 'service'
   },
   {
-    id: 'p1',
-    title: 'Sony Noise Cancelling Headphones',
-    imageUrl: 'https://loremflickr.com/400/400/headphones',
-    price: '$299.00',
-    timeEstimate: '2 days',
-    category: 'Electronics',
-    itemType: 'product'
-  },
-  {
     id: 'p2',
     title: 'Organic Cotton T-Shirt',
     imageUrl: 'https://loremflickr.com/400/400/tshirt',
     price: '$25.00',
     timeEstimate: '3 days',
+    category: 'Fashion',
+    itemType: 'product'
+  },
+  {
+    id: 's4',
+    title: 'Sofa & Carpet Dry Cleaning',
+    imageUrl: 'https://loremflickr.com/400/400/cleaning',
+    price: '$35.00',
+    timeEstimate: '1h',
+    category: 'Home Cleaning',
+    itemType: 'service'
+  },
+  {
+    id: 'p5',
+    title: 'Levi\'s 501 Original Fit Jeans',
+    imageUrl: 'https://loremflickr.com/400/400/jeans',
+    price: '$59.50',
+    timeEstimate: '2 days',
     category: 'Fashion',
     itemType: 'product'
   },
@@ -54,13 +81,58 @@ export const MOCK_SERVICES: ServiceItemData[] = [
   },
   {
     id: 'p3',
-    title: 'Stainless Steel Water Bottle',
-    imageUrl: 'https://loremflickr.com/400/400/bottle',
-    price: '$15.00',
+    title: 'Sony Noise Cancelling Headphones',
+    imageUrl: 'https://loremflickr.com/400/400/headphones',
+    price: '$299.00',
+    timeEstimate: '2 days',
+    category: 'Electronics',
+    itemType: 'product'
+  },
+  {
+    id: 's5',
+    title: 'Professional Home Painting',
+    imageUrl: 'https://loremflickr.com/400/400/painting',
+    price: '$400.00',
+    timeEstimate: '3 Days',
+    category: 'Home Service',
+    itemType: 'service'
+  },
+  {
+    id: 'p6',
+    title: 'Premium Leather Wallet',
+    imageUrl: 'https://loremflickr.com/400/400/wallet',
+    price: '$45.00',
     timeEstimate: 'Tomorrow',
     category: 'Accessories',
     itemType: 'product'
   },
+  {
+    id: 's6',
+    title: 'Deep Tissue Massage Therapy',
+    imageUrl: 'https://loremflickr.com/400/400/massage',
+    price: '$75.00',
+    timeEstimate: '60m',
+    category: 'Wellness',
+    itemType: 'service'
+  },
+  {
+    id: 'p7',
+    title: 'MacBook Pro M3 14-inch',
+    imageUrl: 'https://loremflickr.com/400/400/macbook',
+    price: '$1599.00',
+    timeEstimate: '1 week',
+    category: 'Electronics',
+    itemType: 'product'
+  },
+  {
+    id: 'p8',
+    title: 'Designer Aviator Sunglasses',
+    imageUrl: 'https://loremflickr.com/400/400/sunglasses',
+    price: '$120.00',
+    timeEstimate: '3 days',
+    category: 'Accessories',
+    itemType: 'product'
+  }
 ];
 
 import { useApp } from '../../context/AppContext';
