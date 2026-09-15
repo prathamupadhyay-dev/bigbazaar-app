@@ -24,7 +24,7 @@
     "splash": {
       "image": "./src/assets/images/client-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fefefe"
     }
   }
 }
