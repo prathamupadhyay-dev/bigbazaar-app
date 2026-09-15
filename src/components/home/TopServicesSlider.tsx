@@ -31,7 +31,12 @@ export const TopServicesSlider: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Top Services</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>Top Services</Text>
+        <TouchableOpacity onPress={() => (navigation as any).navigate('Search', { filterType: 'service' })}>
+          <Text style={styles.viewAllText}>View All</Text>
+        </TouchableOpacity>
+      </View>
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false}
@@ -57,11 +62,21 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: Spacing.md,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+    paddingHorizontal: Spacing.xs,
+  },
   title: {
     ...Typography.heading2,
     color: Colors.textPrimary,
-    marginBottom: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
+  },
+  viewAllText: {
+    ...Typography.bodyBold,
+    color: Colors.primary,
+    fontSize: 14,
   },
   scrollContent: {
     paddingRight: Spacing.md, // For right edge spacing
