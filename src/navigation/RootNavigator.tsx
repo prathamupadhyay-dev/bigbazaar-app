@@ -26,6 +26,7 @@ export default function RootNavigator() {
       }}
     >
       <Stack.Screen name="Main" component={MainTabNavigator} />
+      <Stack.Screen name="Account" component={require('../screens/account/AccountScreen').default} />
       <Stack.Screen name="Bookings" component={require('../screens/bookings/BookingsScreen').default} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ServiceBooking" component={ServiceBookingScreen} />

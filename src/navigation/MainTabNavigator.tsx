@@ -70,9 +70,6 @@ export default function MainTabNavigator() {
             case 'Cart':
               iconName = focused ? 'cart' : 'cart-outline';
               break;
-            case 'Account':
-              iconName = focused ? 'person' : 'person-outline';
-              break;
             default:
               iconName = 'help-outline';
           }
@@ -99,11 +96,6 @@ export default function MainTabNavigator() {
         name="Watchlist"
         component={WatchlistScreen}
         options={{ tabBarLabel: 'Watchlist' }}
-      />
-      <Tab.Screen
-        name="Account"
-        component={AccountScreen}
-        options={{ tabBarLabel: 'Account' }}
       />
       <Tab.Screen
         name="Cart"

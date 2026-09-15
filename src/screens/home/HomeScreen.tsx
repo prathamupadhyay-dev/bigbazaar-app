@@ -10,6 +10,7 @@ import ReviewSlider from '../../components/home/ReviewSlider';
 import FilterModal from '../search/FilterModal';
 import SortModal from '../search/SortModal';
 import LocationSheet from '../../components/home/LocationSheet';
+import FilterChipsBar from '../../components/home/FilterChipsBar';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
@@ -36,15 +37,21 @@ export default function HomeScreen() {
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        stickyHeaderIndices={[1]} // Make the second child (FilterChipsBar) sticky
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false } // we'll use it for height animation which requires false, or transform which can be true. Let's stick to true for transforms and opacity
         )}
         scrollEventThrottle={16}
       >
-        <View style={styles.body}>
+        <View style={styles.topSection}>
           <AdBanner />
           <TopServicesSlider />
+        </View>
+
+        <FilterChipsBar scrollY={scrollY} />
+
+        <View style={styles.body}>
           <Text style={[styles.sectionTitle, { marginTop: Spacing.lg }]}>Featured Products</Text>
           <ServiceGridList typeFilter="product" />
           <ReviewSlider />
@@ -101,6 +108,10 @@ const styles = StyleSheet.create({
     paddingBottom: 100, // Extra padding for the floating tab bar
   },
   body: {
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.md,
+  },
+  topSection: {
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
   },

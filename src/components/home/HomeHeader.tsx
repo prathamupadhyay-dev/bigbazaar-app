@@ -42,7 +42,7 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
   };
 
   const handleProfilePress = () => {
-    // Navigate to profile or menu
+    (navigation as any).navigate('Account');
   };
 
   // If scrollY is provided, we can animate the height or padding
@@ -77,17 +77,12 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
           <Ionicons name="chevron-down" size={14} color="#1E293B" style={{marginLeft: 2}} />
         </TouchableOpacity>
         
-        <View style={styles.uptoTag}>
-          <Text style={styles.uptoTagText}>upto ₹100</Text>
-          <View style={styles.rupeeBox}>
-             <Text style={styles.rupeeSymbol}>₹</Text>
-          </View>
-        </View>
+        {/* Removed uptoTag as per request */}
       </View>
 
       <Animated.View style={[styles.topRow, { transform: [{ scale: searchPillScale }] }]}>
         
-        {/* Pill Search Bar */}
+        {/* Rectangular Search Bar with rounded corners */}
         <TouchableOpacity 
           style={styles.searchContainer} 
           onPress={handleSearchPress}
@@ -150,41 +145,6 @@ const styles = StyleSheet.create({
     marginRight: 2,
     flexShrink: 1,
   },
-  uptoTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-    paddingLeft: 12,
-    paddingRight: 4,
-    paddingVertical: 4,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  uptoTagText: {
-    ...Typography.bodyBold,
-    color: '#1E293B',
-    marginRight: 6,
-    fontSize: 13,
-  },
-  rupeeBox: {
-    backgroundColor: '#10B981', // Emerald 500
-    borderRadius: 6,
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    transform: [{ rotate: '15deg' }],
-  },
-  rupeeSymbol: {
-    color: Colors.white,
-    fontWeight: 'bold',
-    fontSize: 12,
-    transform: [{ rotate: '-15deg' }],
-  },
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -196,7 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.white,
-    borderRadius: 24, // Fully rounded pill
+    borderRadius: 12, // Rectangular with rounded corners
     height: 48,
     paddingHorizontal: Spacing.lg,
     marginRight: Spacing.sm,
