@@ -20,7 +20,7 @@ export const AccountScreen: React.FC = () => {
       {
         text: 'Log Out',
         style: 'destructive',
-        onPress: () => navigation.replace('Welcome'),
+        onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Main' as any }] }),
       },
     ]);
   };

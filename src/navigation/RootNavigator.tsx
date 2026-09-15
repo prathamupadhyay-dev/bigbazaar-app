@@ -1,7 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import WelcomeScreen from '../screens/WelcomeScreen';
 import MainTabNavigator from './MainTabNavigator';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import ServiceBookingScreen from '../screens/services/ServiceBookingScreen';
@@ -19,14 +18,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Welcome"
+      initialRouteName="Main"
       screenOptions={{
         headerShown: false,
         animation: Platform.OS === 'android' ? 'ios_from_right' : 'default', // True iOS-style parallax push/pop on Android, default on iOS
         gestureEnabled: true,
       }}
     >
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Main" component={MainTabNavigator} />
       <Stack.Screen name="Bookings" component={require('../screens/bookings/BookingsScreen').default} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />

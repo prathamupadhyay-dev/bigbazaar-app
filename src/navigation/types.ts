@@ -8,7 +8,6 @@ export type MainTabParamList = {
 };
 
 export type RootStackParamList = {
-  Welcome: undefined;
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
   Bookings: undefined;
   EditProfile: undefined;
