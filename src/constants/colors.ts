@@ -3,7 +3,7 @@ export const Colors = {
   primaryLight: '#E5F1FF', // Pale blue for backgrounds and cards
   primaryDark: '#0062D6', // Darker blue for pressed states / headers
   white: '#FFFFFF',
-  background: '#F4F9FF', // Light blue shade matching brand
+  background: '#FFFFFF', // Pure white background
   surface: '#FFFFFF',
   textPrimary: '#1C1C1E', // Core brand text
   textSecondary: '#8E8E93', // iOS system gray

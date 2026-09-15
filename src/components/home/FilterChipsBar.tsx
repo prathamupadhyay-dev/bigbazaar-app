@@ -49,8 +49,6 @@ export const FilterChipsBar: React.FC<Props> = ({ scrollY }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
     zIndex: 9, // Below header
   },
   scrollContent: {

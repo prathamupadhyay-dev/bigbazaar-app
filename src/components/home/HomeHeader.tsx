@@ -45,27 +45,8 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
     (navigation as any).navigate('Account');
   };
 
-  // If scrollY is provided, we can animate the height or padding
-  const headerHeight = scrollY ? scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [105, 85],
-    extrapolate: 'clamp'
-  }) : 105;
-
-  const searchPillScale = scrollY ? scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [1, 0.95],
-    extrapolate: 'clamp'
-  }) : 1;
-
-  const getTypeIconColor = () => {
-    if (typeFilter === 'service') return '#EAB308';
-    if (typeFilter === 'product') return '#0A84FF';
-    return Colors.textPrimary; // Default when both are shown
-  };
-
   return (
-    <Animated.View style={[styles.headerWrapper, { height: headerHeight }]}>
+    <View style={styles.headerWrapper}>
       
       {/* Location Row */}
       <View style={styles.locationRow}>
@@ -80,7 +61,7 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
         {/* Removed uptoTag as per request */}
       </View>
 
-      <Animated.View style={[styles.topRow, { transform: [{ scale: searchPillScale }] }]}>
+      <View style={styles.topRow}>
         
         {/* Rectangular Search Bar with rounded corners */}
         <TouchableOpacity 
@@ -93,7 +74,6 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
           </View>
           <View style={styles.searchIconsRight}>
             <Ionicons name="mic-outline" size={20} color="#64748B" style={styles.rightIcon} />
-            <Ionicons name="camera-outline" size={20} color="#64748B" style={styles.rightIcon} />
           </View>
         </TouchableOpacity>
 
@@ -110,20 +90,21 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
           </TouchableOpacity>
         </View>
 
-      </Animated.View>
-    </Animated.View>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.white, // Since we reverted app to white, keep header white to blend
     paddingHorizontal: Spacing.md,
     justifyContent: 'center',
     borderBottomWidth: 0,
     zIndex: 10,
     elevation: 0,
     paddingTop: 10,
+    paddingBottom: 10,
   },
   locationRow: {
     flexDirection: 'row',
@@ -156,7 +137,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.white,
-    borderRadius: 12, // Rectangular with rounded corners
+    borderRadius: 24, // Pill shape
     height: 48,
     paddingHorizontal: Spacing.lg,
     marginRight: Spacing.sm,
@@ -165,6 +146,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: '#E2E8F0', // faint border to make it pop on white
   },
   searchTexts: {
     flex: 1,
