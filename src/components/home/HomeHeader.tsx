@@ -44,7 +44,9 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
   };
 
   const handleMenuPress = () => {
-    // For now, toggle a drawer or do nothing if no drawer exists
+    if (onFilterPress) {
+      onFilterPress();
+    }
   };
 
   const headerBgColor = scrollY ? scrollY.interpolate({
