@@ -24,6 +24,11 @@ export default function ServiceDetailsScreen() {
   // Product specifics
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('Blue');
+  
+  // Service specifics
+  const [selectedDate, setSelectedDate] = useState('Today, 14th');
+  const [selectedTime, setSelectedTime] = useState('09:00 AM');
+
   const [quantity, setQuantity] = useState(1);
 
   // Mount animation values
@@ -69,6 +74,8 @@ export default function ServiceDetailsScreen() {
       quantity: quantity,
       size: item.itemType === 'product' ? selectedSize : undefined,
       color: item.itemType === 'product' ? selectedColor : undefined,
+      serviceDate: item.itemType === 'service' ? selectedDate : undefined,
+      timeSlot: item.itemType === 'service' ? selectedTime : undefined,
       imageUrl: item.imageUrl,
     });
     // Navigate to Cart (Bucket)
@@ -190,6 +197,37 @@ export default function ServiceDetailsScreen() {
                   onPress={() => setSelectedColor(color)}
                 >
                   <Text style={[styles.variantText, selectedColor === color && styles.variantTextSelected]}>{color}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Service Scheduling */}
+        {item.itemType === 'service' && (
+          <View style={styles.variantsSection}>
+            <Text style={styles.variantTitle}>Select Date</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: Spacing.md }}>
+              {['Today, 14th', 'Tomorrow, 15th', 'Thu, 16th', 'Fri, 17th'].map((date) => (
+                <TouchableOpacity
+                  key={date}
+                  style={[styles.variantBox, selectedDate === date && styles.variantBoxSelected]}
+                  onPress={() => setSelectedDate(date)}
+                >
+                  <Text style={[styles.variantText, selectedDate === date && styles.variantTextSelected]}>{date}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            <Text style={styles.variantTitle}>Select Time</Text>
+            <View style={styles.variantRow}>
+              {['09:00 AM', '11:30 AM', '02:00 PM', '04:30 PM'].map((time) => (
+                <TouchableOpacity
+                  key={time}
+                  style={[styles.variantBox, selectedTime === time && styles.variantBoxSelected, { marginBottom: Spacing.sm }]}
+                  onPress={() => setSelectedTime(time)}
+                >
+                  <Text style={[styles.variantText, selectedTime === time && styles.variantTextSelected]}>{time}</Text>
                 </TouchableOpacity>
               ))}
             </View>

@@ -38,6 +38,9 @@ export const BucketScreen: React.FC = () => {
                 {item.size && item.color && (
                   <Text style={styles.cartItemVariant}>Size: {item.size}, Color: {item.color}</Text>
                 )}
+                {item.serviceDate && item.timeSlot && (
+                  <Text style={styles.cartItemVariant}>{item.serviceDate} at {item.timeSlot}</Text>
+                )}
                 <Text style={styles.cartItemPrice}>${item.price} x {item.quantity}</Text>
               </View>
               <TouchableOpacity onPress={() => removeFromBucket(item.id)}>
