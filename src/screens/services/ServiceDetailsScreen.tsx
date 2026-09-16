@@ -79,7 +79,7 @@ export default function ServiceDetailsScreen() {
       imageUrl: item.imageUrl,
     });
     // Navigate to Cart (Bucket)
-    (navigation as any).navigate('Cart');
+    (navigation as any).navigate('Main', { screen: 'Cart' });
   };
 
   const images = [item.imageUrl, item.imageUrl, item.imageUrl]; // Mock 3 images
