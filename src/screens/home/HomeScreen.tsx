@@ -63,9 +63,6 @@ export default function HomeScreen() {
         <View style={styles.body}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionTitle}>Featured Products</Text>
-            <TouchableOpacity onPress={() => (navigation as any).navigate('AllItems', { type: 'product' })}>
-              <Text style={styles.viewAllText}>View All</Text>
-            </TouchableOpacity>
           </View>
           <ServiceGridList typeFilter="product" />
           <ReviewSlider />
