@@ -87,43 +87,24 @@ export const ServiceItemCard: React.FC<ServiceItemCardProps> = ({
             />
           </TouchableOpacity>
 
-          {item.noFees && (
-            <View style={styles.noFeesBadge}>
-              <Text style={styles.noFeesText}>No Fees</Text>
-            </View>
-          )}
-
+          {/* Rating Pill */}
+          <View style={styles.ratingPill}>
+            <Text style={styles.ratingText}>4.5</Text>
+            <Ionicons name="star" size={10} color="#059669" style={{ marginHorizontal: 2 }} />
+            <Text style={styles.ratingDivider}>|</Text>
+            <Text style={styles.ratingCount}>10.4k</Text>
+          </View>
         </View>
 
         <View style={styles.contentContainer}>
           <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
-          <Text style={styles.price}>{item.price}</Text>
+          <Text style={styles.itemCategory} numberOfLines={1}>{item.category}</Text>
           
-          {item.endsIn ? (
-            <Text style={styles.timeEstimate}>
-              Ends in <Text style={styles.timeBold}>{item.endsIn}</Text>
-            </Text>
-          ) : (
-            <Text style={styles.timeEstimate}>
-              {isProduct ? 'Delivery in ' : 'Estimated '}
-              <Text style={styles.timeBold}>{item.timeEstimate}</Text>
-            </Text>
-          )}
-
-          <TouchableOpacity 
-            style={[styles.bookButton, item.isWinning && styles.winningButton, isProduct && styles.buyButton]} 
-            onPress={(e) => { e.stopPropagation(); onBookPress(item); }}
-            disabled={item.isWinning}
-            activeOpacity={0.9}
-          >
-            <Text style={[styles.bookButtonText, item.isWinning && styles.winningButtonText]}>
-              {item.isWinning 
-                ? `Winning ${(parseFloat(item.price.replace(/[^0-9.]/g, '')) * 0.1).toFixed(0)}` 
-                : (item.endsIn 
-                    ? `Bid ${(parseFloat(item.price.replace(/[^0-9.]/g, '')) * 0.45).toFixed(0)}` 
-                    : (isProduct ? 'Buy Now' : 'Book Now'))}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.priceRow}>
+            <Text style={styles.originalPrice}>${(parseFloat(item.price.replace(/[^0-9.]/g, '')) * 1.15).toFixed(0)}</Text>
+            <Text style={styles.price}>{item.price}</Text>
+            <Text style={styles.discountText}>13% OFF</Text>
+          </View>
         </View>
       </Animated.View>
     </TouchableWithoutFeedback>
@@ -174,89 +155,68 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  categoryBadge: {
+  ratingPill: {
     position: 'absolute',
     bottom: 8,
     left: 8,
-    backgroundColor: 'rgba(254, 240, 138, 0.9)', // translucent yellow by default (service)
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 16, // floating pill
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
   },
-  noFeesBadge: {
-    position: 'absolute',
-    bottom: 38, // Above the shipping badge
-    left: 8,
-    backgroundColor: 'rgba(51, 65, 85, 0.9)', // Slate-700 translucent
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  noFeesText: {
+  ratingText: {
     ...Typography.captionBold,
-    color: Colors.white,
     fontSize: 10,
+    color: Colors.textPrimary,
   },
-  categoryText: {
-    ...Typography.captionBold,
-    color: '#854D0E', // dark yellow text
-    fontSize: 11,
-    marginLeft: 4,
+  ratingDivider: {
+    ...Typography.caption,
+    fontSize: 10,
+    color: Colors.disabled,
+    marginHorizontal: 2,
+  },
+  ratingCount: {
+    ...Typography.caption,
+    fontSize: 10,
+    color: Colors.textSecondary,
   },
   contentContainer: {
     padding: Spacing.sm,
-    paddingTop: Spacing.md,
+    paddingTop: Spacing.sm,
   },
   itemTitle: {
     ...Typography.bodyBold,
     fontSize: 13,
     color: Colors.textPrimary,
+  },
+  itemCategory: {
+    ...Typography.caption,
+    color: Colors.textSecondary,
     marginBottom: 4,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  originalPrice: {
+    ...Typography.caption,
+    color: Colors.textSecondary,
+    textDecorationLine: 'line-through',
+    marginRight: 4,
   },
   price: {
-    ...Typography.heading3,
-    fontSize: 16,
-    color: '#1E293B', // Note: specific accent near-black color not yet tokenized
-    marginBottom: 4,
+    ...Typography.bodyBold,
+    fontSize: 14,
+    color: Colors.textPrimary,
+    marginRight: 4,
   },
-  timeEstimate: {
-    ...Typography.caption,
-    fontSize: 12,
-    color: Colors.textSecondary,
-    marginBottom: Spacing.md,
+  discountText: {
+    ...Typography.captionBold,
+    color: '#D97706', // orange/brown for discount
   },
-  timeBold: {
-    color: '#334155', // Note: specific dark slate color not yet tokenized
-    fontWeight: '700',
-  },
-  bookButton: {
-    width: '100%',
-    backgroundColor: '#EAB308', // Note: specific yellow service accent color not yet tokenized
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  bookButtonText: {
-    ...Typography.button,
-    fontSize: 13,
-    color: Colors.white,
-    fontWeight: '700',
-  },
-  winningButton: {
-    backgroundColor: '#F1F5F9', // Gray-100
-  },
-  winningButtonText: {
-    color: '#94A3B8', // Gray-400
-  },
-  buyButton: {
-    backgroundColor: Colors.primary, 
-  }
 });
 
 export default ServiceItemCard;

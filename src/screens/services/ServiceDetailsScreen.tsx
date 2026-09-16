@@ -16,7 +16,7 @@ export default function ServiceDetailsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { item } = (route.params as any) || {};
-  const { watchlist, toggleWatchlist, addToBucket } = useApp();
+  const { watchlist, toggleWatchlist, bucket, addToBucket } = useApp();
   
   const [imageExpanded, setImageExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -51,6 +51,8 @@ export default function ServiceDetailsScreen() {
   }, []);
 
   const isSaved = item ? watchlist.includes(item.id) : false;
+  const isInBucket = item ? bucket.some(b => b.serviceId === item.id) : false;
+  const bucketCount = bucket.reduce((sum, b) => sum + b.quantity, 0);
   
   if (!item) {
     return (
@@ -65,6 +67,12 @@ export default function ServiceDetailsScreen() {
   };
 
   const handleBuyNow = () => {
+    if (isInBucket) {
+      // Go to cart
+      (navigation as any).navigate('Main', { screen: 'Cart' });
+      return;
+    }
+
     addToBucket({
       serviceId: item.id,
       serviceName: item.title,
@@ -94,11 +102,16 @@ export default function ServiceDetailsScreen() {
           </TouchableOpacity>
         <Text style={styles.headerTitle}>Details</Text>
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="share-outline" size={24} color={Colors.textPrimary} />
-          </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={handleSave}>
             <Ionicons name={isSaved ? "star" : "star-outline"} size={24} color={isSaved ? Colors.primary : Colors.textPrimary} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => (navigation as any).navigate('Main', { screen: 'Cart' })}>
+            <Ionicons name="cart-outline" size={24} color={Colors.textPrimary} />
+            {bucketCount > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>{bucketCount}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -292,7 +305,7 @@ export default function ServiceDetailsScreen() {
           style={[styles.ctaButton, item.itemType === 'product' ? styles.ctaProduct : styles.ctaService]}
           onPress={handleBuyNow}
         >
-          <Text style={styles.ctaButtonText}>{item.itemType === 'product' ? 'Add to Cart' : 'Book Now'}</Text>
+          <Text style={styles.ctaButtonText}>{isInBucket ? 'Go to Cart' : (item.itemType === 'product' ? 'Add to Cart' : 'Book Now')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -360,6 +373,24 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  cartBadge: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    backgroundColor: '#FF3B30',
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,
+  },
+  cartBadgeText: {
+    color: Colors.white,
+    fontSize: 9,
+    fontWeight: 'bold',
   },
   content: {
     flex: 1,
