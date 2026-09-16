@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../navigation/types';
+import { useApp } from '../../context/AppContext';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
@@ -20,6 +21,7 @@ const SEARCH_TERMS = ['"Shoes"', '"Tops"', '"Jeans"', '"Watches"', '"Bags"'];
 
 export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, onTypePress, typeFilter = 'all', onLocationPress }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { activeAddress } = useApp();
   const [searchTermIndex, setSearchTermIndex] = useState(0);
 
   useEffect(() => {
@@ -41,8 +43,8 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
     (navigation as any).navigate('Notifications');
   };
 
-  const handleProfilePress = () => {
-    (navigation as any).navigate('Account');
+  const handleMenuPress = () => {
+    // For now, toggle a drawer or do nothing if no drawer exists
   };
 
   const headerBgColor = scrollY ? scrollY.interpolate({
@@ -59,12 +61,10 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
         <TouchableOpacity style={styles.locationBtn} onPress={onLocationPress}>
           <Ionicons name="location-sharp" size={16} color="#1E293B" />
           <Text style={styles.locationText} numberOfLines={1}>
-            Deliver to 462023
+            Deliver to {activeAddress ? `${activeAddress.city} ${activeAddress.pincode}` : 'Select Location'}
           </Text>
           <Ionicons name="chevron-down" size={14} color="#1E293B" style={{marginLeft: 2}} />
         </TouchableOpacity>
-        
-        {/* Removed uptoTag as per request */}
       </View>
 
       <View style={styles.topRow}>
@@ -91,8 +91,8 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ onFilterPress, scrollY, 
           <TouchableOpacity style={styles.iconBtn} onPress={handleSavedSearchesPress}>
             <Ionicons name="heart-outline" size={24} color="#1E293B" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn} onPress={handleProfilePress}>
-            <Ionicons name="person-outline" size={24} color="#1E293B" />
+          <TouchableOpacity style={styles.iconBtn} onPress={handleMenuPress}>
+            <Ionicons name="menu-outline" size={28} color="#1E293B" />
           </TouchableOpacity>
         </View>
 

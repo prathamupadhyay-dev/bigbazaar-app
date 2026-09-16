@@ -25,22 +25,26 @@ export default function MainTabNavigator() {
         tabBarActiveTintColor: '#0A84FF', // Big Bazaar premium blue
         tabBarInactiveTintColor: Colors.textSecondary,
         tabBarStyle: {
-          height: 60,
+          position: 'absolute',
+          bottom: 24,
+          left: 20,
+          right: 20,
+          elevation: 10,
           backgroundColor: Colors.white,
-          borderTopWidth: 1,
-          borderTopColor: '#E2E8F0',
-          elevation: 8,
+          borderRadius: 30,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.05,
-          shadowRadius: 4,
-          paddingBottom: 8,
-          paddingTop: 8,
+          shadowOffset: { width: 0, height: 10 },
+          shadowOpacity: 0.1,
+          shadowRadius: 20,
+          borderTopWidth: 0,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600',
-          marginTop: 2,
+          fontSize: 10,
+          fontWeight: '700',
+          marginBottom: 4,
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
@@ -54,6 +58,9 @@ export default function MainTabNavigator() {
               break;
             case 'Cart':
               iconName = focused ? 'cart' : 'cart-outline';
+              break;
+            case 'Account':
+              iconName = focused ? 'person' : 'person-outline';
               break;
             default:
               iconName = 'help-outline';
@@ -86,6 +93,11 @@ export default function MainTabNavigator() {
         name="Cart"
         component={BucketScreen}
         options={{ tabBarLabel: 'Cart' }} 
+      />
+      <Tab.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{ tabBarLabel: 'Profile' }} 
       />
     </Tab.Navigator>
   );

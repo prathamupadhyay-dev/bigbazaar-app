@@ -4,11 +4,11 @@ export type MainTabParamList = {
   Home: undefined;
   Watchlist: undefined;
   Cart: undefined;
+  Account: undefined;
 };
 
 export type RootStackParamList = {
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
-  Account: undefined;
   Bookings: undefined;
   EditProfile: undefined;
   ServiceBooking: { categoryName?: string; subCategoryName?: string } | undefined;
