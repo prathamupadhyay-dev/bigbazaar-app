@@ -1,52 +1,49 @@
-# BigBazaar
+# BigBazaar Monorepo
 
-A React Native marketplace app for browsing/booking home services and buying products.
+Welcome to the BigBazaar platform monorepo. This repository contains the mobile app, web app, admin dashboard, backend API, and all shared packages.
 
-Built with Expo + TypeScript.
+## Structure
 
----
+- `apps/mobile`: Expo React Native mobile application
+- `apps/web`: React/Next.js website
+- `apps/admin`: React/Vite admin dashboard
+- `apps/api`: Node.js/Express backend API
+- `packages/*`: Shared internal packages (`types`, `shared`, `validation`, `config`, etc.)
+- `infrastructure/*`: Database schemas, migrations, seed scripts, and Docker configs.
 
-## What it does
+## Installation
 
-- Browse products and home services in one feed
-- Book services (plumbing, cleaning, electrical, etc.)
-- Add products to cart and checkout
-- Manage bookings, saved items, addresses, and payments
-- Search with recent history and product/service filtering
+This project uses `pnpm` workspaces. 
 
-## Tech
-
-- React Native 0.86 / Expo SDK 57
-- TypeScript
-- React Navigation v7 (native stack + bottom tabs)
-- Context API for state
-
-## Screens
-
-| Tab | What's there |
-|-----|-------------|
-| Home | Feed, search, item detail |
-| Watchlist | Saved items |
-| Bookings | Active and past bookings |
-| Cart | Checkout flow |
-| Account | Profile, addresses, payments, help |
-
-## Run it
-
+1. Install dependencies at the root:
 ```bash
-npm install
-npx expo start
+pnpm install
 ```
 
-Scan the QR code with Expo Go or press `a` / `i` for emulator.
+## Running the Apps
 
-## Folder structure
+You can run applications individually from the root using `pnpm --filter`.
 
+### Run Mobile App
+```bash
+pnpm mobile
 ```
-src/
-  components/   reusable UI
-  constants/    colors, typography, spacing tokens
-  context/      global state
-  navigation/   navigators
-  screens/      screens grouped by feature
+*(Runs `expo start` inside `apps/mobile`)*
+
+### Run Web App
+```bash
+pnpm web
 ```
+
+### Run Admin Dashboard
+```bash
+pnpm admin
+```
+
+### Run Backend API
+```bash
+pnpm api
+```
+
+## Environment Config
+Copy `.env.example` to `.env` and fill in the required variables for your local setup.
