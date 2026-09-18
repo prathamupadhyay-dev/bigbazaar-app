@@ -13,7 +13,8 @@ config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
 ];
-// 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-config.resolver.disableHierarchicalLookup = true;
+// 3. Enable Symlinks for PNPM
+config.resolver.unstable_enableSymlinks = true;
+config.resolver.unstable_enablePackageExports = true;
 
 module.exports = config;
