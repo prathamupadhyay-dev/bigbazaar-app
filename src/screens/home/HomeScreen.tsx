@@ -29,6 +29,14 @@ export default function HomeScreen() {
   // Tooltip state
   const [showTooltip, setShowTooltip] = useState(true);
 
+  React.useEffect(() => {
+    // Show location sheet automatically on first launch
+    const timer = setTimeout(() => {
+      setLocationVisible(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ScreenContainer noPadding style={styles.container}>
       {/* Root fixed gradient that the transparent top elements reveal */}

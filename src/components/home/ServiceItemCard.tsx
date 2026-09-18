@@ -26,6 +26,11 @@ interface ServiceItemCardProps {
   onSavePress: (item: ServiceItemData) => void;
 }
 
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/types';
+import { useApp } from '../../context/AppContext';
+
 export const ServiceItemCard: React.FC<ServiceItemCardProps> = ({
   item,
   isSaved = false,
@@ -33,6 +38,9 @@ export const ServiceItemCard: React.FC<ServiceItemCardProps> = ({
   onBookPress,
   onSavePress,
 }) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { requireAuth } = useApp();
+  
   const isProduct = item.itemType === 'product';
   const scale = useRef(new Animated.Value(1)).current;
   const [isImageLoading, setIsImageLoading] = React.useState(true);
@@ -77,7 +85,10 @@ export const ServiceItemCard: React.FC<ServiceItemCardProps> = ({
           {/* Frosted Circular Watchlist Button */}
           <TouchableOpacity 
             style={styles.frostedSaveButton} 
-            onPress={(e) => { e.stopPropagation(); onSavePress(item); }}
+            onPress={(e) => { 
+              e.stopPropagation(); 
+              requireAuth(navigation, () => onSavePress(item));
+            }}
             activeOpacity={0.7}
           >
             <Ionicons 

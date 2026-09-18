@@ -94,7 +94,12 @@ export interface TransactionItem {
 interface AppContextType {
   // User Profile (Module 1)
   user: UserProfile;
+  isAuthenticated: boolean;
   updateUser: (updates: Partial<UserProfile>) => void;
+  setAuthenticated: (value: boolean) => void;
+  pendingAction: (() => void) | null;
+  requireAuth: (navigation: any, callback: () => void) => void;
+  executePendingAction: () => void;
 
   // Address Management (Module 2)
   addresses: AddressItem[];
@@ -300,6 +305,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile>(initialUser);
+  const [isAuthenticated, setAuthenticated] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
   const [addresses, setAddresses] = useState<AddressItem[]>(initialAddresses);
   const [activeAddress, setActiveAddress] = useState<AddressItem>(initialAddresses[0]);
   const [bucket, setBucket] = useState<BucketItem[]>(initialBucket);
@@ -310,6 +317,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [watchlist, setWatchlist] = useState<string[]>([]); // New Watchlist state
   const [savedSearches, setSavedSearches] = useState<string[]>([]); 
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  const requireAuth = (navigation: any, callback: () => void) => {
+    if (isAuthenticated) {
+      callback();
+    } else {
+      setPendingAction(() => callback);
+      navigation.navigate('Login');
+    }
+  };
+
+  const executePendingAction = () => {
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
+    }
+  };
 
   const toggleWatchlist = (serviceId: string) => {
     setWatchlist((prev) => 
@@ -558,6 +581,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <AppContext.Provider
       value={{
         user,
+        isAuthenticated,
+        setAuthenticated,
+        pendingAction,
+        requireAuth,
+        executePendingAction,
         updateUser,
         addresses,
         activeAddress,

@@ -18,6 +18,8 @@ export type RootStackParamList = {
   Search: { query?: string; autoFocusSaved?: boolean } | undefined;
   AllItems: { type: 'product' | 'service' | 'all' };
   ServiceDetails: { item: any };
+  ProductList: undefined;
+  ProductDetails: { product: any };
   Checkout: undefined;
   OrderSuccess: { orderId: string };
   Notifications: undefined;
@@ -25,4 +27,10 @@ export type RootStackParamList = {
   FAQ: undefined;
   Receipts: undefined;
   DeleteAccount: undefined;
+  OrderHistory: undefined;
+  Login: undefined;
+  Signup: undefined;
+  MyAds: undefined;
+  PostAd: undefined;
+  Chat: { sellerName?: string; listingTitle?: string } | undefined;
 };

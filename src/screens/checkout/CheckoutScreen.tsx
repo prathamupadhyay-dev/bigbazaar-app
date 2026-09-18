@@ -11,12 +11,16 @@ import { PaymentMode } from '../../context/AppContext';
 
 export default function CheckoutScreen() {
   const navigation = useNavigation();
-  const { activeAddress, getBucketTotals, createBookingFromBucket } = useApp();
+  const { activeAddress, bucket, getBucketTotals, createBookingFromBucket } = useApp();
   const { subtotal, total } = getBucketTotals();
   
   const [selectedPayment, setSelectedPayment] = useState<PaymentMode>('Card');
 
   const handlePlaceOrder = () => {
+    if (bucket.length === 0) {
+      (navigation as any).navigate('Main', { screen: 'Cart' });
+      return;
+    }
     // Create the booking/order and get the ID
     const orderId = createBookingFromBucket(selectedPayment);
     // Navigate to success screen

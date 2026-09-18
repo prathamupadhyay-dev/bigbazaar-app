@@ -102,7 +102,7 @@ export const ServiceBookingScreen: React.FC<Props> = ({ route, navigation }) => 
     });
     Alert.alert('Added to Bucket', `${selectedSub} has been added to your bucket.`, [
       { text: 'Keep Exploring', onPress: () => navigation.goBack() },
-      { text: 'View Bucket', onPress: () => (navigation as any).navigate('Bucket') },
+      { text: 'View Bucket', onPress: () => (navigation as any).navigate('Main', { screen: 'Cart' }) },
     ]);
   };
 
@@ -129,7 +129,7 @@ export const ServiceBookingScreen: React.FC<Props> = ({ route, navigation }) => 
         {
           text: 'View in Bookings',
           onPress: () => {
-            (navigation as any).navigate('Main', { screen: 'Bookings' });
+            (navigation as any).navigate('OrderHistory');
           },
         },
       ]

@@ -1,109 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useApp, BookingItem } from '../../context/AppContext';
 import ScreenContainer from '../../components/ScreenContainer';
-import { useApp } from '../../context/AppContext';
-import ServiceItemCard, { ServiceItemData } from '../../components/home/ServiceItemCard';
-import { MOCK_SERVICES } from '../../components/home/ServiceGridList';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
 
-export const BookingsScreen: React.FC = () => {
-  const { watchlist, toggleWatchlist } = useApp();
-  const navigation = useNavigation();
-
-  const handlePress = (item: ServiceItemData) => {
-    (navigation as any).navigate('ServiceDetails', { item });
-  };
-
-
-  const mockServiceBookings: ServiceItemData[] = []; // Empty for empty state
-
-  return (
-    <ScreenContainer noPadding>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Bookings</Text>
-      </View>
-      <View style={styles.content}>
-        <FlatList
-          data={mockServiceBookings}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          contentContainerStyle={styles.listContainer}
-          renderItem={({ item }) => (
-            <View style={styles.cardWrapper}>
-              <ServiceItemCard
-                item={item}
-                isSaved={watchlist.includes(item.id)}
-                onPress={handlePress}
-                onBookPress={handlePress}
-                onSavePress={() => toggleWatchlist(item.id)}
-              />
-            </View>
-          )}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons name="calendar-outline" size={100} color="#E2E8F0" style={{ marginBottom: 20 }} />
-              <Text style={styles.emptyTitle}>No bookings found</Text>
-              <Text style={styles.emptySubtitle}>Your service bookings will appear here.</Text>
-            </View>
-          }
-        />
-      </View>
-    </ScreenContainer>
-  );
-};
-
-const styles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.md,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.md,
-    backgroundColor: Colors.white,
-    borderBottomWidth: 0,
-    elevation: 0,
-  },
-  headerTitle: {
-    ...Typography.heading2,
-    color: '#1E293B',
-    fontSize: 18,
-  },
-  content: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  listContainer: {
-    padding: Spacing.md,
-    flexGrow: 1, // needed for empty state to center properly
-  },
-  row: {
-    justifyContent: 'space-between',
-  },
-  cardWrapper: {
-    width: '48.5%',
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '35%', // center it vertically in the visual space
-  },
-  emptyTitle: {
-    ...Typography.heading2,
-    color: '#64748B', // Muted slate color like the screenshot
-    fontSize: 22,
-    marginBottom: Spacing.sm,
-  },
-  emptySubtitle: {
-    ...Typography.body,
-    color: '#94A3B8', // Lighter slate
-    fontSize: 14,
-  },
-});
-
-export default BookingsScreen;
+export default function BookingsScreen() {
+  const navigation = useNavigation<any>(); const { bookings, cancelBooking } = useApp();
+  const render = ({item}:{item:BookingItem}) => <View style={styles.card}><View style={styles.top}><View style={styles.icon}><Ionicons name="construct-outline" size={22} color={Colors.primary}/></View><View style={{flex:1}}><Text style={styles.name}>{item.serviceName}</Text><Text style={styles.provider}>{item.providerName}</Text></View><Text style={styles.status}>{item.status}</Text></View><View style={styles.details}><Text style={styles.detail}>📅 {item.scheduledDate}</Text><Text style={styles.detail}>◷ {item.scheduledTimeSlot}</Text><Text style={styles.detail}>Booking #{item.bookingId} · ${item.amount}</Text></View>{(item.status==='Upcoming'||item.status==='In-Progress')&&<TouchableOpacity style={styles.cancel} onPress={()=>cancelBooking(item.id)}><Text style={styles.cancelText}>Cancel Booking</Text></TouchableOpacity>}</View>;
+  return <ScreenContainer noPadding style={styles.screen}><View style={styles.header}><TouchableOpacity onPress={()=>navigation.goBack()}><Ionicons name="arrow-back" size={24} color={Colors.textPrimary}/></TouchableOpacity><Text style={styles.title}>My Bookings</Text><View style={{width:24}}/></View><FlatList data={bookings} keyExtractor={item=>item.id} renderItem={render} contentContainerStyle={styles.list} ListEmptyComponent={<View style={styles.empty}><Ionicons name="calendar-outline" size={62} color={Colors.disabled}/><Text style={styles.emptyTitle}>No bookings yet</Text><TouchableOpacity style={styles.book} onPress={()=>navigation.navigate('AllItems',{type:'service'})}><Text style={styles.bookText}>Browse Services</Text></TouchableOpacity></View>}/></ScreenContainer>;
+}
+const styles=StyleSheet.create({screen:{flex:1,backgroundColor:'#F8FAFC'},header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',padding:Spacing.md,backgroundColor:Colors.white},title:{...Typography.heading2,color:Colors.textPrimary},list:{padding:Spacing.md,paddingBottom:100},card:{backgroundColor:Colors.white,borderRadius:12,padding:Spacing.md,marginBottom:Spacing.sm,borderWidth:1,borderColor:Colors.border},top:{flexDirection:'row',alignItems:'center'},icon:{width:42,height:42,borderRadius:10,backgroundColor:Colors.primaryLight,alignItems:'center',justifyContent:'center',marginRight:Spacing.sm},name:{...Typography.bodyBold,color:Colors.textPrimary},provider:{...Typography.caption,color:Colors.textSecondary,marginTop:2},status:{...Typography.captionBold,color:Colors.primary},details:{backgroundColor:'#F8FAFC',padding:Spacing.sm,borderRadius:8,marginTop:Spacing.sm,gap:4},detail:{...Typography.caption,color:Colors.textSecondary},cancel:{alignSelf:'flex-end',marginTop:Spacing.sm},cancelText:{...Typography.captionBold,color:Colors.error},empty:{alignItems:'center',marginTop:100},emptyTitle:{...Typography.heading2,color:Colors.textSecondary,margin:Spacing.md},book:{backgroundColor:Colors.primary,paddingHorizontal:18,paddingVertical:12,borderRadius:10},bookText:{...Typography.button,color:Colors.white}});

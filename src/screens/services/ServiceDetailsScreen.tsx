@@ -16,7 +16,7 @@ export default function ServiceDetailsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { item } = (route.params as any) || {};
-  const { watchlist, toggleWatchlist, bucket, addToBucket } = useApp();
+  const { watchlist, toggleWatchlist, bucket, addToBucket, requireAuth } = useApp();
   
   const [imageExpanded, setImageExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -63,31 +63,40 @@ export default function ServiceDetailsScreen() {
   }
 
   const handleSave = () => {
-    toggleWatchlist(item.id);
+    requireAuth(navigation, () => {
+      toggleWatchlist(item.id);
+    });
   };
 
   const handleBuyNow = () => {
-    if (isInBucket) {
-      // Go to cart
-      (navigation as any).navigate('Main', { screen: 'Cart' });
-      return;
-    }
+    requireAuth(navigation, () => {
+      if (item.itemType === 'service') {
+        const categoryMap: Record<string, string> = { Plumbing: 'Plumber', Tutoring: 'Home Tutor', 'AC Repair': 'AC Repair', 'Home Cleaning': 'Cleaning' };
+        (navigation as any).navigate('ServiceBooking', { categoryName: categoryMap[item.category] || 'Plumber' });
+        return;
+      }
+      if (isInBucket) {
+        // Go to cart
+        (navigation as any).navigate('Main', { screen: 'Cart' });
+        return;
+      }
 
-    addToBucket({
-      serviceId: item.id,
-      serviceName: item.title,
-      categoryName: item.category || 'General',
-      subCategoryName: item.itemType,
-      price: parseFloat(item.price.replace(/[^0-9.]/g, '')),
-      quantity: quantity,
-      size: item.itemType === 'product' ? selectedSize : undefined,
-      color: item.itemType === 'product' ? selectedColor : undefined,
-      serviceDate: item.itemType === 'service' ? selectedDate : undefined,
-      timeSlot: item.itemType === 'service' ? selectedTime : undefined,
-      imageUrl: item.imageUrl,
+      addToBucket({
+        serviceId: item.id,
+        serviceName: item.title,
+        categoryName: item.category || 'General',
+        subCategoryName: item.itemType,
+        price: parseFloat(item.price.replace(/[^0-9.]/g, '')),
+        quantity: quantity,
+        size: item.itemType === 'product' ? selectedSize : undefined,
+        color: item.itemType === 'product' ? selectedColor : undefined,
+        serviceDate: item.itemType === 'service' ? selectedDate : undefined,
+        timeSlot: item.itemType === 'service' ? selectedTime : undefined,
+        imageUrl: item.imageUrl,
+      });
+      // Navigate to Cart (Bucket)
+      (navigation as any).navigate('Main', { screen: 'Cart' });
     });
-    // Navigate to Cart (Bucket)
-    (navigation as any).navigate('Main', { screen: 'Cart' });
   };
 
   const images = [item.imageUrl, item.imageUrl, item.imageUrl]; // Mock 3 images
@@ -305,7 +314,7 @@ export default function ServiceDetailsScreen() {
           style={[styles.ctaButton, item.itemType === 'product' ? styles.ctaProduct : styles.ctaService]}
           onPress={handleBuyNow}
         >
-          <Text style={styles.ctaButtonText}>{isInBucket ? 'Go to Cart' : (item.itemType === 'product' ? 'Add to Cart' : 'Book Now')}</Text>
+          <Text style={styles.ctaButtonText}>{isInBucket ? 'Go to Cart' : (item.itemType === 'product' ? 'Add to Cart' : 'Choose Package')}</Text>
         </TouchableOpacity>
       </View>
 

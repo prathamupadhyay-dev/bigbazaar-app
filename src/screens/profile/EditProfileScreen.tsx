@@ -17,12 +17,23 @@ import Spacing from '../../constants/spacing';
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
-  const { user } = useApp();
+  const { user, updateUser } = useApp();
   
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user.fullName);
   const [phone, setPhone] = useState(user.mobileNumber);
   const [email, setEmail] = useState(user.email);
+
+  const toggleEdit = () => {
+    if (isEditing) {
+      updateUser({
+        fullName: name,
+        mobileNumber: phone,
+        email: email,
+      });
+    }
+    setIsEditing(!isEditing);
+  };
 
   return (
     <ScreenContainer noPadding style={styles.container}>
@@ -32,7 +43,7 @@ export default function EditProfileScreen() {
           <Ionicons name="arrow-back" size={24} color={Colors.textSecondary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My Details</Text>
-        <TouchableOpacity onPress={() => setIsEditing(!isEditing)} style={styles.backButton}>
+        <TouchableOpacity onPress={toggleEdit} style={styles.backButton}>
           <Ionicons name={isEditing ? "checkmark" : "pencil"} size={20} color={Colors.primary} />
         </TouchableOpacity>
       </View>

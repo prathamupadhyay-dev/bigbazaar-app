@@ -40,9 +40,9 @@ export default function OrderSuccessScreen() {
 
         <TouchableOpacity 
           style={styles.primaryBtn} 
-          onPress={() => (navigation as any).navigate('Bookings')}
+          onPress={() => (navigation as any).navigate('OrderHistory')}
         >
-          <Text style={styles.primaryBtnText}>Track Order</Text>
+          <Text style={styles.primaryBtnText}>View Order History</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 

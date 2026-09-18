@@ -4,6 +4,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import { useApp } from '../../context/AppContext';
 import ServiceItemCard, { ServiceItemData } from '../../components/home/ServiceItemCard';
 import { MOCK_SERVICES } from '../../components/home/ServiceGridList';
+import { MOCK_PRODUCTS } from '../products/ProductListScreen';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
@@ -24,7 +25,10 @@ export default function WatchlistScreen() {
     </View>
   );
 
-  const savedItems = MOCK_SERVICES.filter(item => watchlist.includes(item.id));
+  const savedItems = [
+    ...MOCK_SERVICES.filter(item => watchlist.includes(item.id)),
+    ...MOCK_PRODUCTS.filter(item => watchlist.includes(item.id)).map((item) => ({ id: item.id, title: item.title, imageUrl: item.imageUrl, price: item.price, timeEstimate: item.location, category: item.category, itemType: 'product' as const })),
+  ];
 
   return (
     <ScreenContainer noPadding>

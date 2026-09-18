@@ -17,6 +17,17 @@ export default function AllItemsScreen() {
 
   const title = typeFilter === 'product' ? 'All Products' : typeFilter === 'service' ? 'All Services' : 'All Items';
 
+  // If type is 'product', navigate to ProductList screen instead
+  React.useEffect(() => {
+    if (typeFilter === 'product') {
+      navigation.navigate('ProductList');
+    }
+  }, [typeFilter]);
+
+  if (typeFilter === 'product') {
+    return null; // Will redirect
+  }
+
   return (
     <ScreenContainer noPadding style={styles.container}>
       <View style={styles.header}>

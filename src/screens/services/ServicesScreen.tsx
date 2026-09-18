@@ -242,7 +242,7 @@ export const ServicesScreen: React.FC = () => {
     });
     Alert.alert('Added to Bucket', `${sub.name} (₹${sub.price}) added to your bucket!`, [
       { text: 'Continue Browsing' },
-      { text: 'Go to Bucket', onPress: () => (navigation as any).navigate('Bucket') },
+      { text: 'Go to Bucket', onPress: () => (navigation as any).navigate('Main', { screen: 'Cart' }) },
     ]);
   };
 
@@ -263,7 +263,7 @@ export const ServicesScreen: React.FC = () => {
         </View>
         <TouchableOpacity
           style={styles.headerBucketBtn}
-          onPress={() => (navigation as any).navigate('Bucket')}
+          onPress={() => (navigation as any).navigate('Main', { screen: 'Cart' })}
         >
           <Ionicons name="basket-outline" size={22} color="#0A84FF" />
         </TouchableOpacity>

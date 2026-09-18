@@ -12,6 +12,14 @@ import ServiceDetailsScreen from '../screens/services/ServiceDetailsScreen';
 import NotificationsScreen from '../screens/notifications/NotificationsScreen';
 import SavedSearchesScreen from '../screens/search/SavedSearchesScreen';
 import { RootStackParamList } from './types';
+import ProductListScreen from '../screens/products/ProductListScreen';
+import ProductDetailsScreen from '../screens/products/ProductDetailsScreen';
+import OrderHistoryScreen from '../screens/orders/OrderHistoryScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
+import MyAdsScreen from '../screens/ads/MyAdsScreen';
+import PostAdScreen from '../screens/ads/PostAdScreen';
+import ChatScreen from '../screens/chat/ChatScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,7 +29,7 @@ export default function RootNavigator() {
       initialRouteName="Main"
       screenOptions={{
         headerShown: false,
-        animation: Platform.OS === 'android' ? 'ios_from_right' : 'default', // True iOS-style parallax push/pop on Android, default on iOS
+        animation: Platform.OS === 'android' ? 'ios_from_right' : 'default',
         gestureEnabled: true,
       }}
     >
@@ -39,6 +47,8 @@ export default function RootNavigator() {
         component={ServiceDetailsScreen} 
         options={{ animation: 'fade' }} 
       />
+      <Stack.Screen name="ProductList" component={ProductListScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
       <Stack.Screen name="Checkout" component={require('../screens/checkout/CheckoutScreen').default} />
       <Stack.Screen name="OrderSuccess" component={require('../screens/checkout/OrderSuccessScreen').default} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
@@ -46,6 +56,12 @@ export default function RootNavigator() {
       <Stack.Screen name="FAQ" component={require('../screens/support/FAQScreen').default} />
       <Stack.Screen name="Receipts" component={require('../screens/account/ReceiptsScreen').default} />
       <Stack.Screen name="DeleteAccount" component={require('../screens/account/DeleteAccountScreen').default} />
+      <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="MyAds" component={MyAdsScreen} />
+      <Stack.Screen name="PostAd" component={PostAdScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
     </Stack.Navigator>
   );
 }
