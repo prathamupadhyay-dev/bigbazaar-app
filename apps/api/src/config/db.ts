@@ -1,9 +1,4 @@
 import mongoose from 'mongoose';
-import dns from 'dns';
-
-// ISP DNS blocks SRV lookups for *.mongodb.net — use Google DNS instead
-dns.setDefaultResultOrder('ipv4first');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const connectDB = async (): Promise<void> => {
   try {
