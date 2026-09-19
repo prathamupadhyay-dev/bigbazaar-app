@@ -1,3 +1,6 @@
+import { webcrypto } from 'crypto';
+if (!globalThis.crypto) globalThis.crypto = webcrypto; // Node 18 polyfill
+
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
