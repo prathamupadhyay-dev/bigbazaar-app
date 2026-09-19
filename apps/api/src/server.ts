@@ -16,12 +16,10 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ─── Health Check ────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API is running' });
 });
 
-// ─── Auth Routes ─────────────────────────────────────────────────────────────
 app.use('/api/v1/auth/user', userAuthRoutes);
 app.use('/api/v1/auth/admin', adminAuthRoutes);
 
