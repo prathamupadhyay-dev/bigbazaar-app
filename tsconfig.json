@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "jsx": "react-native"
+  },
+  "include": [
+    "apps/mobile/src/**/*",
+    "apps/web/src/**/*",
+    "apps/admin/src/**/*",
+    "apps/api/src/**/*",
+    "packages/**/*.ts",
+    "packages/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "dist",
+    "**/dist"
+  ]
+}

@@ -7,6 +7,7 @@ export type BookingStatus = 'Upcoming' | 'In-Progress' | 'Completed' | 'Cancelle
 export type PaymentStatus = 'Success' | 'Failed' | 'Pending';
 export type PaymentMode = 'UPI' | 'Card' | 'NetBanking' | 'Cash on Delivery';
 export type TicketIssueCategory = 'Service Delay' | 'Tutor Conduct' | 'Payment Failure' | 'App Issue';
+export type AdStatus = 'Active' | 'Pending' | 'Rejected' | 'Expired' | 'Draft' | 'Sold';
 
 export interface UserProfile {
   fullName: string;
@@ -115,6 +116,7 @@ interface AppContextType {
   addToBucket: (item: Omit<BucketItem, 'id'>) => void;
   removeFromBucket: (id: string) => void;
   clearBucket: () => void;
+  updateBucketQuantity: (id: string, newQuantity: number) => void;
   appliedCoupon: string | null;
   applyCoupon: (code: string) => { success: boolean; discount: number; message: string };
   removeCoupon: () => void;
@@ -138,6 +140,11 @@ interface AppContextType {
   // Watchlist (New Feature)
   watchlist: string[]; // Array of service IDs
   toggleWatchlist: (serviceId: string) => void;
+
+  // Ads
+  ads: any[];
+  addAd: (ad: any) => void;
+  updateAdStatus: (id: string, status: AdStatus) => void;
 
   // Saved Searches
   savedSearches: string[];
@@ -317,6 +324,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [watchlist, setWatchlist] = useState<string[]>([]); // New Watchlist state
   const [savedSearches, setSavedSearches] = useState<string[]>([]); 
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [ads, setAds] = useState<any[]>([]);
+
+  const addAd = (ad: any) => setAds(prev => [ad, ...prev]);
+  const updateAdStatus = (id: string, status: AdStatus) => {
+    setAds(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+  };
 
   const requireAuth = (navigation: any, callback: () => void) => {
     if (isAuthenticated) {
@@ -421,6 +434,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const removeFromBucket = (id: string) => {
     setBucket((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateBucketQuantity = (id: string, quantity: number) => {
+    setBucket((prev) => prev.map((item) => (item.id === id ? { ...item, quantity } : item)));
   };
 
   const clearBucket = () => {
@@ -597,6 +614,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         bucket,
         addToBucket,
         removeFromBucket,
+        updateBucketQuantity,
         clearBucket,
         appliedCoupon,
         applyCoupon,
@@ -620,6 +638,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         recentSearches,
         addRecentSearch,
         removeRecentSearch,
+        ads,
+        addAd,
+        updateAdStatus,
       }}
     >
       {children}
