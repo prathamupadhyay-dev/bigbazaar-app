@@ -5,8 +5,8 @@ import {
   forgotPassword,
   resetPassword,
   getMe } from
-'../controllers/user.auth.controller';
-import { protect, isUser } from '../middleware/auth.middleware';
+'../controllers/user.auth.controller.js';
+import { protect, isUser } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

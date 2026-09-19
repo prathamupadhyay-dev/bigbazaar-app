@@ -5,8 +5,8 @@ import {
   forgotPassword,
   resetPassword,
   getMe } from
-'../controllers/admin.auth.controller';
-import { protect, isAdmin } from '../middleware/auth.middleware';
+'../controllers/admin.auth.controller.js';
+import { protect, isAdmin } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

@@ -1,10 +1,8 @@
-import { Request, Response } from 'express';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.model';
-import sendEmail from '../utils/sendEmail';
-import { AuthRequest } from '../middleware/auth.middleware';
+import User from '../models/User.model.js';
+import sendEmail from '../utils/sendEmail.js';
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {

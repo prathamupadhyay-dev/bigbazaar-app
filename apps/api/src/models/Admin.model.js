@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 
 
@@ -9,7 +9,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 
 
-const AdminSchema = new Schema(
+const AdminSchema = new mongoose.Schema(
   {
     name: {
       type: String,

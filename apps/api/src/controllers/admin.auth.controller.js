@@ -1,10 +1,8 @@
-import { Request, Response } from 'express';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Admin from '../models/Admin.model';
-import sendEmail from '../utils/sendEmail';
-import { AuthRequest } from '../middleware/auth.middleware';
+import Admin from '../models/Admin.model.js';
+import sendEmail from '../utils/sendEmail.js';
 
 // ─── Helper: generate signed JWT ────────────────────────────────────────────
 const generateToken = (id, role) => {

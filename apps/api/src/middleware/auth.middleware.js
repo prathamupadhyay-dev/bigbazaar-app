@@ -1,7 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.model';
-import Admin from '../models/Admin.model';
+import User from '../models/User.model.js';
+import Admin from '../models/Admin.model.js';
 
 // Extend Express Request to carry user/admin payload
 
