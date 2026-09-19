@@ -14,7 +14,8 @@ function Sidebar({ isOpen, onClose, profileImage, userName = 'Admin', userEmail 
   useEffect(() => {
     const p = location.pathname
     if (p.includes('/users')) setOpen('users')
-    else if (p.includes('/listings')) setOpen('marketplace')
+    //else if (p.includes('/listings')) setOpen('marketplace')
+  else if (p.includes('/listings')) setOpen('Ads Management')
     else if (p.includes('/services')) setOpen('services')
     else if (p.includes('/providers')) setOpen('providers')
     else if (p.includes('/bookings')) setOpen('bookings')
@@ -102,14 +103,13 @@ function Sidebar({ isOpen, onClose, profileImage, userName = 'Admin', userEmail 
           </NavLink>
 
           <div className={`p-sidebar-link ${open === 'marketplace' ? 'active' : ''}`} onClick={() => toggle('marketplace')}>
-            <div className="p-link-content"><Icon path="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /><span>Marketplace</span></div><Arrow section="marketplace" />
+            <div className="p-link-content"><Icon path="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /><span>Ads Management</span></div><Arrow section="marketplace" />
           </div>
           {open === 'marketplace' && (
             <div className="p-submenu">
-              <SubLink to="/dashboard/listings">All Listings</SubLink>
-              <SubLink to="/dashboard/listings/pending" badge="5">Pending Moderation</SubLink>
-              <SubLink to="/dashboard/listings/categories">Categories</SubLink>
-              <SubLink to="/dashboard/listings/featured">Featured / Promotions</SubLink>
+              <SubLink to="/dashboard/listings">Banner</SubLink>
+              <SubLink to="/dashboard/listings/pending" badge="5">Campaign</SubLink>
+  
             </div>
           )}
 
@@ -118,9 +118,8 @@ function Sidebar({ isOpen, onClose, profileImage, userName = 'Admin', userEmail 
           </div>
           {open === 'users' && (
             <div className="p-submenu">
-              <SubLink to="/dashboard/users">All Users</SubLink>
-              <SubLink to="/dashboard/users/verification" badge="2">Verification</SubLink>
-              <SubLink to="/dashboard/users/suspended">Suspended / Blocked</SubLink>
+              <SubLink to="/dashboard/users">Buyer</SubLink>
+              <SubLink to="/dashboard/users/verification">Seller</SubLink>
             </div>
           )}
 
@@ -135,7 +134,7 @@ function Sidebar({ isOpen, onClose, profileImage, userName = 'Admin', userEmail 
             </div>
           )}
 
-          <div className={`p-sidebar-link ${open === 'providers' ? 'active' : ''}`} onClick={() => toggle('providers')}>
+          {/* <div className={`p-sidebar-link ${open === 'providers' ? 'active' : ''}`} onClick={() => toggle('providers')}>
             <div className="p-link-content"><Icon path="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /><span>Providers</span></div><Arrow section="providers" />
           </div>
           {open === 'providers' && (
@@ -145,7 +144,7 @@ function Sidebar({ isOpen, onClose, profileImage, userName = 'Admin', userEmail 
               <SubLink to="/dashboard/providers/service-ads">Service Ads</SubLink>
               <SubLink to="/dashboard/providers/availability">Provider Availability</SubLink>
             </div>
-          )}
+          )} */}
 
           <div className={`p-sidebar-link ${open === 'bookings' ? 'active' : ''}`} onClick={() => toggle('bookings')}>
             <div className="p-link-content"><Icon path="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /><span>Bookings</span></div><Arrow section="bookings" />
@@ -190,11 +189,11 @@ function Sidebar({ isOpen, onClose, profileImage, userName = 'Admin', userEmail 
           </div>
           {open === 'cms' && (
             <div className="p-submenu">
-              <SubLink to="/dashboard/cms/banners">Banners</SubLink>
-              <SubLink to="/dashboard/cms/home-modules">Home Modules</SubLink>
+        
+              
               <SubLink to="/dashboard/cms/faqs">FAQs</SubLink>
               <SubLink to="/dashboard/cms/safety">Safety Content</SubLink>
-              <SubLink to="/dashboard/cms/static-pages">Static Pages</SubLink>
+              
               <SubLink to="/dashboard/cms/notification-templates">Notification Templates</SubLink>
             </div>
           )}
