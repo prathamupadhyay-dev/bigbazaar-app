@@ -6,14 +6,12 @@ import User from '../models/User.model';
 import sendEmail from '../utils/sendEmail';
 import { AuthRequest } from '../middleware/auth.middleware';
 
-// ─── Helper: generate signed JWT ────────────────────────────────────────────
 const generateToken = (id: string, role: string): string => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET as string, {
     expiresIn: process.env.JWT_EXPIRE || '7d',
   } as jwt.SignOptions);
 };
 
-// ─── POST /api/v1/auth/user/register ────────────────────────────────────────
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password } = req.body;
@@ -46,7 +44,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// ─── POST /api/v1/auth/user/login ───────────────────────────────────────────
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
@@ -81,7 +78,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// ─── POST /api/v1/auth/user/forgot-password ─────────────────────────────────
 export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email } = req.body;
@@ -93,14 +89,11 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
 
     const user = await User.findOne({ email });
     if (!user) {
-      // Generic message to avoid user enumeration
       res.status(200).json({ success: true, message: 'If that email exists, a reset link has been sent' });
       return;
     }
 
-    // Generate raw token
     const rawToken = crypto.randomBytes(32).toString('hex');
-    // Store hashed version in DB
     const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
 
     user.resetPasswordToken = hashedToken;
@@ -127,7 +120,6 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
   }
 };
 
-// ─── POST /api/v1/auth/user/reset-password/:token ───────────────────────────
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
   try {
     const { token } = req.params;
@@ -138,7 +130,6 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    // Hash the incoming raw token to compare with stored hashed token
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
     const user = await User.findOne({
@@ -162,7 +153,6 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-// ─── GET /api/v1/auth/user/me ────────────────────────────────────────────────
 export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     res.status(200).json({ success: true, user: req.user });
