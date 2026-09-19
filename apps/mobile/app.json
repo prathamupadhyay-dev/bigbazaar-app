@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "\u200B",
+    "name": "​",
     "slug": "mybigbazzar",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,15 +16,26 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.raidening.mybigbazzar"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "splash": {
-      "image": "./src/assets/images/client-logo-purewhite.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./src/assets/images/client-logo-purewhite.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "51122022-fb07-4f23-8e5d-1e8638a29476"
+      }
     }
   }
 }
