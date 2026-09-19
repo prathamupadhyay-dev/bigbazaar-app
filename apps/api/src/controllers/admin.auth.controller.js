@@ -7,14 +7,14 @@ import sendEmail from '../utils/sendEmail';
 import { AuthRequest } from '../middleware/auth.middleware';
 
 // ─── Helper: generate signed JWT ────────────────────────────────────────────
-const generateToken = (id: string, role: string): string => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET as string, {
-    expiresIn: process.env.JWT_EXPIRE || '7d',
-  } as jwt.SignOptions);
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE || '7d'
+  });
 };
 
 // ─── POST /api/v1/auth/admin/register ───────────────────────────────────────
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req, res) => {
   try {
     const { name, email, password, adminSecretKey } = req.body;
 
@@ -45,15 +45,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'Admin registered successfully',
       token,
-      admin: { id: admin._id, name: admin.name, email: admin.email, role: admin.role },
+      admin: { id: admin._id, name: admin.name, email: admin.email, role: admin.role }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // ─── POST /api/v1/auth/admin/login ──────────────────────────────────────────
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -80,15 +80,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'Admin login successful',
       token,
-      admin: { id: admin._id, name: admin.name, email: admin.email, role: admin.role },
+      admin: { id: admin._id, name: admin.name, email: admin.email, role: admin.role }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // ─── POST /api/v1/auth/admin/forgot-password ────────────────────────────────
-export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -121,17 +121,17 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
         <p>You requested a password reset for your admin account. Click below (valid for 15 minutes):</p>
         <a href="${resetUrl}" style="display:inline-block;padding:10px 20px;background:#2b6cb0;color:#fff;border-radius:5px;text-decoration:none;">Reset Password</a>
         <p>If you didn't request this, please secure your account immediately.</p>
-      `,
+      `
     });
 
     res.status(200).json({ success: true, message: 'Reset link sent to your admin email' });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // ─── POST /api/v1/auth/admin/reset-password/:token ──────────────────────────
-export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+export const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;
@@ -145,7 +145,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
 
     const admin = await Admin.findOne({
       resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: new Date() },
+      resetPasswordExpire: { $gt: new Date() }
     });
 
     if (!admin) {
@@ -159,16 +159,16 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     await admin.save();
 
     res.status(200).json({ success: true, message: 'Admin password reset successful. Please login.' });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // ─── GET /api/v1/auth/admin/me ───────────────────────────────────────────────
-export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getMe = async (req, res) => {
   try {
     res.status(200).json({ success: true, admin: req.user });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };

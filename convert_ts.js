@@ -3,8 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
 
-const TARGET_DIR = path.resolve(__dirname, 'apps/mobile').replace(/\\/g, '/');
-const ADMIN_DIR = path.resolve(__dirname, 'apps/admin').replace(/\\/g, '/');
+const API_DIR = path.resolve(__dirname, 'apps/api').replace(/\\/g, '/');
 
 async function convertFiles(targetDir) {
   const tsFiles = glob.sync(`${targetDir}/**/*.{ts,tsx}`, {
@@ -40,9 +39,4 @@ async function convertFiles(targetDir) {
   }
 }
 
-async function run() {
-  await convertFiles(TARGET_DIR);
-  await convertFiles(ADMIN_DIR);
-}
-
-run();
+convertFiles(API_DIR);

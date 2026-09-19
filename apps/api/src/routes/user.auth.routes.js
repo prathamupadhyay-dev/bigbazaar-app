@@ -4,8 +4,8 @@ import {
   login,
   forgotPassword,
   resetPassword,
-  getMe,
-} from '../controllers/user.auth.controller';
+  getMe } from
+'../controllers/user.auth.controller';
 import { protect, isUser } from '../middleware/auth.middleware';
 
 const router = Router();

@@ -5,11 +5,11 @@ import dns from 'dns';
 dns.setDefaultResultOrder('ipv4first');
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
-const connectDB = async (): Promise<void> => {
+const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bigbazaar';
     const conn = await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 10000, // Fail fast after 10s
+      serverSelectionTimeoutMS: 10000 // Fail fast after 10s
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {

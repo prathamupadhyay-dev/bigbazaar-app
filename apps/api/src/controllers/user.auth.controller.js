@@ -6,13 +6,13 @@ import User from '../models/User.model';
 import sendEmail from '../utils/sendEmail';
 import { AuthRequest } from '../middleware/auth.middleware';
 
-const generateToken = (id: string, role: string): string => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET as string, {
-    expiresIn: process.env.JWT_EXPIRE || '7d',
-  } as jwt.SignOptions);
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE || '7d'
+  });
 };
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -37,14 +37,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'User registered successfully',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -71,14 +71,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -111,16 +111,16 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
         <p>You requested a password reset. Click the button below (valid for 15 minutes):</p>
         <a href="${resetUrl}" style="display:inline-block;padding:10px 20px;background:#e53e3e;color:#fff;border-radius:5px;text-decoration:none;">Reset Password</a>
         <p>If you didn't request this, you can safely ignore this email.</p>
-      `,
+      `
     });
 
     res.status(200).json({ success: true, message: 'Reset link sent to your email' });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+export const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;
@@ -134,7 +134,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
 
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: new Date() },
+      resetPasswordExpire: { $gt: new Date() }
     });
 
     if (!user) {
@@ -148,15 +148,15 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     await user.save();
 
     res.status(200).json({ success: true, message: 'Password reset successful. Please login.' });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getMe = async (req, res) => {
   try {
     res.status(200).json({ success: true, user: req.user });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };

@@ -4,21 +4,21 @@ import User from '../models/User.model';
 import Admin from '../models/Admin.model';
 
 // Extend Express Request to carry user/admin payload
-export interface AuthRequest extends Request {
-  user?: any;
-}
 
-interface JwtPayload {
-  id: string;
-  role: string;
-}
+
+
+
+
+
+
+
 
 // ─── Protect: verify JWT & attach user/admin to req ────────────────────────
 export const protect = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+req,
+res,
+next) =>
+{
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -29,12 +29,12 @@ export const protect = async (
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Try User first, then Admin
     let account =
-      (await User.findById(decoded.id).select('-password')) ||
-      (await Admin.findById(decoded.id).select('-password'));
+    (await User.findById(decoded.id).select('-password')) || (
+    await Admin.findById(decoded.id).select('-password'));
 
     if (!account) {
       res.status(401).json({ success: false, message: 'Account not found' });
@@ -50,10 +50,10 @@ export const protect = async (
 
 // ─── isAdmin: only allow admin role ────────────────────────────────────────
 export const isAdmin = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+req,
+res,
+next) =>
+{
   if (req.user && req.user.role === 'admin') {
     next();
   } else {
@@ -63,10 +63,10 @@ export const isAdmin = (
 
 // ─── isUser: only allow user role ──────────────────────────────────────────
 export const isUser = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+req,
+res,
+next) =>
+{
   if (req.user && req.user.role === 'user') {
     next();
   } else {
