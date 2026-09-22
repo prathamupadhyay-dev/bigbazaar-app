@@ -55,6 +55,7 @@ export default function SavedSearchesScreen({ navigation }) {
           onPress={() => handleSearchItemPress(item)}>
           
             <View style={styles.itemLeft}>
+              <Ionicons name="star" size={17} color="#F59E0B" style={styles.savedIcon} />
               <Text style={styles.itemText}>{item}</Text>
               <View style={styles.blueDot} />
             </View>
@@ -129,6 +130,9 @@ const styles = StyleSheet.create({
   itemLeft: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  savedIcon: {
+    marginRight: Spacing.sm,
   },
   itemText: {
     ...Typography.bodyBold,

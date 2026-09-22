@@ -112,7 +112,7 @@ export default function ServiceDetailsScreen() {
         <Text style={styles.headerTitle}>Details</Text>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconBtn} onPress={handleSave}>
-            <Ionicons name={isSaved ? "star" : "star-outline"} size={24} color={isSaved ? Colors.primary : Colors.textPrimary} />
+            <Ionicons name={isSaved ? "heart" : "heart-outline"} size={24} color={isSaved ? Colors.error : Colors.textPrimary} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Main', { screen: 'Cart' })}>
             <Ionicons name="cart-outline" size={24} color={Colors.textPrimary} />

@@ -82,7 +82,7 @@ export const ServiceItemCard = ({
             onLoadEnd={() => setIsImageLoading(false)} />
           
           
-          {/* Frosted Circular Watchlist Button */}
+          {/* Frosted Circular Wishlist Button */}
           <TouchableOpacity
             style={styles.frostedSaveButton}
             onPress={(e) => {
@@ -92,9 +92,9 @@ export const ServiceItemCard = ({
             activeOpacity={0.7}>
             
             <Ionicons
-              name={isSaved ? "star" : "star-outline"}
+              name={isSaved ? "heart" : "heart-outline"}
               size={16}
-              color={isSaved ? Colors.primary : Colors.textPrimary} />
+              color={isSaved ? Colors.error : Colors.textPrimary} />
             
           </TouchableOpacity>
 

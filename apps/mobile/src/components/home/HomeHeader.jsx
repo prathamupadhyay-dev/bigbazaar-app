@@ -91,7 +91,7 @@ export const HomeHeader = ({ onFilterPress, scrollY, onTypePress, typeFilter = '
             <Ionicons name="notifications-outline" size={24} color="#1E293B" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={handleSavedSearchesPress}>
-            <Ionicons name="heart-outline" size={24} color="#1E293B" />
+            <Ionicons name="star-outline" size={24} color="#1E293B" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={handleMenuPress}>
             <Ionicons name="menu-outline" size={28} color="#1E293B" />

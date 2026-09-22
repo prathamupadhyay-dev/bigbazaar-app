@@ -54,7 +54,7 @@ export default function MainTabNavigator() {
               iconName = focused ? 'home' : 'home-outline';
               break;
             case 'Watchlist':
-              iconName = focused ? 'star' : 'star-outline';
+              iconName = focused ? 'heart' : 'heart-outline';
               break;
             case 'Cart':
               iconName = focused ? 'cart' : 'cart-outline';
@@ -87,7 +87,7 @@ export default function MainTabNavigator() {
       <Tab.Screen
         name="Watchlist"
         component={WatchlistScreen}
-        options={{ tabBarLabel: 'Watchlist' }} />
+        options={{ tabBarLabel: 'Wishlist' }} />
       
       <Tab.Screen
         name="Cart"

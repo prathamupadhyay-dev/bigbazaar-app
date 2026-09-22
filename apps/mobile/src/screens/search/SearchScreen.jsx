@@ -113,9 +113,9 @@ export default function SearchScreen() {
           {query.trim().length > 0 ?
           <TouchableOpacity style={styles.heartBtn} onPress={toggleSearchSaved}>
               <Ionicons
-              name={isSearchSaved ? "heart" : "heart-outline"}
+              name={isSearchSaved ? "star" : "star-outline"}
               size={20}
-              color={isSearchSaved ? '#FF2D55' : Colors.textSecondary} />
+              color={isSearchSaved ? '#F59E0B' : Colors.textSecondary} />
             
             </TouchableOpacity> :
           null}
@@ -139,7 +139,7 @@ export default function SearchScreen() {
             onPress={() => navigation.navigate('SavedSearches')}>
             
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="heart" size={20} color={Colors.primary} style={{ marginRight: 8 }} />
+                <Ionicons name="star" size={20} color="#F59E0B" style={{ marginRight: 8 }} />
                 <Text style={styles.savedHeaderTitle}>View Saved Searches</Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={Colors.disabled} />

@@ -98,7 +98,7 @@ export const AccountScreen = () => {
               {renderMenuItem('cube-outline', 'Delivery Address', () => navigation.navigate('AddressManagement'))}
               {renderMenuItem('card-outline', 'Payment Methods', () => navigation.navigate('PaymentManagement'))}
               {renderMenuItem('receipt-outline', 'Receipts', () => navigation.navigate('Receipts'))}
-              {renderMenuItem('search-outline', 'Saved Searches', () => navigation.navigate('Search', { autoFocusSaved: true }))}
+              {renderMenuItem('star-outline', 'Saved Searches', () => navigation.navigate('Search', { autoFocusSaved: true }))}
             </>
           }
           {renderMenuItem('help-circle-outline', 'FAQ', () => navigation.navigate('FAQ'))}
@@ -113,7 +113,7 @@ export const AccountScreen = () => {
             <Text style={styles.footerText}>Send logs</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ height: 100 }} />
+        <View style={{ height: 135 }} />
       </ScrollView>
     </ScreenContainer>);
 

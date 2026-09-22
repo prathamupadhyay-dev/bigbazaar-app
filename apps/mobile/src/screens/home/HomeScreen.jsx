@@ -63,6 +63,24 @@ export default function HomeScreen() {
         
         <View style={styles.topSection}>
           <AdBanner />
+          <View style={styles.quickPanel}>
+            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('ProductList')}>
+              <View style={[styles.quickIcon, { backgroundColor: Colors.primaryLight }]}><Ionicons name="grid-outline" size={21} color={Colors.primary} /></View>
+              <Text style={styles.quickText}>Marketplace</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('AllItems', { type: 'service' })}>
+              <View style={[styles.quickIcon, { backgroundColor: '#ECFDF5' }]}><Ionicons name="construct-outline" size={21} color={Colors.success} /></View>
+              <Text style={styles.quickText}>Services</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('PostAd')}>
+              <View style={[styles.quickIcon, { backgroundColor: '#FFF7ED' }]}><Ionicons name="add-circle-outline" size={21} color="#EA580C" /></View>
+              <Text style={styles.quickText}>Sell</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('OrderHistory')}>
+              <View style={[styles.quickIcon, { backgroundColor: '#F5F3FF' }]}><Ionicons name="receipt-outline" size={21} color="#7C3AED" /></View>
+              <Text style={styles.quickText}>Orders</Text>
+            </TouchableOpacity>
+          </View>
           <TopServicesSlider />
         </View>
 
@@ -131,7 +149,7 @@ const styles = StyleSheet.create({
     height: 400 // Covers the top portion of the screen
   },
   scrollContent: {
-    paddingBottom: 100, // Extra padding for the floating tab bar
+    paddingBottom: 130, // Keeps final content above the floating tab bar
     flexGrow: 1
   },
   body: {
@@ -145,6 +163,20 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     backgroundColor: 'transparent'
   },
+  quickPanel: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.white,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: 16,
+    marginTop: Spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  quickAction: { alignItems: 'center', flex: 1 },
+  quickIcon: { width: 45, height: 45, borderRadius: 14, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
+  quickText: { ...Typography.captionBold, fontSize: 11, color: Colors.textPrimary },
   sectionTitle: {
     ...Typography.heading2,
     color: Colors.textPrimary

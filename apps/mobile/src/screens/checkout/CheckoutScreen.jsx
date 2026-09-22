@@ -73,6 +73,12 @@ export default function CheckoutScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Order Summary</Text>
           <View style={styles.card}>
+            {bucket.map((item) => <View key={item.id} style={styles.itemRow}>
+              <View style={styles.itemThumb}><Ionicons name="cube-outline" size={18} color={Colors.primary} /></View>
+              <View style={styles.itemInfo}><Text style={styles.itemName} numberOfLines={1}>{item.serviceName}</Text><Text style={styles.itemMeta}>Qty {item.quantity}</Text></View>
+              <Text style={styles.itemAmount}>${(item.price * item.quantity).toFixed(2)}</Text>
+            </View>)}
+            <View style={styles.divider} />
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal</Text>
               <Text style={styles.summaryValue}>${subtotal}</Text>
@@ -122,7 +128,9 @@ export default function CheckoutScreen() {
           </View>
         </View>
 
-        <View style={{ height: 100 }} />
+        <View style={styles.assurance}><Ionicons name="shield-checkmark-outline" size={20} color={Colors.success} /><Text style={styles.assuranceText}>Secure mock checkout · No payment will be processed</Text></View>
+
+        <View style={{ height: 135 }} />
       </ScrollView>
 
       {/* Footer */}
@@ -191,7 +199,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: Colors.border
   },
   addressRow: {
     flexDirection: 'row',
@@ -224,6 +234,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: Spacing.sm
   },
+  itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.sm },
+  itemThumb: { width: 34, height: 34, borderRadius: 8, backgroundColor: Colors.primaryLight, alignItems: 'center', justifyContent: 'center', marginRight: Spacing.sm },
+  itemInfo: { flex: 1 },
+  itemName: { ...Typography.bodyBold, fontSize: 13, color: Colors.textPrimary },
+  itemMeta: { ...Typography.caption, fontSize: 11, color: Colors.textSecondary, marginTop: 1 },
+  itemAmount: { ...Typography.bodyBold, color: Colors.textPrimary },
+  divider: { height: 1, backgroundColor: Colors.border, marginBottom: Spacing.md },
+  assurance: { flexDirection: 'row', alignItems: 'center', margin: Spacing.lg, padding: Spacing.sm, backgroundColor: '#ECFDF5', borderRadius: 10 },
+  assuranceText: { ...Typography.caption, color: Colors.success, marginLeft: Spacing.xs, flex: 1 },
   summaryTotalRow: {
     marginTop: Spacing.sm,
     paddingTop: Spacing.sm,
@@ -320,7 +339,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
-    paddingBottom: Spacing.lg
+    paddingBottom: Spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 8
   },
   totalContainer: {
     flex: 1

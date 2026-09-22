@@ -138,37 +138,20 @@ export const BucketScreen = () => {
 
         <>
             <FlatList
-            data={bucket}
-            keyExtractor={(item) => item.id}
-            renderItem={renderCartItem}
-            contentContainerStyle={styles.listContainer}
-            showsVerticalScrollIndicator={false} />
-          
-
-            {/* Order Summary */}
-            <View style={styles.summarySection}>
-              <Text style={styles.summaryTitle}>Order Summary</Text>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Subtotal</Text>
-                <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
-              </View>
-              {discount > 0 &&
-            <View style={styles.summaryRow}>
-                  <Text style={styles.summaryLabel}>Discount</Text>
-                  <Text style={styles.discountValue}>-${discount.toFixed(2)}</Text>
-                </View>
-            }
-              {appliedCoupon &&
-            <View style={styles.couponApplied}>
-                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
-                  <Text style={styles.couponText}>Coupon "{appliedCoupon}" applied</Text>
-                </View>
-            }
-              <View style={[styles.summaryRow, styles.totalRow]}>
-                <Text style={styles.totalLabel}>Total</Text>
-                <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
-              </View>
-            </View>
+              data={bucket}
+              keyExtractor={(item) => item.id}
+              renderItem={renderCartItem}
+              contentContainerStyle={styles.listContainer}
+              showsVerticalScrollIndicator={false}
+              ListFooterComponent={<View style={styles.summarySection}>
+                <View style={styles.summaryHeading}><Ionicons name="receipt-outline" size={20} color={Colors.primary} /><Text style={styles.summaryTitle}>Order Summary</Text></View>
+                <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Subtotal</Text><Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text></View>
+                <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Delivery</Text><Text style={styles.freeValue}>Free</Text></View>
+                {discount > 0 && <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Discount</Text><Text style={styles.discountValue}>-${discount.toFixed(2)}</Text></View>}
+                {appliedCoupon && <View style={styles.couponApplied}><Ionicons name="checkmark-circle" size={16} color={Colors.success} /><Text style={styles.couponText}>Coupon "{appliedCoupon}" applied</Text></View>}
+                <View style={[styles.summaryRow, styles.totalRow]}><Text style={styles.totalLabel}>Total</Text><Text style={styles.totalValue}>${total.toFixed(2)}</Text></View>
+              </View>}
+            />
           </>
         }
       </View>
@@ -225,7 +208,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: Spacing.md,
-    paddingBottom: Spacing.lg
+    paddingBottom: 205
   },
   cartItem: {
     flexDirection: 'row',
@@ -324,15 +307,21 @@ const styles = StyleSheet.create({
   summarySection: {
     backgroundColor: Colors.white,
     padding: Spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
-    marginBottom: 100
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginTop: Spacing.xs
+  },
+  summaryHeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md
   },
   summaryTitle: {
     ...Typography.bodyBold,
     fontSize: 16,
     color: Colors.textPrimary,
-    marginBottom: Spacing.md
+    marginLeft: Spacing.xs
   },
   summaryRow: {
     flexDirection: 'row',
@@ -351,6 +340,11 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary
   },
   discountValue: {
+    ...Typography.bodyBold,
+    fontSize: 14,
+    color: Colors.success
+  },
+  freeValue: {
     ...Typography.bodyBold,
     fontSize: 14,
     color: Colors.success
@@ -418,7 +412,7 @@ const styles = StyleSheet.create({
   checkoutFooter: {
     position: 'absolute',
     // Keep this action clear of the floating tab bar (70px high at bottom: 24).
-    bottom: 110,
+    bottom: 108,
     left: 20,
     right: 20,
     flexDirection: 'row',

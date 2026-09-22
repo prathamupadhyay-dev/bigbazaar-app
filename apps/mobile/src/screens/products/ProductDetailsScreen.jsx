@@ -10,7 +10,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
-import { ProductItem } from './ProductListScreen';
+import { MOCK_PRODUCTS } from './ProductListScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -106,10 +106,19 @@ export const ProductDetailsScreen = () => {
   const handleBuyNow = () => {
     requireAuth(navigation, () => {
       if (!isInCart) {
-        handleAddToCart(); // Wait, handleAddToCart wraps in requireAuth too. That's fine since it will pass if logged in.
-      } else {
-        navigation.navigate('Checkout');
+        addToBucket({
+          serviceId: product.id,
+          serviceName: product.title,
+          categoryName: product.category,
+          subCategoryName: product.condition,
+          price: parseFloat(product.price.replace(/[^0-9.]/g, '')),
+          quantity,
+          size: selectedSize,
+          color: selectedColor,
+          imageUrl: product.imageUrl,
+        });
       }
+      navigation.navigate('Checkout');
     });
   };
 
@@ -119,15 +128,8 @@ export const ProductDetailsScreen = () => {
     });
   };
 
-  const handleMakeOffer = () => {
-    requireAuth(navigation, () => {
-      const suggestedOffer = Math.round(parseFloat(product.price.replace(/[^0-9.]/g, '')) * 0.9);
-      Alert.alert('Make an Offer', 'Send an offer of $' + suggestedOffer + ' to ' + product.sellerName + '?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Send Offer', onPress: () => Alert.alert('Offer Submitted', 'The seller will be notified of your offer.') }]
-      );
-    });
-  };
+  const categoryMatches = MOCK_PRODUCTS.filter((item) => item.id !== product.id && item.category === product.category);
+  const relatedProducts = (categoryMatches.length ? categoryMatches : MOCK_PRODUCTS.filter((item) => item.id !== product.id)).slice(0, 4);
 
   return (
     <ScreenContainer noPadding style={styles.container}>
@@ -196,6 +198,7 @@ export const ProductDetailsScreen = () => {
             <Text style={styles.conditionLabel}>Condition:</Text>
             <Text style={styles.conditionValue}>{product.condition}</Text>
           </View>
+          <Text style={styles.description}>Well-kept {product.condition.toLowerCase()} item from a verified local seller. Review the listing details and chat with the seller before ordering.</Text>
         </View>
 
         {/* Size Selection */}
@@ -255,15 +258,11 @@ export const ProductDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Actions */}
+        {/* Listing action */}
         <View style={styles.actionsSection}>
-          <TouchableOpacity style={styles.actionBtn} onPress={handleMakeOffer}>
-            <Ionicons name="pricetag-outline" size={18} color={Colors.primary} />
-            <Text style={styles.actionBtnText}>Make Offer</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.reportBtn} onPress={handleReport}>
             <Ionicons name="flag-outline" size={18} color={Colors.textSecondary} />
-            <Text style={styles.reportBtnText}>Report</Text>
+            <Text style={styles.reportBtnText}>Report listing</Text>
           </TouchableOpacity>
         </View>
 
@@ -280,14 +279,16 @@ export const ProductDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Related Products */}
+        {/* Related products */}
         <View style={styles.relatedSection}>
-          <Text style={styles.sectionTitle}>Related Products</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {[1, 2, 3, 4].map((i) =>
-            <TouchableOpacity key={i} style={styles.relatedCard}>
-                <Image source={{ uri: `https://picsum.photos/seed/related${i}/120/120` }} style={styles.relatedImage} />
-                <Text style={styles.relatedPrice}>${89 + i * 20}</Text>
+          <View style={styles.relatedHeader}><Text style={styles.sectionTitle}>You may also like</Text><Text style={styles.relatedHint}>Similar {product.category}</Text></View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.relatedScroll}>
+            {relatedProducts.map((item) =>
+            <TouchableOpacity key={item.id} style={styles.relatedCard} onPress={() => navigation.push('ProductDetails', { product: item })}>
+                <Image source={{ uri: item.imageUrl }} style={styles.relatedImage} />
+                <Text style={styles.relatedTitle} numberOfLines={2}>{item.title}</Text>
+                <Text style={styles.relatedPrice}>{item.price}</Text>
+                <Text style={styles.relatedLocation} numberOfLines={1}>{item.location}</Text>
               </TouchableOpacity>
             )}
           </ScrollView>
@@ -585,7 +586,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border
+    borderBottomColor: Colors.border,
+    justifyContent: 'flex-end'
   },
   actionBtn: {
     flex: 1,
@@ -636,29 +638,37 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.sm
   },
   relatedSection: {
-    padding: Spacing.md
+    padding: Spacing.md,
+    paddingBottom: Spacing.md
   },
+  description: { ...Typography.body, fontSize: 14, color: Colors.textSecondary, lineHeight: 20, marginTop: Spacing.sm },
+  relatedHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  relatedHint: { ...Typography.caption, color: Colors.textSecondary, marginBottom: Spacing.sm },
+  relatedScroll: { paddingRight: Spacing.md },
   relatedCard: {
-    width: 100,
+    width: 142,
     marginRight: Spacing.sm,
     backgroundColor: Colors.white,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: Colors.border,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    paddingBottom: Spacing.sm
   },
   relatedImage: {
     width: '100%',
-    height: 80,
+    height: 104,
     backgroundColor: '#F5F5F5'
   },
   relatedPrice: {
     ...Typography.bodyBold,
     fontSize: 13,
     color: Colors.textPrimary,
-    padding: Spacing.xs,
-    textAlign: 'center'
+    paddingHorizontal: Spacing.xs,
+    marginTop: 4
   },
+  relatedTitle: { ...Typography.bodyBold, fontSize: 12, color: Colors.textPrimary, paddingHorizontal: Spacing.xs, marginTop: Spacing.xs, lineHeight: 16 },
+  relatedLocation: { ...Typography.caption, fontSize: 10, color: Colors.textSecondary, paddingHorizontal: Spacing.xs, marginTop: 2 },
   bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -666,7 +676,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
-    paddingBottom: Spacing.lg
+    paddingBottom: Spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 8
   },
   quantityContainer: {
     flexDirection: 'row',

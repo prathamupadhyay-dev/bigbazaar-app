@@ -21,7 +21,9 @@ export default function WatchlistScreen() {
 
   const renderEmpty = () =>
   <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Your watchlist is empty.</Text>
+      <Ionicons name="heart-outline" size={60} color={Colors.disabled} />
+      <Text style={styles.emptyText}>Your wishlist is empty.</Text>
+      <Text style={styles.emptySubtitle}>Save items you love to find them here.</Text>
     </View>;
 
 
@@ -36,7 +38,7 @@ export default function WatchlistScreen() {
         <TouchableOpacity style={styles.iconBtn} onPress={() => alert('Sort options coming soon')}>
           <Ionicons name="swap-vertical" size={24} color={Colors.textSecondary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Watchlist</Text>
+        <Text style={styles.headerTitle}>Wishlist</Text>
         <TouchableOpacity onPress={() => alert('History coming soon')}>
           <Text style={styles.headerRightText}>History</Text>
         </TouchableOpacity>
@@ -96,7 +98,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC'
   },
   listContainer: {
-    padding: Spacing.md
+    padding: Spacing.md,
+    paddingBottom: 130
   },
   row: {
     justifyContent: 'space-between'
@@ -113,5 +116,11 @@ const styles = StyleSheet.create({
   emptyText: {
     ...Typography.heading2,
     color: Colors.textPrimary
+  },
+  emptySubtitle: {
+    ...Typography.body,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    marginTop: Spacing.xs,
   }
 });
