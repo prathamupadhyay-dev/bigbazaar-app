@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -165,6 +166,9 @@ const initialUser = {
   role: 'Buyer'
 };
 
+const APP_LOCK_ENABLED_KEY = '@app_lock_enabled';
+const APP_LOCK_PROMPT_SHOWN_KEY = '@app_lock_prompt_shown';
+
 const initialAddresses = [
 {
   id: 'addr-1',
@@ -313,6 +317,8 @@ const AppContext = createContext(undefined);
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(initialUser);
   const [isAuthenticated, setAuthenticated] = useState(false);
+  const [appLockEnabled, setAppLockEnabledState] = useState(false);
+  const [appLockPromptShown, setAppLockPromptShownState] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [addresses, setAddresses] = useState(initialAddresses);
   const [activeAddress, setActiveAddress] = useState(initialAddresses[0]);
@@ -325,6 +331,32 @@ export const AppProvider = ({ children }) => {
   const [savedSearches, setSavedSearches] = useState([]);
   const [recentSearches, setRecentSearches] = useState([]);
   const [ads, setAds] = useState([]);
+
+  useEffect(() => {
+    const restoreSecurityPreferences = async () => {
+      try {
+        const [storedLock, storedPrompt] = await Promise.all([
+          AsyncStorage.getItem(APP_LOCK_ENABLED_KEY),
+          AsyncStorage.getItem(APP_LOCK_PROMPT_SHOWN_KEY)
+        ]);
+        setAppLockEnabledState(storedLock === 'true');
+        setAppLockPromptShownState(storedPrompt === 'true');
+      } catch (error) {
+        // Security settings remain usable with in-memory defaults if storage is unavailable.
+      }
+    };
+    restoreSecurityPreferences();
+  }, []);
+
+  const setAppLockEnabled = (enabled) => {
+    setAppLockEnabledState(enabled);
+    AsyncStorage.setItem(APP_LOCK_ENABLED_KEY, String(enabled)).catch(() => {});
+  };
+
+  const setAppLockPromptShown = (shown) => {
+    setAppLockPromptShownState(shown);
+    AsyncStorage.setItem(APP_LOCK_PROMPT_SHOWN_KEY, String(shown)).catch(() => {});
+  };
 
   const addAd = (ad) => setAds((prev) => [ad, ...prev]);
   const updateAdStatus = (id, status) => {
@@ -600,6 +632,10 @@ export const AppProvider = ({ children }) => {
         user,
         isAuthenticated,
         setAuthenticated,
+        appLockEnabled,
+        setAppLockEnabled,
+        appLockPromptShown,
+        setAppLockPromptShown,
         pendingAction,
         requireAuth,
         executePendingAction,

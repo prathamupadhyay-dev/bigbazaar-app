@@ -1,89 +1,25 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
 
+const FILTERS = { Gender: ['All', 'Men', 'Women', 'Kids'], Sort: ['Popular', 'Price: Low to High', 'Price: High to Low', 'Top Rated'], Categories: ['All', 'Electronics', 'Fashion', 'Furniture', 'Sports', 'Home'], 'Top Brands': ['All', 'Apple', 'Nike', 'Samsung', 'Adidas'] };
 
+export default function FilterChipsBar({ onFiltersChange }) {
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [values, setValues] = useState({ Gender: 'All', Sort: 'Popular', Categories: 'All', 'Top Brands': 'All', 'Top Rated': false });
+  const choose = (value) => { const next = { ...values, [activeFilter]: value }; setValues(next); setActiveFilter(null); onFiltersChange?.(next); };
+  const toggleTopRated = () => { const next = { ...values, 'Top Rated': !values['Top Rated'] }; setValues(next); onFiltersChange?.(next); };
+  const chipLabel = (name) => { const value = values[name]; if (value !== 'All' && name !== 'Top Rated') return name === 'Sort' ? value.replace('Price: ', '') : value; return name; };
+  const reset = () => { const next = { Gender: 'All', Sort: 'Popular', Categories: 'All', 'Top Brands': 'All', 'Top Rated': false }; setValues(next); onFiltersChange?.(next); };
+  const hasFilters = Object.values(values).some((value) => value !== 'All' && value !== false);
+  return <View style={styles.container}><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+    {Object.keys(FILTERS).map((name) => <TouchableOpacity key={name} style={[styles.chip, values[name] !== 'All' && styles.chipActive]} onPress={() => setActiveFilter(name)}>{name === 'Top Brands' && <Ionicons name="pricetag-outline" size={14} color={values[name] !== 'All' ? Colors.primary : '#1E293B'} style={styles.leftIcon} />}<Text style={[styles.chipText, values[name] !== 'All' && styles.chipTextActive]} numberOfLines={1}>{chipLabel(name)}</Text><Ionicons name={name === 'Sort' ? 'swap-vertical' : 'chevron-down'} size={14} color={values[name] !== 'All' ? Colors.primary : '#1E293B'} style={styles.icon} /></TouchableOpacity>)}
+    <TouchableOpacity style={[styles.chip, values['Top Rated'] && styles.chipActive]} onPress={toggleTopRated}><Ionicons name="star-outline" size={14} color={values['Top Rated'] ? Colors.primary : '#1E293B'} style={styles.leftIcon} /><Text style={[styles.chipText, values['Top Rated'] && styles.chipTextActive]}>Top Rated</Text></TouchableOpacity>
+    {hasFilters ? <TouchableOpacity style={styles.clearChip} onPress={reset}><Ionicons name="close-circle" size={16} color={Colors.textSecondary} /><Text style={styles.clearText}>Clear</Text></TouchableOpacity> : null}
+  </ScrollView><Modal visible={!!activeFilter} transparent animationType="slide" onRequestClose={() => setActiveFilter(null)}><TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setActiveFilter(null)}><View style={styles.sheet} onStartShouldSetResponder={() => true}><View style={styles.handle} /><View style={styles.sheetHeader}><Text style={styles.sheetTitle}>{activeFilter}</Text><TouchableOpacity onPress={() => setActiveFilter(null)}><Ionicons name="close" size={22} color={Colors.textSecondary} /></TouchableOpacity></View>{(FILTERS[activeFilter] || []).map((option) => <TouchableOpacity key={option} style={styles.option} onPress={() => choose(option)}><Text style={[styles.optionText, values[activeFilter] === option && styles.optionSelected]}>{option}</Text>{values[activeFilter] === option && <Ionicons name="checkmark-circle" size={21} color={Colors.primary} />}</TouchableOpacity>)}</View></TouchableOpacity></Modal></View>;
+}
 
-
-
-export const FilterChipsBar = ({ scrollY }) => {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}>
-        
-        <TouchableOpacity style={styles.chip}>
-          <Text style={styles.chipText}>Gender</Text>
-          <Ionicons name="chevron-down" size={14} color="#1E293B" style={styles.icon} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.chip}>
-          <Text style={styles.chipText}>Sort</Text>
-          <Ionicons name="swap-vertical" size={14} color="#1E293B" style={styles.icon} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.chip}>
-          <Text style={styles.chipText}>Categories</Text>
-          <Ionicons name="chevron-down" size={14} color="#1E293B" style={styles.icon} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.chip}>
-          <Ionicons name="pricetag-outline" size={14} color="#1E293B" style={styles.leftIcon} />
-          <Text style={styles.chipText}>Top Brands</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.chip}>
-          <Ionicons name="star-outline" size={14} color="#1E293B" style={styles.leftIcon} />
-          <Text style={styles.chipText}>Top Rated</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.chip}>
-          <Ionicons name="trending-up-outline" size={14} color="#1E293B" style={styles.leftIcon} />
-          <Text style={styles.chipText}>Rising Star</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>);
-
-};
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: Colors.white,
-    zIndex: 9 // Below header
-  },
-  scrollContent: {
-    paddingHorizontal: Spacing.md,
-    paddingVertical: 12,
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginRight: 10
-  },
-  chipText: {
-    ...Typography.bodyBold,
-    fontSize: 14,
-    color: '#1E293B'
-  },
-  icon: {
-    marginLeft: 6
-  },
-  leftIcon: {
-    marginRight: 6
-  }
-});
-
-export default FilterChipsBar;
+const styles = StyleSheet.create({ container: { backgroundColor: Colors.white, zIndex: 9 }, scrollContent: { paddingHorizontal: Spacing.md, paddingVertical: 10, alignItems: 'center' }, chip: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.white, borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, marginRight: 8, maxWidth: 170 }, chipActive: { backgroundColor: Colors.primaryLight, borderColor: Colors.primary }, chipText: { ...Typography.bodyBold, fontSize: 13, color: '#1E293B' }, chipTextActive: { color: Colors.primary }, icon: { marginLeft: 6 }, leftIcon: { marginRight: 5 }, clearChip: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 8 }, clearText: { ...Typography.captionBold, color: Colors.textSecondary, marginLeft: 4 }, overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(15,23,42,0.28)' }, sheet: { backgroundColor: Colors.white, borderTopLeftRadius: 22, borderTopRightRadius: 22, padding: Spacing.lg, paddingBottom: Spacing.xl }, handle: { width: 42, height: 4, borderRadius: 4, backgroundColor: '#D7DCE5', alignSelf: 'center', marginBottom: Spacing.md }, sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: Spacing.sm }, sheetTitle: { ...Typography.heading2, color: Colors.textPrimary }, option: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#F1F5F9' }, optionText: { ...Typography.body, color: Colors.textPrimary }, optionSelected: { ...Typography.bodyBold, color: Colors.primary } });

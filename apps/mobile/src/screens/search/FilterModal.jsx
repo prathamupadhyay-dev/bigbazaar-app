@@ -50,10 +50,10 @@ export default function FilterModal({ visible, onClose, onOpenSort }) {
               </View>
               <View style={styles.priceInputs}>
                 <View style={styles.priceInputBox}>
-                  <Text style={styles.priceInputText}>From <Text style={styles.priceValue}>$1</Text></Text>
+                  <Text style={styles.priceInputText}>From <Text style={styles.priceValue}>₹1</Text></Text>
                 </View>
                 <View style={styles.priceInputBox}>
-                  <Text style={styles.priceInputText}>To <Text style={styles.priceValue}>$2000+</Text></Text>
+                  <Text style={styles.priceInputText}>To <Text style={styles.priceValue}>₹2000+</Text></Text>
                 </View>
               </View>
               {/* Fake Slider */}

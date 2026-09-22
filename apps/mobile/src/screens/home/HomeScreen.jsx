@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Animated, Modal } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -7,15 +8,25 @@ import ScreenContainer from '../../components/ScreenContainer';
 import HomeHeader from '../../components/home/HomeHeader';
 import AdBanner from '../../components/home/AdBanner';
 import ServiceGridList from '../../components/home/ServiceGridList';
-import TopServicesSlider from '../../components/home/TopServicesSlider';
 import ReviewSlider from '../../components/home/ReviewSlider';
 import FilterModal from '../search/FilterModal';
 import SortModal from '../search/SortModal';
 import LocationSheet from '../../components/home/LocationSheet';
-import FilterChipsBar from '../../components/home/FilterChipsBar';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+
+const HAS_SEEN_LOCATION_PICKER_KEY = '@has_seen_location_picker';
+const MARKETPLACE_CATEGORIES = [
+  { label: 'Cars', icon: 'car-outline', query: 'Cars' },
+  { label: 'Properties', icon: 'business-outline', query: 'Properties' },
+  { label: 'Mobiles', icon: 'phone-portrait-outline', query: 'Electronics' },
+  { label: 'Jobs', icon: 'briefcase-outline', query: 'Jobs' },
+  { label: 'Bikes', icon: 'bicycle-outline', query: 'Bikes' },
+  { label: 'Electronics', icon: 'laptop-outline', query: 'Electronics' },
+  { label: 'Furniture', icon: 'bed-outline', query: 'Furniture' },
+  { label: 'Fashion', icon: 'shirt-outline', query: 'Fashion' }
+];
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -27,14 +38,29 @@ export default function HomeScreen() {
   const [locationVisible, setLocationVisible] = useState(false);
 
   // Tooltip state
-  const [showTooltip, setShowTooltip] = useState(true);
 
   React.useEffect(() => {
-    // Show location sheet automatically on first launch
-    const timer = setTimeout(() => {
-      setLocationVisible(true);
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      try {
+        const hasSeenLocationPicker = await AsyncStorage.getItem(HAS_SEEN_LOCATION_PICKER_KEY);
+        if (hasSeenLocationPicker === 'true') return;
+
+        // Mark it before opening so closing the sheet or returning from checkout
+        // does not trigger the prompt again. The header remains the manual entry point.
+        await AsyncStorage.setItem(HAS_SEEN_LOCATION_PICKER_KEY, 'true');
+        if (isMounted) setLocationVisible(true);
+      } catch (error) {
+        // Keep the app usable if storage is unavailable; the user can still use
+        // the location pill in the header to choose a location manually.
+        if (isMounted) setLocationVisible(true);
+      }
     }, 1000);
-    return () => clearTimeout(timer);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
@@ -54,7 +80,6 @@ export default function HomeScreen() {
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-        stickyHeaderIndices={[1]} // Make the second child (FilterChipsBar) sticky
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false } // we'll use it for height animation which requires false, or transform which can be true. Let's stick to true for transforms and opacity
@@ -63,28 +88,29 @@ export default function HomeScreen() {
         
         <View style={styles.topSection}>
           <AdBanner />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRail}>
+            {MARKETPLACE_CATEGORIES.map((category) => (
+              <TouchableOpacity key={category.label} style={styles.categoryItem} onPress={() => navigation.navigate('ProductList', { category: category.query })} accessibilityLabel={`Browse ${category.label}`}>
+                <View style={styles.categoryIcon}><Ionicons name={category.icon} size={21} color={Colors.primary} /></View>
+                <Text style={styles.categoryLabel}>{category.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
           <View style={styles.quickPanel}>
             <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('ProductList')}>
               <View style={[styles.quickIcon, { backgroundColor: Colors.primaryLight }]}><Ionicons name="grid-outline" size={21} color={Colors.primary} /></View>
               <Text style={styles.quickText}>Marketplace</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('AllItems', { type: 'service' })}>
-              <View style={[styles.quickIcon, { backgroundColor: '#ECFDF5' }]}><Ionicons name="construct-outline" size={21} color={Colors.success} /></View>
-              <Text style={styles.quickText}>Services</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('PostAd')}>
-              <View style={[styles.quickIcon, { backgroundColor: '#FFF7ED' }]}><Ionicons name="add-circle-outline" size={21} color="#EA580C" /></View>
-              <Text style={styles.quickText}>Sell</Text>
-            </TouchableOpacity>
             <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('OrderHistory')}>
               <View style={[styles.quickIcon, { backgroundColor: '#F5F3FF' }]}><Ionicons name="receipt-outline" size={21} color="#7C3AED" /></View>
               <Text style={styles.quickText}>Orders</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.quickAction} onPress={() => navigation.navigate('Bucket')}>
+              <View style={[styles.quickIcon, { backgroundColor: '#ECFDF5' }]}><Ionicons name="cart-outline" size={21} color={Colors.success} /></View>
+              <Text style={styles.quickText}>Cart</Text>
+            </TouchableOpacity>
           </View>
-          <TopServicesSlider />
         </View>
-
-        <FilterChipsBar scrollY={scrollY} />
 
         <View style={styles.body}>
           <View style={styles.sectionHeaderRow}>
@@ -94,23 +120,6 @@ export default function HomeScreen() {
           <ReviewSlider />
         </View>
       </Animated.ScrollView>
-
-      {/* Filter Coachmark Tooltip */}
-      {showTooltip &&
-      <View style={styles.tooltipContainer} pointerEvents="box-none">
-          {/* The little up-arrow triangle */}
-          <View style={styles.tooltipArrow} />
-          {/* Tooltip Body */}
-          <View style={styles.tooltipBox}>
-            <Text style={styles.tooltipText}>
-              Filter to only see the items sold at your preferred location
-            </Text>
-            <TouchableOpacity onPress={() => setShowTooltip(false)}>
-              <Text style={styles.tooltipBtnText}>Got it</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      }
 
       {/* Modals */}
       <FilterModal
@@ -163,6 +172,10 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     backgroundColor: 'transparent'
   },
+  categoryRail: { paddingVertical: Spacing.sm, gap: Spacing.md },
+  categoryItem: { width: 62, alignItems: 'center' },
+  categoryIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: Colors.surfaceRaised, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: Colors.border },
+  categoryLabel: { ...Typography.micro, color: Colors.textPrimary, textAlign: 'center', marginTop: 4 },
   quickPanel: {
     flexDirection: 'row',
     justifyContent: 'space-between',

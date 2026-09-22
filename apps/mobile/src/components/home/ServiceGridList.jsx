@@ -11,7 +11,7 @@ export const MOCK_SERVICES = [
   id: 'p1',
   title: 'Nike Air Jordan 1 Retro',
   imageUrl: 'https://loremflickr.com/400/400/sneakers',
-  price: '$180.00',
+  price: '₹180.00',
   timeEstimate: '3 days',
   category: 'Fashion',
   itemType: 'product'
@@ -20,7 +20,7 @@ export const MOCK_SERVICES = [
   id: 's1',
   title: 'Expert Plumbing Repair & Leak Fix',
   imageUrl: 'https://loremflickr.com/400/400/plumber',
-  price: '$45.00',
+  price: '₹45.00',
   timeEstimate: '2h',
   category: 'Plumbing',
   itemType: 'service'
@@ -29,7 +29,7 @@ export const MOCK_SERVICES = [
   id: 'p4',
   title: 'Apple Watch Series 9 GPS',
   imageUrl: 'https://loremflickr.com/400/400/watch',
-  price: '$399.00',
+  price: '₹399.00',
   timeEstimate: '1 day',
   category: 'Electronics',
   itemType: 'product'
@@ -38,7 +38,7 @@ export const MOCK_SERVICES = [
   id: 's2',
   title: 'AC Servicing & Deep Clean',
   imageUrl: 'https://loremflickr.com/400/400/hvac',
-  price: '$60.00',
+  price: '₹60.00',
   timeEstimate: '1h 30m',
   category: 'AC Repair',
   itemType: 'service'
@@ -47,7 +47,7 @@ export const MOCK_SERVICES = [
   id: 'p2',
   title: 'Organic Cotton T-Shirt',
   imageUrl: 'https://loremflickr.com/400/400/tshirt',
-  price: '$25.00',
+  price: '₹25.00',
   timeEstimate: '3 days',
   category: 'Fashion',
   itemType: 'product'
@@ -56,7 +56,7 @@ export const MOCK_SERVICES = [
   id: 's4',
   title: 'Sofa & Carpet Dry Cleaning',
   imageUrl: 'https://loremflickr.com/400/400/cleaning',
-  price: '$35.00',
+  price: '₹35.00',
   timeEstimate: '1h',
   category: 'Home Cleaning',
   itemType: 'service'
@@ -65,7 +65,7 @@ export const MOCK_SERVICES = [
   id: 'p5',
   title: 'Levi\'s 501 Original Fit Jeans',
   imageUrl: 'https://loremflickr.com/400/400/jeans',
-  price: '$59.50',
+  price: '₹59.50',
   timeEstimate: '2 days',
   category: 'Fashion',
   itemType: 'product'
@@ -74,7 +74,7 @@ export const MOCK_SERVICES = [
   id: 's3',
   title: 'High School Math Tutoring',
   imageUrl: 'https://loremflickr.com/400/400/tutoring',
-  price: '$30.00 / hr',
+  price: '₹30.00 / hr',
   timeEstimate: 'Flexible',
   category: 'Tutoring',
   itemType: 'service'
@@ -83,7 +83,7 @@ export const MOCK_SERVICES = [
   id: 'p3',
   title: 'Sony Noise Cancelling Headphones',
   imageUrl: 'https://loremflickr.com/400/400/headphones',
-  price: '$299.00',
+  price: '₹299.00',
   timeEstimate: '2 days',
   category: 'Electronics',
   itemType: 'product'
@@ -92,7 +92,7 @@ export const MOCK_SERVICES = [
   id: 's5',
   title: 'Professional Home Painting',
   imageUrl: 'https://loremflickr.com/400/400/painting',
-  price: '$400.00',
+  price: '₹400.00',
   timeEstimate: '3 Days',
   category: 'Home Service',
   itemType: 'service'
@@ -101,7 +101,7 @@ export const MOCK_SERVICES = [
   id: 'p6',
   title: 'Premium Leather Wallet',
   imageUrl: 'https://loremflickr.com/400/400/wallet',
-  price: '$45.00',
+  price: '₹45.00',
   timeEstimate: 'Tomorrow',
   category: 'Accessories',
   itemType: 'product'
@@ -110,7 +110,7 @@ export const MOCK_SERVICES = [
   id: 's6',
   title: 'Deep Tissue Massage Therapy',
   imageUrl: 'https://loremflickr.com/400/400/massage',
-  price: '$75.00',
+  price: '₹75.00',
   timeEstimate: '60m',
   category: 'Wellness',
   itemType: 'service'
@@ -119,7 +119,7 @@ export const MOCK_SERVICES = [
   id: 'p7',
   title: 'MacBook Pro M3 14-inch',
   imageUrl: 'https://loremflickr.com/400/400/macbook',
-  price: '$1599.00',
+  price: '₹1599.00',
   timeEstimate: '1 week',
   category: 'Electronics',
   itemType: 'product'
@@ -128,7 +128,7 @@ export const MOCK_SERVICES = [
   id: 'p8',
   title: 'Designer Aviator Sunglasses',
   imageUrl: 'https://loremflickr.com/400/400/sunglasses',
-  price: '$120.00',
+  price: '₹120.00',
   timeEstimate: '3 days',
   category: 'Accessories',
   itemType: 'product'
@@ -176,7 +176,7 @@ const AnimatedCard = ({ item, index, handlePress, handleBookPress, handleSavePre
 
 
 
-export const ServiceGridList = ({ typeFilter = 'all' }) => {
+export const ServiceGridList = ({ typeFilter = 'all', filters = {} }) => {
   const navigation = useNavigation();
   const { watchlist, toggleWatchlist } = useApp();
 
@@ -192,10 +192,29 @@ export const ServiceGridList = ({ typeFilter = 'all' }) => {
     toggleWatchlist(item.id);
   };
 
-  const filteredServices = MOCK_SERVICES.filter((item) => {
+  let filteredServices = MOCK_SERVICES.filter((item) => {
     if (typeFilter === 'all') return true;
     return item.itemType === typeFilter;
   });
+  if (filters.Categories && filters.Categories !== 'All') {
+    filteredServices = filteredServices.filter((item) => item.category === filters.Categories);
+  }
+  if (filters.Gender && filters.Gender !== 'All') {
+    const genderKeywords = { Men: ['Nike', 'Levi', 'Sony', 'MacBook'], Women: ['Apple', 'Cotton', 'Sunglasses'], Kids: ['Jordan', 'Watch'] };
+    const keywords = genderKeywords[filters.Gender] || [];
+    filteredServices = filteredServices.filter((item) => keywords.some((keyword) => item.title.includes(keyword)));
+  }
+  if (filters['Top Brands'] && filters['Top Brands'] !== 'All') {
+    filteredServices = filteredServices.filter((item) => item.title.toLowerCase().includes(filters['Top Brands'].toLowerCase()));
+  }
+  if (filters['Top Rated'] || filters.Sort === 'Top Rated') {
+    filteredServices = filteredServices.filter((_, index) => index < 4);
+  }
+  if (filters.Sort === 'Price: Low to High') {
+    filteredServices = [...filteredServices].sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, '')));
+  } else if (filters.Sort === 'Price: High to Low') {
+    filteredServices = [...filteredServices].sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, '')));
+  }
 
   return (
     <View style={styles.container}>

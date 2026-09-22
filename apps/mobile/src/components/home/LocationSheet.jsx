@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, Platform, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+import { useApp } from '../../context/AppContext';
 
 
 
@@ -12,8 +13,40 @@ import Spacing from '../../constants/spacing';
 
 export const LocationSheet = ({ visible, onClose }) => {
   const [pincode, setPincode] = useState('452006');
+  const [locationQuery, setLocationQuery] = useState('');
+  const { activeAddress, setActiveAddress } = useApp();
+  const locationSuggestions = [
+    { city: 'Indore', area: 'Vijay Nagar', pincode: '452010' },
+    { city: 'Mumbai', area: 'Andheri West', pincode: '400053' },
+    { city: 'Delhi', area: 'Connaught Place', pincode: '110001' },
+    { city: 'Bengaluru', area: 'Koramangala', pincode: '560034' },
+    { city: 'Pune', area: 'Kothrud', pincode: '411038' }
+  ];
 
   if (!visible) return null;
+
+  const applyPincode = () => {
+    if (!/^\d{6}$/.test(pincode)) {
+      Alert.alert('Enter a valid pincode', 'Please enter a 6-digit delivery pincode.');
+      return;
+    }
+    setActiveAddress({ ...activeAddress, pincode });
+    onClose?.();
+  };
+
+  const useCurrentLocation = () => {
+    const detectedLocation = { city: 'Indore', street: 'Vijay Nagar', pincode: '452010' };
+    setPincode(detectedLocation.pincode);
+    setActiveAddress({ ...activeAddress, ...detectedLocation });
+    onClose?.();
+  };
+
+  const chooseLocation = (location) => {
+    setPincode(location.pincode);
+    setLocationQuery(`${location.area}, ${location.city}`);
+    setActiveAddress({ ...activeAddress, city: location.city, street: location.area, pincode: location.pincode });
+    onClose?.();
+  };
 
   return (
     <Modal visible={true} transparent={true} animationType="fade">
@@ -21,6 +54,10 @@ export const LocationSheet = ({ visible, onClose }) => {
         <TouchableOpacity style={styles.overlayBg} onPress={onClose} activeOpacity={1} />
         
         <View style={styles.sheet}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.sheetContent}>
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Select Delivery Location</Text>
@@ -38,24 +75,41 @@ export const LocationSheet = ({ visible, onClose }) => {
               keyboardType="number-pad"
               maxLength={6} />
             
-            <TouchableOpacity>
-              <Text style={styles.checkText}>Check Pincode</Text>
+            <TouchableOpacity onPress={applyPincode} accessibilityLabel="Check pincode">
+              <Text style={styles.checkText}>Apply</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Use Current Location */}
-          <TouchableOpacity style={styles.actionRow}>
-            <Ionicons name="locate" size={20} color="#F41E68" style={styles.actionIcon} />
-            <Text style={styles.actionText}>Use my current location</Text>
-            <Ionicons name="chevron-forward" size={16} color="#F41E68" style={styles.chevron} />
-          </TouchableOpacity>
+          <Text style={styles.fieldLabel}>Search city or locality</Text>
+          <View style={styles.searchContainer}>
+            <Ionicons name="search-outline" size={19} color={Colors.textSecondary} />
+            <TextInput
+              style={styles.searchInput}
+              value={locationQuery}
+              onChangeText={setLocationQuery}
+              placeholder="e.g. Vijay Nagar, Mumbai"
+              placeholderTextColor={Colors.disabled}
+              autoCorrect={false}
+            />
+            {locationQuery.length > 0 && <TouchableOpacity onPress={() => setLocationQuery('')}><Ionicons name="close-circle" size={18} color={Colors.textSecondary} /></TouchableOpacity>}
+          </View>
+          {locationQuery.trim().length > 0 && <View style={styles.suggestions}>
+            {locationSuggestions.filter((location) => `${location.area} ${location.city}`.toLowerCase().includes(locationQuery.toLowerCase())).map((location) =>
+              <TouchableOpacity key={location.pincode} style={styles.suggestionRow} onPress={() => chooseLocation(location)}>
+                <View style={styles.suggestionIcon}><Ionicons name="location-outline" size={17} color={Colors.primary} /></View>
+                <View style={styles.suggestionCopy}><Text style={styles.suggestionTitle}>{location.area}</Text><Text style={styles.suggestionMeta}>{location.city} · {location.pincode}</Text></View>
+                <Ionicons name="chevron-forward" size={17} color={Colors.disabled} />
+              </TouchableOpacity>
+            )}
+          </View>}
 
-          {/* Search Location */}
-          <TouchableOpacity style={styles.actionRow}>
-            <Ionicons name="map-outline" size={20} color="#F41E68" style={styles.actionIcon} />
-            <Text style={styles.actionText}>Search location</Text>
-            <Ionicons name="chevron-forward" size={16} color="#F41E68" style={styles.chevron} />
+          {/* Use Current Location */}
+          <TouchableOpacity style={styles.actionRow} onPress={useCurrentLocation}>
+            <Ionicons name="locate" size={20} color={Colors.primary} style={styles.actionIcon} />
+            <Text style={styles.actionText}>Use my current location</Text>
+            <Ionicons name="chevron-forward" size={16} color={Colors.primary} style={styles.chevron} />
           </TouchableOpacity>
+          </ScrollView>
         </View>
       </View>
     </Modal>);
@@ -80,8 +134,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: Spacing.xl,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 24
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    maxHeight: '86%'
   },
+  sheetContent: { paddingBottom: Spacing.sm },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -109,9 +165,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.textPrimary
   },
+  fieldLabel: { ...Typography.captionBold, color: Colors.textSecondary, marginBottom: 6 },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', height: 48, borderWidth: 1, borderColor: Colors.border, borderRadius: 12, paddingHorizontal: Spacing.md, backgroundColor: '#F8FAFC' },
+  searchInput: { flex: 1, ...Typography.body, color: Colors.textPrimary, marginLeft: Spacing.sm },
+  suggestions: { borderWidth: 1, borderColor: Colors.border, borderRadius: 12, marginTop: 6, overflow: 'hidden', backgroundColor: Colors.white },
+  suggestionRow: { flexDirection: 'row', alignItems: 'center', padding: Spacing.sm, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  suggestionIcon: { width: 32, height: 32, borderRadius: 16, backgroundColor: Colors.primaryLight, alignItems: 'center', justifyContent: 'center', marginRight: Spacing.sm },
+  suggestionCopy: { flex: 1 },
+  suggestionTitle: { ...Typography.bodyBold, fontSize: 13, color: Colors.textPrimary },
+  suggestionMeta: { ...Typography.caption, color: Colors.textSecondary, marginTop: 2 },
   checkText: {
     ...Typography.bodyBold,
-    color: '#94A3B8' // Grayish
+    color: Colors.primary,
+    fontSize: 14
   },
   actionRow: {
     flexDirection: 'row',
@@ -124,7 +190,7 @@ const styles = StyleSheet.create({
   actionText: {
     ...Typography.bodyBold,
     fontSize: 15,
-    color: '#F41E68',
+    color: Colors.primary,
     flex: 1
   },
   chevron: {

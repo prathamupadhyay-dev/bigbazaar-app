@@ -15,7 +15,7 @@ export const TopServicesSlider = () => {
   const { watchlist, toggleWatchlist } = useApp();
 
   const handleViewAll = () => {
-    navigation.navigate('AllItems', { type: 'service' });
+    navigation.navigate('Services');
   };
 
   // Pick top services to show in slider
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     paddingRight: Spacing.md // For right edge spacing
   },
   cardWrapper: {
-    width: 220,
+    width: 188,
     marginRight: Spacing.md
   }
 });

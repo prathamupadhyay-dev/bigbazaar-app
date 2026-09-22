@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+import { useApp } from '../../context/AppContext';
 
 export default function OrderSuccessScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { orderId } = route.params || { orderId: 'BB-00000' };
+  const { appLockEnabled, setAppLockEnabled, appLockPromptShown, setAppLockPromptShown } = useApp();
 
   const scaleValue = React.useRef(new Animated.Value(0)).current;
 
@@ -22,6 +24,22 @@ export default function OrderSuccessScreen() {
       useNativeDriver: true
     }).start();
   }, []);
+
+  useEffect(() => {
+    if (appLockEnabled || appLockPromptShown) return undefined;
+    setAppLockPromptShown(true);
+    const promptTimer = setTimeout(() => {
+      Alert.alert(
+        'Protect your account',
+        'Would you like to turn on App Lock for faster, safer access to your orders and payments?',
+        [
+          { text: 'Maybe later', style: 'cancel' },
+          { text: 'Enable App Lock', onPress: () => setAppLockEnabled(true) }
+        ]
+      );
+    }, 650);
+    return () => clearTimeout(promptTimer);
+  }, [appLockEnabled, appLockPromptShown, setAppLockEnabled, setAppLockPromptShown]);
 
   return (
     <ScreenContainer noPadding style={styles.container}>

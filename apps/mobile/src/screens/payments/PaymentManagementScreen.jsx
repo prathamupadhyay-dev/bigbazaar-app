@@ -14,13 +14,23 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+import { formatCurrency } from '../../utils/formatters';
 
 const STATUS_FILTERS = ['All', 'Success', 'Failed', 'Pending'];
+const MOCK_REFUNDS = [
+  { id: 'refund-1', orderId: 'BB-87321', reason: 'Service cancellation', amount: 499, status: 'Processed', date: '05 Sep 2026' },
+  { id: 'refund-2', orderId: 'BB-65120', reason: 'Duplicate payment', amount: 699, status: 'Pending', date: '02 Sep 2026' }
+];
+const INITIAL_PAYMENT_METHODS = [
+  { id: 'pm-1', label: '•••• 4821', type: 'Visa', detail: 'Personal card' },
+  { id: 'pm-2', label: 'john@upi', type: 'UPI', detail: 'Primary UPI ID' }
+];
 
 export const PaymentManagementScreen = () => {
   const navigation = useNavigation();
   const { transactions } = useApp();
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [paymentMethods, setPaymentMethods] = useState(INITIAL_PAYMENT_METHODS);
 
   const filteredTransactions = transactions.filter((t) =>
   selectedFilter === 'All' ? true : t.status === selectedFilter
@@ -41,6 +51,13 @@ export const PaymentManagementScreen = () => {
     );
   };
 
+  const handleRemoveMethod = (method) => {
+    Alert.alert('Remove payment method?', `${method.type} ${method.label} will be removed from this demo account.`, [
+      { text: 'Keep', style: 'cancel' },
+      { text: 'Remove', style: 'destructive', onPress: () => setPaymentMethods((prev) => prev.filter((item) => item.id !== method.id)) }
+    ]);
+  };
+
   return (
     <ScreenContainer noPadding style={styles.container}>
       {/* Header */}
@@ -52,7 +69,7 @@ export const PaymentManagementScreen = () => {
           
           <Ionicons name="arrow-back" size={24} color={Colors.textPrimary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Payments & History</Text>
+        <Text style={styles.headerTitle}>Payments & Refunds</Text>
         <View style={{ width: 32 }} />
       </View>
 
@@ -87,6 +104,15 @@ export const PaymentManagementScreen = () => {
           </View>
         </View>
 
+        <View style={styles.methodsHeader}><Text style={styles.sectionHeader}>Saved payment methods</Text><TouchableOpacity onPress={() => Alert.alert('Add payment method', 'Payment method setup is represented locally in this prototype.')}><Text style={styles.addMethodText}>Add new</Text></TouchableOpacity></View>
+        {paymentMethods.length === 0 ? <View style={styles.methodEmpty}><Text style={styles.emptySubtitle}>No saved payment methods</Text></View> : paymentMethods.map((method) =>
+          <View key={method.id} style={styles.methodCard}>
+            <View style={styles.methodIcon}><Ionicons name={method.type === 'UPI' ? 'phone-portrait-outline' : 'card-outline'} size={20} color={Colors.primary} /></View>
+            <View style={styles.methodCopy}><Text style={styles.methodLabel}>{method.type} · {method.label}</Text><Text style={styles.methodDetail}>{method.detail}</Text></View>
+            <TouchableOpacity onPress={() => handleRemoveMethod(method)} accessibilityLabel={`Remove ${method.type}`}><Ionicons name="trash-outline" size={18} color="#DC2626" /></TouchableOpacity>
+          </View>
+        )}
+
         {/* Transactions List */}
         <Text style={styles.sectionHeader}>Transaction History</Text>
 
@@ -104,7 +130,7 @@ export const PaymentManagementScreen = () => {
                   <Text style={styles.serviceTitle}>{txn.serviceName}</Text>
                   <Text style={styles.txnId}>Txn ID: {txn.transactionId}</Text>
                 </View>
-                <Text style={styles.amountText}>₹{txn.amount}</Text>
+              <Text style={styles.amountText}>{formatCurrency(txn.amount)}</Text>
               </View>
 
               <View style={styles.metaRow}>
@@ -170,6 +196,24 @@ export const PaymentManagementScreen = () => {
             </View>
         )
         }
+
+        <Text style={[styles.sectionHeader, { marginTop: Spacing.lg }]}>Refunds</Text>
+        {MOCK_REFUNDS.map((refund) =>
+          <View key={refund.id} style={styles.card}>
+            <View style={styles.cardTop}>
+              <View style={styles.txnIdBox}>
+                <Text style={styles.serviceTitle}>{refund.reason}</Text>
+                <Text style={styles.txnId}>Order: {refund.orderId} · {refund.date}</Text>
+              </View>
+              <Text style={styles.amountText}>{formatCurrency(refund.amount)}</Text>
+            </View>
+            <View style={styles.refundStatusRow}>
+              <Ionicons name={refund.status === 'Processed' ? 'checkmark-circle' : 'time-outline'} size={16} color={refund.status === 'Processed' ? '#059669' : '#D97706'} />
+              <Text style={[styles.refundStatusText, { color: refund.status === 'Processed' ? '#059669' : '#D97706' }]}>{refund.status}</Text>
+              <Text style={styles.refundHint}>{refund.status === 'Processed' ? 'Credited to original payment method' : 'Usually completed within 3–5 business days'}</Text>
+            </View>
+          </View>
+        )}
       </ScrollView>
     </ScreenContainer>);
 
@@ -253,6 +297,14 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
     marginBottom: Spacing.sm
   },
+  methodsHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: Spacing.sm },
+  addMethodText: { ...Typography.captionBold, color: Colors.primary, marginBottom: Spacing.sm },
+  methodCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 14, borderWidth: 1, borderColor: Colors.border, padding: Spacing.sm, marginBottom: Spacing.sm },
+  methodIcon: { width: 38, height: 38, borderRadius: 10, backgroundColor: '#EFF6FF', alignItems: 'center', justifyContent: 'center', marginRight: Spacing.sm },
+  methodCopy: { flex: 1 },
+  methodLabel: { ...Typography.bodyBold, color: Colors.textPrimary, fontSize: 13 },
+  methodDetail: { ...Typography.caption, color: Colors.textSecondary, marginTop: 2 },
+  methodEmpty: { backgroundColor: '#FFFFFF', borderRadius: 12, padding: Spacing.md, marginBottom: Spacing.md, borderWidth: 1, borderColor: Colors.border },
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
@@ -344,6 +396,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.border
   },
+  refundStatusRow: { flexDirection: 'row', alignItems: 'center', marginTop: Spacing.sm, gap: 5 },
+  refundStatusText: { ...Typography.captionBold, fontSize: 12 },
+  refundHint: { ...Typography.caption, color: Colors.textSecondary, flex: 1, marginLeft: 4 },
   invoiceBtn: {
     flexDirection: 'row',
     alignItems: 'center',

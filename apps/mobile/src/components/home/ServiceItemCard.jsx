@@ -30,6 +30,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { useApp } from '../../context/AppContext';
+import { formatCurrency, formatPriceText } from '../../utils/formatters';
 
 export const ServiceItemCard = ({
   item,
@@ -112,8 +113,8 @@ export const ServiceItemCard = ({
           <Text style={styles.itemCategory} numberOfLines={1}>{item.category}</Text>
           
           <View style={styles.priceRow}>
-            <Text style={styles.originalPrice}>${(parseFloat(item.price.replace(/[^0-9.]/g, '')) * 1.15).toFixed(0)}</Text>
-            <Text style={styles.price}>{item.price}</Text>
+            <Text style={styles.originalPrice}>{formatCurrency(parseFloat(item.price.replace(/[^0-9.]/g, '')) * 1.15)}</Text>
+            <Text style={styles.price}>{formatPriceText(item.price)}</Text>
             <Text style={styles.discountText}>13% OFF</Text>
           </View>
         </View>
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    aspectRatio: 1.1, // slightly wider to frame products beautifully
+    aspectRatio: 1.35,
     backgroundColor: Colors.background,
     position: 'relative',
     overflow: 'hidden',
@@ -194,8 +195,8 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary
   },
   contentContainer: {
-    padding: Spacing.sm,
-    paddingTop: Spacing.sm
+    padding: 10,
+    paddingTop: 9
   },
   itemTitle: {
     ...Typography.bodyBold,

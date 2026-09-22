@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
@@ -15,7 +15,7 @@ export default function SavedSearchesScreen({ navigation }) {
   const { savedSearches } = useApp();
 
   const handleEditPress = () => {
-    alert('Edit functionality coming soon.');
+    Alert.alert('Edit Saved Search', 'Run this search again from the search screen to update its filters.');
   };
 
   const handleSearchItemPress = (keyword) => {

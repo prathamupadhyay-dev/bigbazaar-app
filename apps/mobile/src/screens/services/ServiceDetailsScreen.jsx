@@ -9,6 +9,7 @@ import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
 import { ServiceItemData } from '../../components/home/ServiceItemCard';
 import { useApp } from '../../context/AppContext';
+import { MOCK_SERVICES } from '../../components/home/ServiceGridList';
 
 const { width } = Dimensions.get('window');
 
@@ -16,7 +17,7 @@ export default function ServiceDetailsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { item } = route.params || {};
-  const { watchlist, toggleWatchlist, bucket, addToBucket, requireAuth } = useApp();
+  const { watchlist, toggleWatchlist, bucket, addToBucket, requireAuth, activeAddress } = useApp();
 
   const [imageExpanded, setImageExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -53,6 +54,11 @@ export default function ServiceDetailsScreen() {
   const isSaved = item ? watchlist.includes(item.id) : false;
   const isInBucket = item ? bucket.some((b) => b.serviceId === item.id) : false;
   const bucketCount = bucket.reduce((sum, b) => sum + b.quantity, 0);
+  const relatedServices = MOCK_SERVICES.filter((service) => service.itemType === 'service' && service.id !== item?.id).slice(0, 4);
+  const reviews = [
+    { name: 'Anita R.', text: 'Arrived on time and explained everything clearly.', rating: '5.0' },
+    { name: 'Vikram S.', text: 'Good service and transparent pricing.', rating: '4.8' }
+  ];
 
   if (!item) {
     return (
@@ -72,12 +78,15 @@ export default function ServiceDetailsScreen() {
     requireAuth(navigation, () => {
       if (item.itemType === 'service') {
         const categoryMap = { Plumbing: 'Plumber', Tutoring: 'Home Tutor', 'AC Repair': 'AC Repair', 'Home Cleaning': 'Cleaning' };
-        navigation.navigate('ServiceBooking', { categoryName: categoryMap[item.category] || 'Plumber' });
+        navigation.navigate('ServiceBooking', {
+          categoryName: categoryMap[item.category] || 'Plumber',
+          subCategoryName: item.title
+        });
         return;
       }
       if (isInBucket) {
         // Go to cart
-        navigation.navigate('Main', { screen: 'Cart' });
+        navigation.navigate('Bucket');
         return;
       }
 
@@ -95,7 +104,7 @@ export default function ServiceDetailsScreen() {
         imageUrl: item.imageUrl
       });
       // Navigate to Cart (Bucket)
-      navigation.navigate('Main', { screen: 'Cart' });
+      navigation.navigate('Bucket');
     });
   };
 
@@ -114,7 +123,7 @@ export default function ServiceDetailsScreen() {
           <TouchableOpacity style={styles.iconBtn} onPress={handleSave}>
             <Ionicons name={isSaved ? "heart" : "heart-outline"} size={24} color={isSaved ? Colors.error : Colors.textPrimary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Main', { screen: 'Cart' })}>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Bucket')}>
             <Ionicons name="cart-outline" size={24} color={Colors.textPrimary} />
             {bucketCount > 0 &&
               <View style={styles.cartBadge}>
@@ -152,45 +161,32 @@ export default function ServiceDetailsScreen() {
           </View>
         </View>
         
-        {/* Stats Row */}
-        <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Retail price</Text>
-            <Text style={[styles.statValueDark, styles.strikeThrough]}>${(parseFloat(item.price.replace(/[^0-9.]/g, '')) * 1.5).toFixed(2)}</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Save</Text>
-            <Text style={styles.statValueRed}>33%</Text>
-          </View>
-        </View>
-
-        {/* Title & Condition */}
+        {/* Service summary */}
         <View style={styles.titleSection}>
-          <Text style={styles.itemTitle}>{item.title}, Premium Service, Verified Professional</Text>
-          <Text style={styles.conditionText}>
-            Condition{'\n'}
-            <Text style={styles.conditionValue}>New. Best By: 09/21/2026</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
+          <View style={styles.serviceMetaRow}>
+            <Ionicons name="star" size={16} color="#F59E0B" />
+            <Text style={styles.serviceMetaText}>4.8 (24 reviews)</Text>
+            <View style={styles.metaDot} />
+            <Text style={styles.serviceMetaText}>Verified professional</Text>
+          </View>
+          <Text style={styles.serviceDescription}>
+            Reliable {item.category || 'local'} service from a verified professional. Choose a convenient slot and we’ll confirm the visit with you.
           </Text>
         </View>
 
-        {/* Delivery Options */}
-        <View style={styles.deliverySection}>
-          <View style={[styles.deliveryBox, styles.deliveryBoxSelected]}>
-            <View style={styles.deliveryHeader}>
-              <View style={styles.radioSelected}>
-                <View style={styles.radioInner} />
-              </View>
-              <Text style={styles.deliveryTitle}>Pickup</Text>
-            </View>
-            <Text style={styles.deliveryPrice}>Free</Text>
+        <View style={styles.serviceInfoCard}>
+          <View style={styles.serviceInfoItem}>
+            <Ionicons name="time-outline" size={20} color={Colors.primary} />
+            <View><Text style={styles.serviceInfoLabel}>Duration</Text><Text style={styles.serviceInfoValue}>45–90 mins</Text></View>
           </View>
-          
-          <View style={styles.deliveryBox}>
-            <View style={styles.deliveryHeader}>
-              <View style={styles.radioUnselected} />
-              <Text style={styles.deliveryTitleInactive}>Shipping</Text>
-            </View>
-            <Text style={styles.deliveryPriceInactive}>$15</Text>
+          <View style={styles.serviceInfoItem}>
+            <Ionicons name="location-outline" size={20} color={Colors.primary} />
+            <View><Text style={styles.serviceInfoLabel}>Service area</Text><Text style={styles.serviceInfoValue}>{activeAddress?.city || 'Your area'}</Text></View>
+          </View>
+          <View style={styles.serviceInfoItem}>
+            <Ionicons name="shield-checkmark-outline" size={20} color={Colors.success} />
+            <View><Text style={styles.serviceInfoLabel}>Guarantee</Text><Text style={styles.serviceInfoValue}>Service support</Text></View>
           </View>
         </View>
 
@@ -258,31 +254,32 @@ export default function ServiceDetailsScreen() {
 
         {/* Address */}
         <View style={styles.addressSection}>
-          <Text style={styles.addressText}>1550 Commerce Drive, Stow, OH 44224 USA</Text>
+          <Text style={styles.addressText}>{activeAddress.houseNo}, {activeAddress.street}, {activeAddress.city} - {activeAddress.pincode}</Text>
           <View style={styles.infoRow}>
             <Ionicons name="information-circle-outline" size={16} color={Colors.textSecondary} />
             <Text style={styles.infoText}>Pickup time for this item</Text>
           </View>
         </View>
 
-        {/* List Options */}
-        <TouchableOpacity style={styles.listOption}>
-          <Text style={styles.listOptionText}>Bids (7)</Text>
-          <Ionicons name="chevron-forward" size={20} color={Colors.disabled} />
-        </TouchableOpacity>
         <TouchableOpacity style={styles.listOption}>
           <Text style={styles.listOptionText}>View Terms and Conditions</Text>
           <Ionicons name="chevron-forward" size={20} color={Colors.disabled} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.listOption}>
-          <Text style={styles.listOptionText}>Look up on Google</Text>
-          <Ionicons name="open-outline" size={20} color={Colors.disabled} />
-        </TouchableOpacity>
 
-        {/* SKU */}
-        <View style={styles.skuSection}>
-          <Text style={styles.skuLabel}>SKU number</Text>
-          <Text style={styles.skuValue}>OLARA{Math.floor(Math.random() * 10000000)}</Text>
+        <View style={styles.relatedSection}>
+          <View style={styles.relatedHeader}><Text style={styles.sectionTitle}>Similar services</Text><Text style={styles.relatedHint}>More near you</Text></View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.relatedScroll}>
+            {relatedServices.map((service) => <TouchableOpacity key={service.id} style={styles.relatedCard} onPress={() => navigation.push('ServiceDetails', { item: service })}>
+              <Image source={{ uri: service.imageUrl }} style={styles.relatedImage} />
+              <Text style={styles.relatedTitle} numberOfLines={2}>{service.title}</Text>
+              <Text style={styles.relatedPrice}>{service.price}</Text>
+            </TouchableOpacity>)}
+          </ScrollView>
+        </View>
+
+        <View style={styles.reviewsSection}>
+          <View style={styles.relatedHeader}><Text style={styles.sectionTitle}>Customer reviews</Text><View style={styles.ratingSummary}><Ionicons name="star" size={15} color="#F59E0B" /><Text style={styles.ratingSummaryText}>4.8 · 24 reviews</Text></View></View>
+          {reviews.map((review) => <View key={review.name} style={styles.reviewCard}><View style={styles.reviewTop}><Text style={styles.reviewName}>{review.name}</Text><Text style={styles.reviewRating}>★ {review.rating}</Text></View><Text style={styles.reviewText}>{review.text}</Text></View>)}
         </View>
         
         {/* Padding for footer */}
@@ -314,7 +311,7 @@ export default function ServiceDetailsScreen() {
             style={[styles.ctaButton, item.itemType === 'product' ? styles.ctaProduct : styles.ctaService]}
             onPress={handleBuyNow}>
             
-          <Text style={styles.ctaButtonText}>{isInBucket ? 'Go to Cart' : item.itemType === 'product' ? 'Add to Cart' : 'Choose Package'}</Text>
+          <Text style={styles.ctaButtonText}>{item.itemType === 'service' ? 'Book Now' : isInBucket ? 'Go to Cart' : 'Add to Cart'}</Text>
         </TouchableOpacity>
       </View>
 
@@ -470,6 +467,14 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: Spacing.md
   },
+  serviceMetaRow: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.sm },
+  serviceMetaText: { ...Typography.caption, color: Colors.textSecondary, marginLeft: 5 },
+  metaDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: Colors.disabled, marginHorizontal: 8 },
+  serviceDescription: { ...Typography.body, color: Colors.textSecondary, lineHeight: 21 },
+  serviceInfoCard: { marginHorizontal: Spacing.lg, marginBottom: Spacing.lg, padding: Spacing.md, borderRadius: 14, backgroundColor: '#F8FAFC', borderWidth: 1, borderColor: Colors.border },
+  serviceInfoItem: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.sm },
+  serviceInfoLabel: { ...Typography.caption, color: Colors.textSecondary, marginLeft: Spacing.sm },
+  serviceInfoValue: { ...Typography.bodyBold, color: Colors.textPrimary, marginLeft: Spacing.sm },
   conditionText: {
     ...Typography.caption,
     color: Colors.textSecondary,
@@ -573,18 +578,22 @@ const styles = StyleSheet.create({
     ...Typography.body,
     color: Colors.textPrimary
   },
-  skuSection: {
-    padding: Spacing.lg
-  },
-  skuLabel: {
-    ...Typography.caption,
-    color: Colors.textSecondary,
-    marginBottom: 4
-  },
-  skuValue: {
-    ...Typography.body,
-    color: Colors.textPrimary
-  },
+  relatedSection: { padding: Spacing.lg, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  relatedHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: Spacing.sm },
+  relatedHint: { ...Typography.caption, color: Colors.textSecondary },
+  relatedScroll: { paddingRight: Spacing.md },
+  relatedCard: { width: 150, marginRight: Spacing.sm, backgroundColor: Colors.white, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden', paddingBottom: Spacing.sm },
+  relatedImage: { width: '100%', height: 90, backgroundColor: '#F1F5F9' },
+  relatedTitle: { ...Typography.bodyBold, fontSize: 12, color: Colors.textPrimary, paddingHorizontal: Spacing.sm, marginTop: Spacing.xs },
+  relatedPrice: { ...Typography.captionBold, color: Colors.primary, paddingHorizontal: Spacing.sm, marginTop: 3 },
+  reviewsSection: { padding: Spacing.lg, paddingBottom: Spacing.xl },
+  ratingSummary: { flexDirection: 'row', alignItems: 'center' },
+  ratingSummaryText: { ...Typography.captionBold, color: Colors.textSecondary, marginLeft: 4 },
+  reviewCard: { backgroundColor: '#F8FAFC', borderRadius: 12, padding: Spacing.sm, marginBottom: Spacing.sm },
+  reviewTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  reviewName: { ...Typography.bodyBold, color: Colors.textPrimary, fontSize: 13 },
+  reviewRating: { ...Typography.captionBold, color: '#B45309' },
+  reviewText: { ...Typography.caption, color: Colors.textSecondary, marginTop: 4, lineHeight: 17 },
   footer: {
     position: 'absolute',
     bottom: 0,

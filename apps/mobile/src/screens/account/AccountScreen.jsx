@@ -78,7 +78,7 @@ export const AccountScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
             style={styles.quickActionItem}
-            onPress={() => navigation.navigate('Main', { screen: 'Watchlist' })}>
+            onPress={() => navigation.navigate('Watchlist')}>
             
               <View style={[styles.quickActionIcon, { backgroundColor: '#FEE2E2' }]}>
                 <Ionicons name="heart-outline" size={20} color={Colors.error} />
@@ -96,11 +96,13 @@ export const AccountScreen = () => {
               {renderMenuItem('add-circle-outline', 'Sell an Item', () => navigation.navigate('PostAd'))}
               {renderMenuItem('chatbubbles-outline', 'Chats', () => navigation.navigate('Chat'))}
               {renderMenuItem('cube-outline', 'Delivery Address', () => navigation.navigate('AddressManagement'))}
-              {renderMenuItem('card-outline', 'Payment Methods', () => navigation.navigate('PaymentManagement'))}
+              {renderMenuItem('card-outline', 'Payments & Refunds', () => navigation.navigate('PaymentManagement'))}
+              {renderMenuItem('lock-closed-outline', 'App Lock & Security', () => navigation.navigate('SecuritySettings'))}
               {renderMenuItem('receipt-outline', 'Receipts', () => navigation.navigate('Receipts'))}
-              {renderMenuItem('star-outline', 'Saved Searches', () => navigation.navigate('Search', { autoFocusSaved: true }))}
+              {renderMenuItem('heart-outline', 'Wishlist', () => navigation.navigate('Watchlist'), Colors.error)}
             </>
           }
+          {renderMenuItem('cart-outline', 'Cart', () => navigation.navigate('Bucket'))}
           {renderMenuItem('help-circle-outline', 'FAQ', () => navigation.navigate('FAQ'))}
           {renderMenuItem('mail-outline', 'Support', () => navigation.navigate('HelpSupport'))}
           {isAuthenticated && renderMenuItem('trash-outline', 'Delete Account', () => navigation.navigate('DeleteAccount'), '#DC2626')}

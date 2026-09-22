@@ -20,6 +20,9 @@ import SignupScreen from '../screens/auth/SignupScreen';
 import MyAdsScreen from '../screens/ads/MyAdsScreen';
 import PostAdScreen from '../screens/ads/PostAdScreen';
 import ChatScreen from '../screens/chat/ChatScreen';
+import SecuritySettingsScreen from '../screens/account/SecuritySettingsScreen';
+import WatchlistScreen from '../screens/watchlist/WatchlistScreen';
+import BucketScreen from '../screens/bucket/BucketScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +42,9 @@ export default function RootNavigator() {
       <Stack.Screen name="ServiceBooking" component={ServiceBookingScreen} />
       <Stack.Screen name="AddressManagement" component={AddressManagementScreen} />
       <Stack.Screen name="PaymentManagement" component={PaymentManagementScreen} />
+      <Stack.Screen name="SecuritySettings" component={SecuritySettingsScreen} />
+      <Stack.Screen name="Watchlist" component={WatchlistScreen} />
+      <Stack.Screen name="Bucket" component={BucketScreen} />
       <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="AllItems" component={require('../screens/search/AllItemsScreen').default} />

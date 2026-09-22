@@ -18,7 +18,7 @@ export default function CheckoutScreen() {
 
   const handlePlaceOrder = () => {
     if (bucket.length === 0) {
-      navigation.navigate('Main', { screen: 'Cart' });
+      navigation.navigate('Bucket');
       return;
     }
     // Create the booking/order and get the ID
@@ -76,12 +76,12 @@ export default function CheckoutScreen() {
             {bucket.map((item) => <View key={item.id} style={styles.itemRow}>
               <View style={styles.itemThumb}><Ionicons name="cube-outline" size={18} color={Colors.primary} /></View>
               <View style={styles.itemInfo}><Text style={styles.itemName} numberOfLines={1}>{item.serviceName}</Text><Text style={styles.itemMeta}>Qty {item.quantity}</Text></View>
-              <Text style={styles.itemAmount}>${(item.price * item.quantity).toFixed(2)}</Text>
+              <Text style={styles.itemAmount}>₹{(item.price * item.quantity).toFixed(2)}</Text>
             </View>)}
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal</Text>
-              <Text style={styles.summaryValue}>${subtotal}</Text>
+              <Text style={styles.summaryValue}>₹{subtotal}</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Delivery Fee</Text>
@@ -89,7 +89,7 @@ export default function CheckoutScreen() {
             </View>
             <View style={[styles.summaryRow, styles.summaryTotalRow]}>
               <Text style={styles.summaryTotalLabel}>Total</Text>
-              <Text style={styles.summaryTotalValue}>${total}</Text>
+              <Text style={styles.summaryTotalValue}>₹{total}</Text>
             </View>
           </View>
         </View>
@@ -130,6 +130,11 @@ export default function CheckoutScreen() {
 
         <View style={styles.assurance}><Ionicons name="shield-checkmark-outline" size={20} color={Colors.success} /><Text style={styles.assuranceText}>Secure mock checkout · No payment will be processed</Text></View>
 
+        <View style={styles.policyCard}>
+          <View style={styles.policyTitleRow}><Ionicons name="document-text-outline" size={18} color={Colors.primary} /><Text style={styles.policyTitle}>Cancellation & refund policy</Text></View>
+          <Text style={styles.policyText}>Cancel before dispatch for a full refund. Once a provider or seller has started fulfilment, any refund is reviewed against the order status.</Text>
+        </View>
+
         <View style={{ height: 135 }} />
       </ScrollView>
 
@@ -137,7 +142,7 @@ export default function CheckoutScreen() {
       <View style={styles.footer}>
         <View style={styles.totalContainer}>
           <Text style={styles.footerTotalLabel}>Total Payment</Text>
-          <Text style={styles.footerTotalValue}>${total}</Text>
+          <Text style={styles.footerTotalValue}>₹{total}</Text>
         </View>
         <TouchableOpacity style={styles.placeOrderBtn} onPress={handlePlaceOrder}>
           <Text style={styles.placeOrderBtnText}>Place Order</Text>
@@ -243,6 +248,10 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: Colors.border, marginBottom: Spacing.md },
   assurance: { flexDirection: 'row', alignItems: 'center', margin: Spacing.lg, padding: Spacing.sm, backgroundColor: '#ECFDF5', borderRadius: 10 },
   assuranceText: { ...Typography.caption, color: Colors.success, marginLeft: Spacing.xs, flex: 1 },
+  policyCard: { marginHorizontal: Spacing.lg, marginBottom: Spacing.sm, padding: Spacing.md, borderRadius: 12, backgroundColor: '#F8FAFC', borderWidth: 1, borderColor: Colors.border },
+  policyTitleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 5, gap: 7 },
+  policyTitle: { ...Typography.bodyBold, fontSize: 13, color: Colors.textPrimary },
+  policyText: { ...Typography.caption, color: Colors.textSecondary, lineHeight: 17 },
   summaryTotalRow: {
     marginTop: Spacing.sm,
     paddingTop: Spacing.sm,

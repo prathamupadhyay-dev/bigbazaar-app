@@ -102,7 +102,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
     });
     Alert.alert('Added to Bucket', `${selectedSub} has been added to your bucket.`, [
     { text: 'Keep Exploring', onPress: () => navigation.goBack() },
-    { text: 'View Bucket', onPress: () => navigation.navigate('Main', { screen: 'Cart' }) }]
+    { text: 'View Bucket', onPress: () => navigation.navigate('Bucket') }]
     );
   };
 
@@ -129,7 +129,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
       {
         text: 'View in Bookings',
         onPress: () => {
-          navigation.navigate('OrderHistory');
+          navigation.navigate('Bookings');
         }
       }]
 
@@ -291,6 +291,10 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
 
         {/* Step 7: Payment Choice */}
         <View style={styles.section}>
+          <View style={styles.policyBox}>
+            <View style={styles.policyTitleRow}><Ionicons name="shield-checkmark-outline" size={18} color={Colors.primary} /><Text style={styles.policyTitle}>Booking policy</Text></View>
+            <Text style={styles.policyText}>Free cancellation up to 2 hours before the slot. Any prepaid refund is returned to the original payment method after review.</Text>
+          </View>
           <Text style={styles.sectionTitle}>7. Payment Choice</Text>
           <View style={styles.paymentOptionsRow}>
             <TouchableOpacity
@@ -576,6 +580,10 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     marginLeft: Spacing.xs
   },
+  policyBox: { backgroundColor: '#EFF6FF', borderRadius: 10, padding: Spacing.sm, marginBottom: Spacing.md, borderWidth: 1, borderColor: '#BFDBFE' },
+  policyTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
+  policyTitle: { ...Typography.captionBold, color: Colors.primary },
+  policyText: { ...Typography.caption, color: Colors.textSecondary, lineHeight: 17 },
   paymentOptionsRow: {
     flexDirection: 'row',
     gap: 10

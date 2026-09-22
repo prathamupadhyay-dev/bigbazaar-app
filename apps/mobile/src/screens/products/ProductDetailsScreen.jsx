@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Share, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Share, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -25,6 +25,8 @@ export const ProductDetailsScreen = () => {
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('Blue');
   const [quantity, setQuantity] = useState(1);
+  const [offerModalVisible, setOfferModalVisible] = useState(false);
+  const [offerAmount, setOfferAmount] = useState('');
 
   if (!product) {
     return (
@@ -98,7 +100,7 @@ export const ProductDetailsScreen = () => {
       });
       Alert.alert('Added to Cart', `${product.title} has been added to your cart.`, [
       { text: 'Continue Shopping' },
-      { text: 'View Cart', onPress: () => navigation.navigate('Main', { screen: 'Cart' }) }]
+      { text: 'View Cart', onPress: () => navigation.navigate('Bucket') }]
       );
     });
   };
@@ -126,6 +128,24 @@ export const ProductDetailsScreen = () => {
     requireAuth(navigation, () => {
       navigation.navigate('Chat', { sellerName: product.sellerName, listingTitle: product.title });
     });
+  };
+
+  const handleMakeOffer = () => {
+    requireAuth(navigation, () => {
+      const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
+      setOfferAmount(String(Math.round(numericPrice * 0.9)));
+      setOfferModalVisible(true);
+    });
+  };
+
+  const submitOffer = () => {
+    const amount = Number(offerAmount.replace(/[^0-9.]/g, ''));
+    if (!amount || amount <= 0) {
+      Alert.alert('Enter an offer', 'Please enter a valid amount before sending your offer.');
+      return;
+    }
+    setOfferModalVisible(false);
+    Alert.alert('Offer Sent', `Your ₹${amount} offer was sent to ${product.sellerName}.`);
   };
 
   const categoryMatches = MOCK_PRODUCTS.filter((item) => item.id !== product.id && item.category === product.category);
@@ -250,6 +270,10 @@ export const ProductDetailsScreen = () => {
                 <Ionicons name="star" size={14} color="#F59E0B" />
                 <Text style={styles.sellerRatingText}>{product.sellerRating} Seller Rating</Text>
               </View>
+              <TouchableOpacity style={styles.verifiedBadge} onPress={() => Alert.alert('Verified seller', 'Phone number and identity documents were verified for this demo listing.')} accessibilityLabel="Explain verified seller badge">
+                <Ionicons name="checkmark-circle" size={14} color={Colors.success} />
+                <Text style={styles.verifiedText}>Verified seller</Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.chatBtn} onPress={handleChat}>
               <Ionicons name="chatbubble-outline" size={18} color={Colors.primary} />
@@ -260,6 +284,10 @@ export const ProductDetailsScreen = () => {
 
         {/* Listing action */}
         <View style={styles.actionsSection}>
+          <TouchableOpacity style={styles.offerBtn} onPress={handleMakeOffer}>
+            <Ionicons name="pricetag-outline" size={18} color={Colors.primary} />
+            <Text style={styles.offerBtnText}>Make an Offer</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.reportBtn} onPress={handleReport}>
             <Ionicons name="flag-outline" size={18} color={Colors.textSecondary} />
             <Text style={styles.reportBtnText}>Report listing</Text>
@@ -349,6 +377,34 @@ export const ProductDetailsScreen = () => {
             )}
           </View>
         </SafeAreaView>
+      </Modal>
+
+      <Modal visible={offerModalVisible} transparent animationType="slide" onRequestClose={() => setOfferModalVisible(false)}>
+        <View style={styles.offerOverlay}>
+          <View style={styles.offerSheet}>
+            <View style={styles.offerSheetHeader}>
+              <Text style={styles.offerTitle}>Make an Offer</Text>
+              <TouchableOpacity onPress={() => setOfferModalVisible(false)} accessibilityLabel="Close offer dialog">
+                <Ionicons name="close" size={22} color={Colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.offerSubtitle}>Suggest a fair price to {product.sellerName}</Text>
+            <View style={styles.offerInputWrap}>
+              <Text style={styles.currency}>₹</Text>
+              <TextInput
+                value={offerAmount}
+                onChangeText={setOfferAmount}
+                keyboardType="numeric"
+                placeholder="Enter amount"
+                placeholderTextColor={Colors.disabled}
+                style={styles.offerInput}
+              />
+            </View>
+            <TouchableOpacity style={styles.sendOfferBtn} onPress={submitOffer}>
+              <Text style={styles.sendOfferText}>Send Offer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
     </ScreenContainer>);
 
@@ -568,6 +624,8 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginLeft: 4
   },
+  verifiedBadge: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
+  verifiedText: { ...Typography.captionBold, fontSize: 11, color: Colors.success, marginLeft: 4 },
   chatBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -589,6 +647,8 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
     justifyContent: 'flex-end'
   },
+  offerBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: Spacing.sm, paddingHorizontal: Spacing.md, borderRadius: 8, borderWidth: 1, borderColor: Colors.primary, marginRight: Spacing.sm },
+  offerBtnText: { ...Typography.bodyBold, fontSize: 14, color: Colors.primary, marginLeft: 5 },
   actionBtn: {
     flex: 1,
     flexDirection: 'row',
@@ -756,6 +816,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Spacing.md
   },
+  offerOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(15, 23, 42, 0.42)' },
+  offerSheet: { backgroundColor: Colors.white, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: Spacing.lg, paddingBottom: Spacing.xl },
+  offerSheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  offerTitle: { ...Typography.heading2, color: Colors.textPrimary },
+  offerSubtitle: { ...Typography.body, color: Colors.textSecondary, marginTop: Spacing.xs, marginBottom: Spacing.lg },
+  offerInputWrap: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Colors.border, borderRadius: 12, paddingHorizontal: Spacing.md, height: 52 },
+  currency: { ...Typography.heading2, color: Colors.textPrimary, marginRight: Spacing.xs },
+  offerInput: { flex: 1, ...Typography.body, fontSize: 18, color: Colors.textPrimary },
+  sendOfferBtn: { height: 52, borderRadius: 12, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center', marginTop: Spacing.md },
+  sendOfferText: { ...Typography.button, color: Colors.white },
   thumbnailBtn: {
     width: 60,
     height: 60,

@@ -1,45 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { createBottomTabNavigator, BottomTabBar } from '@react-navigation/bottom-tabs';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/colors';
 import HomeScreen from '../screens/home/HomeScreen';
-import WatchlistScreen from '../screens/watchlist/WatchlistScreen';
-import BucketScreen from '../screens/bucket/BucketScreen';
 import AccountScreen from '../screens/account/AccountScreen';
+import ServicesScreen from '../screens/services/ServicesScreen';
+import ChatsScreen from '../screens/chat/ChatsScreen';
+import PostAdScreen from '../screens/ads/PostAdScreen';
 import { MainTabParamList } from './types';
-import { useApp } from '../context/AppContext';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
-  const { bucket } = useApp();
-  const bucketCount = bucket.reduce((sum, item) => sum + item.quantity, 0);
-
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: '#0A84FF', // Big Bazaar premium blue
+          tabBarActiveTintColor: route.name === 'Services' ? '#6E4CC7' : '#1548A6',
         tabBarInactiveTintColor: Colors.textSecondary,
         tabBarStyle: {
-          position: 'absolute',
-          bottom: 24,
-          left: 20,
-          right: 20,
-          elevation: 10,
+          height: 72,
+          elevation: 0,
           backgroundColor: Colors.white,
-          borderRadius: 30,
-          height: 70,
           paddingBottom: 10,
           paddingTop: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 10 },
-          shadowOpacity: 0.1,
-          shadowRadius: 20,
-          borderTopWidth: 0
+          borderTopWidth: 1,
+          borderTopColor: Colors.border,
+          overflow: 'visible'
         },
         tabBarLabelStyle: {
           fontSize: 10,
@@ -53,11 +42,14 @@ export default function MainTabNavigator() {
             case 'Home':
               iconName = focused ? 'home' : 'home-outline';
               break;
-            case 'Watchlist':
-              iconName = focused ? 'heart' : 'heart-outline';
+            case 'Chats':
+              iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
               break;
-            case 'Cart':
-              iconName = focused ? 'cart' : 'cart-outline';
+            case 'Sell':
+              iconName = 'add';
+              break;
+            case 'Services':
+              iconName = focused ? 'briefcase' : 'briefcase-outline';
               break;
             case 'Account':
               iconName = focused ? 'person' : 'person-outline';
@@ -66,17 +58,8 @@ export default function MainTabNavigator() {
               iconName = 'help-outline';
           }
 
-          if (route.name === 'Cart') {
-            return (
-              <View style={styles.bucketIconWrapper}>
-                <Ionicons name={iconName} size={26} color={color} />
-                {bucketCount > 0 &&
-                <View style={styles.tabBadge}>
-                    <Text style={styles.tabBadgeText}>{bucketCount}</Text>
-                  </View>
-                }
-              </View>);
-
+          if (route.name === 'Sell') {
+            return <View style={styles.sellIcon}><Ionicons name="add" size={27} color={Colors.white} /></View>;
           }
 
           return <Ionicons name={iconName} size={26} color={color} />;
@@ -84,20 +67,32 @@ export default function MainTabNavigator() {
       })}>
       
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Chats" component={ChatsScreen} options={{ tabBarLabel: 'Chats' }} />
+
       <Tab.Screen
-        name="Watchlist"
-        component={WatchlistScreen}
-        options={{ tabBarLabel: 'Wishlist' }} />
-      
+        name="Sell"
+        component={PostAdScreen}
+        options={{
+          tabBarLabel: 'Sell',
+          tabBarButton: (props) => (
+            <View style={styles.sellTabSlot}>
+              <TouchableOpacity {...props} style={styles.sellTabButton} accessibilityLabel="Sell an item">
+                <View style={styles.sellIcon}><Ionicons name="add" size={27} color={Colors.white} /></View>
+                <Text style={styles.sellLabel}>Sell</Text>
+              </TouchableOpacity>
+            </View>
+          )
+        }} />
+
       <Tab.Screen
-        name="Cart"
-        component={BucketScreen}
-        options={{ tabBarLabel: 'Cart' }} />
+        name="Services"
+        component={ServicesScreen}
+        options={{ tabBarLabel: 'Services' }} />
       
       <Tab.Screen
         name="Account"
         component={AccountScreen}
-        options={{ tabBarLabel: 'Profile' }} />
+        options={{ tabBarLabel: 'Account' }} />
       
     </Tab.Navigator>);
 
@@ -109,6 +104,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  sellTabSlot: { flex: 1, alignItems: 'center', justifyContent: 'center', overflow: 'visible' },
+  sellTabButton: { alignItems: 'center', justifyContent: 'center', minWidth: 62, marginTop: -18 },
+  sellIcon: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#E96D0F', alignItems: 'center', justifyContent: 'center', borderWidth: 4, borderColor: Colors.white, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.18, shadowRadius: 6 },
+  sellLabel: { fontSize: 10, fontWeight: '800', color: '#E96D0F', marginTop: 2 },
   tabBadge: {
     position: 'absolute',
     top: -4,

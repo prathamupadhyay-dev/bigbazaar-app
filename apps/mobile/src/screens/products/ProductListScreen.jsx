@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { useApp } from '../../context/AppContext';
@@ -9,6 +9,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+import { formatPriceText } from '../../utils/formatters';
 
 
 
@@ -29,8 +30,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-1',
   title: 'Apple iPhone 14 Pro Max - 256GB',
-  price: '$899',
-  originalPrice: '$1099',
+  price: '₹899',
+  originalPrice: '₹1099',
   location: 'Mumbai, MH',
   imageUrl: 'https://picsum.photos/seed/iphone/400/400',
   rating: 4.8,
@@ -43,8 +44,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-2',
   title: 'Nike Air Max 270 - Running Shoes',
-  price: '$89',
-  originalPrice: '$129',
+  price: '₹89',
+  originalPrice: '₹129',
   location: 'Delhi, DL',
   imageUrl: 'https://picsum.photos/seed/nike/400/400',
   rating: 4.6,
@@ -57,8 +58,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-3',
   title: 'Samsung 55" 4K Smart TV',
-  price: '$499',
-  originalPrice: '$699',
+  price: '₹499',
+  originalPrice: '₹699',
   location: 'Bangalore, KA',
   imageUrl: 'https://picsum.photos/seed/samsung/400/400',
   rating: 4.5,
@@ -71,8 +72,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-4',
   title: 'Levi\'s 511 Slim Fit Jeans',
-  price: '$45',
-  originalPrice: '$70',
+  price: '₹45',
+  originalPrice: '₹70',
   location: 'Pune, MH',
   imageUrl: 'https://picsum.photos/seed/levis/400/400',
   rating: 4.7,
@@ -85,8 +86,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-5',
   title: 'MacBook Pro M2 - 13 inch',
-  price: '$1199',
-  originalPrice: '$1499',
+  price: '₹1199',
+  originalPrice: '₹1499',
   location: 'Hyderabad, TS',
   imageUrl: 'https://picsum.photos/seed/macbook/400/400',
   rating: 4.9,
@@ -99,8 +100,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-6',
   title: 'Wooden King Size Bed Frame',
-  price: '$299',
-  originalPrice: '$450',
+  price: '₹299',
+  originalPrice: '₹450',
   location: 'Chennai, TN',
   imageUrl: 'https://picsum.photos/seed/bed/400/400',
   rating: 4.4,
@@ -113,8 +114,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-7',
   title: 'Canon EOS R6 Mirrorless Camera',
-  price: '$1799',
-  originalPrice: '$2199',
+  price: '₹1799',
+  originalPrice: '₹2199',
   location: 'Kolkata, WB',
   imageUrl: 'https://picsum.photos/seed/canon/400/400',
   rating: 4.8,
@@ -127,8 +128,8 @@ export const MOCK_PRODUCTS = [
 {
   id: 'prod-8',
   title: 'Adidas Ultraboost 22 Running Shoes',
-  price: '$120',
-  originalPrice: '$180',
+  price: '₹120',
+  originalPrice: '₹180',
   location: 'Ahmedabad, GJ',
   imageUrl: 'https://picsum.photos/seed/adidas/400/400',
   rating: 4.7,
@@ -144,9 +145,10 @@ const CATEGORIES = ['All', 'Electronics', 'Fashion', 'Furniture', 'Home', 'Sport
 
 export const ProductListScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const { watchlist, toggleWatchlist, requireAuth } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(route.params?.category || 'All');
   const [sortBy, setSortBy] = useState('popular');
 
   const filteredProducts = MOCK_PRODUCTS.filter((product) => {
@@ -190,8 +192,8 @@ export const ProductListScreen = () => {
         <View style={styles.productInfo}>
           <Text style={styles.productTitle} numberOfLines={2}>{item.title}</Text>
           <View style={styles.priceRow}>
-            <Text style={styles.productPrice}>{item.price}</Text>
-            <Text style={styles.originalPrice}>{item.originalPrice}</Text>
+            <Text style={styles.productPrice}>{formatPriceText(item.price)}</Text>
+            <Text style={styles.originalPrice}>{formatPriceText(item.originalPrice)}</Text>
           </View>
           <View style={styles.locationRow}>
             <Ionicons name="location-outline" size={12} color={Colors.textSecondary} />
@@ -217,7 +219,7 @@ export const ProductListScreen = () => {
         <Text style={styles.headerTitle}>Products</Text>
         <TouchableOpacity
           style={styles.cartBtn}
-          onPress={() => navigation.navigate('Main', { screen: 'Cart' })}>
+          onPress={() => navigation.navigate('Bucket')}>
           
           <Ionicons name="cart-outline" size={24} color={Colors.textPrimary} />
         </TouchableOpacity>

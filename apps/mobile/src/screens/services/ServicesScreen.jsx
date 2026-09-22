@@ -5,18 +5,18 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
-  Alert } from
+  TextInput } from
 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
-import { useApp } from '../../context/AppContext';
 import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+import { useApp } from '../../context/AppContext';
+import { formatCurrency } from '../../utils/formatters';
 
 
 
@@ -217,39 +217,28 @@ const CATEGORIES = [
 
 export const ServicesScreen = () => {
   const navigation = useNavigation();
-  const { addToBucket } = useApp();
+  const { bucket, getBucketTotals } = useApp();
   const [selectedCatId, setSelectedCatId] = useState('cat-plumber');
   const [searchQuery, setSearchQuery] = useState('');
 
   const activeCategory = CATEGORIES.find((c) => c.id === selectedCatId) || CATEGORIES[0];
+  const { total } = getBucketTotals();
 
   const filteredSubCategories = activeCategory.subCategories.filter((sub) =>
   sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
   sub.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleAddToBucket = (sub) => {
-    addToBucket({
-      serviceId: sub.id,
-      serviceName: activeCategory.name,
-      categoryName: activeCategory.name,
-      subCategoryName: sub.name,
-      price: sub.price,
-      timeSlot: '10:00 AM - 12:00 PM',
-      serviceDate: 'Tomorrow',
-      paymentChoice: 'Prepaid',
-      quantity: 1
-    });
-    Alert.alert('Added to Bucket', `${sub.name} (₹${sub.price}) added to your bucket!`, [
-    { text: 'Continue Browsing' },
-    { text: 'Go to Bucket', onPress: () => navigation.navigate('Main', { screen: 'Cart' }) }]
-    );
-  };
-
   const handleBookSlot = (sub) => {
-    navigation.navigate('ServiceBooking', {
-      categoryName: activeCategory.name,
-      subCategoryName: sub.name
+    navigation.navigate('ServiceDetails', {
+      item: {
+        id: sub.id,
+        title: sub.name,
+        price: `₹${sub.price}`,
+        category: activeCategory.name,
+        itemType: 'service',
+        imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900'
+      }
     });
   };
 
@@ -263,9 +252,9 @@ export const ServicesScreen = () => {
         </View>
         <TouchableOpacity
           style={styles.headerBucketBtn}
-          onPress={() => navigation.navigate('Main', { screen: 'Cart' })}>
+          onPress={() => navigation.navigate('Bucket')}>
           
-          <Ionicons name="basket-outline" size={22} color="#0A84FF" />
+          <Ionicons name="basket-outline" size={22} color={Colors.brandPurple} />
         </TouchableOpacity>
       </View>
 
@@ -319,7 +308,7 @@ export const ServicesScreen = () => {
       {/* Sub-categories List */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}>
+        contentContainerStyle={[styles.listContent, bucket.length > 0 && styles.listWithCartBar]}>
         
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>{activeCategory.name} Solutions</Text>
@@ -357,24 +346,23 @@ export const ServicesScreen = () => {
 
             <View style={styles.cardActions}>
               <TouchableOpacity
-              style={styles.addBucketBtn}
-              onPress={() => handleAddToBucket(sub)}>
-              
-                <Ionicons name="basket-outline" size={16} color="#0A84FF" />
-                <Text style={styles.addBucketText}>Add to Bucket</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
               style={styles.bookNowBtn}
               onPress={() => handleBookSlot(sub)}>
               
-                <Text style={styles.bookNowText}>Book Slot</Text>
+                <Text style={styles.bookNowText}>View & Book</Text>
                 <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
           </View>
         )}
       </ScrollView>
+      {bucket.length > 0 && <TouchableOpacity style={styles.cartBar} onPress={() => navigation.navigate('Bucket')} accessibilityLabel="Open service cart">
+        <View>
+          <Text style={styles.cartBarTitle}>{bucket.reduce((count, item) => count + item.quantity, 0)} service{bucket.length === 1 ? '' : 's'} selected</Text>
+          <Text style={styles.cartBarTotal}>{formatCurrency(total)}</Text>
+        </View>
+        <View style={styles.cartBarAction}><Text style={styles.cartBarActionText}>View cart</Text><Ionicons name="arrow-forward" size={17} color={Colors.white} /></View>
+      </TouchableOpacity>}
     </ScreenContainer>);
 
 };
@@ -410,7 +398,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#0A84FF'
+    borderColor: Colors.brandPurple
   },
   searchBoxContainer: {
     flexDirection: 'row',
@@ -454,7 +442,7 @@ const styles = StyleSheet.create({
     marginRight: Spacing.xs
   },
   selectedCatTab: {
-    backgroundColor: '#0A84FF' // Big Bazaar orange
+    backgroundColor: Colors.brandPurple
   },
   catTabIcon: {
     marginRight: 6
@@ -471,6 +459,7 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     paddingBottom: Spacing.xl
   },
+  listWithCartBar: { paddingBottom: 120 },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -571,25 +560,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  addBucketBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: Spacing.md,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#0A84FF',
-    backgroundColor: '#E5F1FF',
-    flex: 1,
-    marginRight: Spacing.sm
-  },
-  addBucketText: {
-    ...Typography.bodyBold,
-    color: '#0A84FF',
-    fontSize: 13,
-    marginLeft: 4
-  },
   bookNowBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -597,7 +567,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: Spacing.md,
     borderRadius: 10,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.brandPurple,
     flex: 1
   },
   bookNowText: {
@@ -605,7 +575,12 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 13,
     marginRight: 4
-  }
+  },
+  cartBar: { position: 'absolute', left: Spacing.md, right: Spacing.md, bottom: Spacing.md, minHeight: 64, borderRadius: 16, paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm, backgroundColor: Colors.brandPurple, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.18, shadowRadius: 8, elevation: 8 },
+  cartBarTitle: { ...Typography.micro, color: '#EDE9FE' },
+  cartBarTotal: { ...Typography.sectionHeader, color: Colors.white, marginTop: 2 },
+  cartBarAction: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: Spacing.sm, paddingHorizontal: Spacing.sm },
+  cartBarActionText: { ...Typography.bodyBold, color: Colors.white, fontSize: 14 }
 });
 
 export default ServicesScreen;

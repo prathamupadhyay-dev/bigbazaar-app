@@ -35,8 +35,8 @@ export const HomeHeader = ({ onFilterPress, scrollY, onTypePress, typeFilter = '
     navigation.navigate('Search');
   };
 
-  const handleSavedSearchesPress = () => {
-    navigation.navigate('SavedSearches');
+  const handleWishlistPress = () => {
+    navigation.navigate('Watchlist');
   };
 
   const handleNotificationsPress = () => {
@@ -90,11 +90,11 @@ export const HomeHeader = ({ onFilterPress, scrollY, onTypePress, typeFilter = '
           <TouchableOpacity style={styles.iconBtn} onPress={handleNotificationsPress}>
             <Ionicons name="notifications-outline" size={24} color="#1E293B" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn} onPress={handleSavedSearchesPress}>
-            <Ionicons name="star-outline" size={24} color="#1E293B" />
+          <TouchableOpacity style={styles.iconBtn} onPress={handleWishlistPress} accessibilityLabel="Open wishlist">
+            <Ionicons name="heart-outline" size={21} color="#1E293B" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={handleMenuPress}>
-            <Ionicons name="menu-outline" size={28} color="#1E293B" />
+            <Ionicons name="options-outline" size={22} color="#1E293B" />
           </TouchableOpacity>
         </View>
 
@@ -177,11 +177,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   iconBtn: {
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 6
+    marginLeft: 8
   }
 });
 

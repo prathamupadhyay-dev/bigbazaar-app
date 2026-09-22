@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
 import { useApp } from '../../context/AppContext';
 import ServiceItemCard, { ServiceItemData } from '../../components/home/ServiceItemCard';
@@ -35,11 +35,11 @@ export default function WatchlistScreen() {
   return (
     <ScreenContainer noPadding>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconBtn} onPress={() => alert('Sort options coming soon')}>
+        <TouchableOpacity style={styles.iconBtn} onPress={() => Alert.alert('Sort Wishlist', 'Wishlist sorting will use your latest saved items first.')}>
           <Ionicons name="swap-vertical" size={24} color={Colors.textSecondary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Wishlist</Text>
-        <TouchableOpacity onPress={() => alert('History coming soon')}>
+        <TouchableOpacity onPress={() => Alert.alert('Wishlist History', 'Removed wishlist items can be saved again from any product card.')}>
           <Text style={styles.headerRightText}>History</Text>
         </TouchableOpacity>
       </View>

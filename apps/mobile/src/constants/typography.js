@@ -11,6 +11,44 @@ export const Typography =
 
 
 {
+  // Brief-aligned names for new surfaces. Existing names below remain stable
+  // so older screens can adopt the system incrementally.
+  priceLarge: {
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: '700',
+    color: Colors.textPrimary
+  },
+  priceCard: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '700',
+    color: Colors.textPrimary
+  },
+  screenTitle: {
+    fontSize: 20,
+    lineHeight: 26,
+    fontWeight: '600',
+    color: Colors.textPrimary
+  },
+  sectionHeader: {
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: '600',
+    color: Colors.textPrimary
+  },
+  secondary: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '400',
+    color: Colors.textSecondary
+  },
+  micro: {
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: '500',
+    color: Colors.textSecondary
+  },
   heading1: {
     fontSize: 28,
     fontWeight: '700',

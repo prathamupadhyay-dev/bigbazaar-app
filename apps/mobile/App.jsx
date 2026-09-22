@@ -12,7 +12,7 @@ export default function App() {
       <AppProvider>
         <NavigationContainer>
           <RootNavigator />
-          <StatusBar style="dark" />
+          <StatusBar style="auto" />
         </NavigationContainer>
         <PermissionsFlow />
       </AppProvider>

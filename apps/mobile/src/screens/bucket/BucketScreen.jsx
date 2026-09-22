@@ -76,10 +76,10 @@ export const BucketScreen = () => {
       }
         <View style={styles.priceRow}>
           <Text style={styles.itemPrice}>
-            ${(item.price * item.quantity).toFixed(2)}
+            ₹{(item.price * item.quantity).toFixed(2)}
           </Text>
           {item.quantity > 1 &&
-        <Text style={styles.unitPrice}>${item.price} each</Text>
+        <Text style={styles.unitPrice}>₹{item.price} each</Text>
         }
         </View>
       </View>
@@ -145,11 +145,11 @@ export const BucketScreen = () => {
               showsVerticalScrollIndicator={false}
               ListFooterComponent={<View style={styles.summarySection}>
                 <View style={styles.summaryHeading}><Ionicons name="receipt-outline" size={20} color={Colors.primary} /><Text style={styles.summaryTitle}>Order Summary</Text></View>
-                <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Subtotal</Text><Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text></View>
+                <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Subtotal</Text><Text style={styles.summaryValue}>₹{subtotal.toFixed(2)}</Text></View>
                 <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Delivery</Text><Text style={styles.freeValue}>Free</Text></View>
-                {discount > 0 && <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Discount</Text><Text style={styles.discountValue}>-${discount.toFixed(2)}</Text></View>}
+                {discount > 0 && <View style={styles.summaryRow}><Text style={styles.summaryLabel}>Discount</Text><Text style={styles.discountValue}>-₹{discount.toFixed(2)}</Text></View>}
                 {appliedCoupon && <View style={styles.couponApplied}><Ionicons name="checkmark-circle" size={16} color={Colors.success} /><Text style={styles.couponText}>Coupon "{appliedCoupon}" applied</Text></View>}
-                <View style={[styles.summaryRow, styles.totalRow]}><Text style={styles.totalLabel}>Total</Text><Text style={styles.totalValue}>${total.toFixed(2)}</Text></View>
+                <View style={[styles.summaryRow, styles.totalRow]}><Text style={styles.totalLabel}>Total</Text><Text style={styles.totalValue}>₹{total.toFixed(2)}</Text></View>
               </View>}
             />
           </>
@@ -161,7 +161,7 @@ export const BucketScreen = () => {
       <View style={styles.checkoutFooter}>
           <View style={styles.totalContainer}>
             <Text style={styles.footerTotalLabel}>Total</Text>
-            <Text style={styles.footerTotalValue}>${total.toFixed(2)}</Text>
+            <Text style={styles.footerTotalValue}>₹{total.toFixed(2)}</Text>
           </View>
           <TouchableOpacity style={styles.checkoutBtn} onPress={handleCheckout}>
             <Ionicons name="card-outline" size={20} color={Colors.white} />

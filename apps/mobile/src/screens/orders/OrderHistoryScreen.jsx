@@ -14,7 +14,7 @@ import Spacing from '../../constants/spacing';
 
 export const OrderHistoryScreen = () => {
   const navigation = useNavigation();
-  const { bookings } = useApp();
+  const { bookings, cancelBooking, rateBooking } = useApp();
   const [filter, setFilter] = useState('All');
 
   const getStatusColor = (status) => {
@@ -44,12 +44,21 @@ export const OrderHistoryScreen = () => {
   const handleOrderPress = (order) => {
     Alert.alert(
       `Order ${order.bookingId}`,
-      `Status: ${order.status}\nService: ${order.serviceName}\nDate: ${order.scheduledDate}\nAmount: $${order.amount}`,
+      `Status: ${order.status}\nService: ${order.serviceName}\nDate: ${order.scheduledDate}\nAmount: ₹${order.amount}`,
       [
       { text: 'Close' },
-      order.status === 'Upcoming' ? { text: 'Cancel Order', style: 'destructive', onPress: () => {} } : null].
+      order.status === 'Upcoming' ? { text: 'Cancel Order', style: 'destructive', onPress: () => cancelBooking(order.id) } : null].
       filter(Boolean)
     );
+  };
+
+  const handleRate = (order) => {
+    Alert.alert('Rate your service', 'How was your experience?', [
+      { text: '1', onPress: () => rateBooking(order.id, 1, 'Needs improvement') },
+      { text: '3', onPress: () => rateBooking(order.id, 3, 'Good service') },
+      { text: '5', onPress: () => rateBooking(order.id, 5, 'Excellent service') },
+      { text: 'Cancel', style: 'cancel' }
+    ]);
   };
 
   const renderOrderCard = ({ item }) => {
@@ -101,11 +110,11 @@ export const OrderHistoryScreen = () => {
         <View style={styles.orderFooter}>
           <View style={styles.amountContainer}>
             <Text style={styles.amountLabel}>Amount</Text>
-            <Text style={styles.amountValue}>${item.amount}</Text>
+            <Text style={styles.amountValue}>₹{item.amount}</Text>
           </View>
           <View style={styles.orderActions}>
             {item.status === 'Completed' && !item.userRating &&
-            <TouchableOpacity style={styles.rateBtn}>
+            <TouchableOpacity style={styles.rateBtn} onPress={() => handleRate(item)}>
                 <Ionicons name="star-outline" size={16} color={Colors.primary} />
                 <Text style={styles.rateBtnText}>Rate</Text>
               </TouchableOpacity>
