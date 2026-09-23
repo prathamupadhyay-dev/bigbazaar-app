@@ -173,21 +173,21 @@ const initialAddresses = [
 {
   id: 'addr-1',
   type: 'Home',
-  houseNo: '123 Main Street',
-  street: 'Downtown Avenue',
-  landmark: 'Near Central Park',
-  city: 'New York',
-  pincode: '10001',
+  houseNo: '12 Temple Road',
+  street: 'Kumarakom',
+  landmark: 'Near Kumarakom Market',
+  city: 'Kottayam',
+  pincode: '686001',
   isDefault: true
 },
 {
   id: 'addr-2',
   type: 'Office',
-  houseNo: '456 Business Ave',
-  street: 'Midtown',
-  landmark: 'Opp Trade Center',
-  city: 'New York',
-  pincode: '10002',
+  houseNo: '48 Market Junction',
+  street: 'Kaloor',
+  landmark: 'Opposite Metro Station',
+  city: 'Kottayam',
+  pincode: '682017',
   isDefault: false
 }];
 
@@ -206,7 +206,7 @@ const initialBookings = [
   providerRating: 4.8,
   amount: 349,
   status: 'Upcoming',
-  serviceAddress: '123 Main Street, New York',
+  serviceAddress: '12 Temple Road, Kottayam',
   paymentMode: 'Cash on Delivery'
 },
 {
@@ -222,7 +222,7 @@ const initialBookings = [
   providerRating: 4.9,
   amount: 499,
   status: 'In-Progress',
-  serviceAddress: '123 Main Street, New York',
+  serviceAddress: '12 Temple Road, Kottayam',
   paymentMode: 'UPI'
 },
 {
@@ -238,7 +238,7 @@ const initialBookings = [
   providerRating: 5.0,
   amount: 699,
   status: 'Completed',
-  serviceAddress: '123 Main Street, New York',
+  serviceAddress: '12 Temple Road, Kottayam',
   paymentMode: 'UPI',
   userRating: 5,
   userReview: 'Excellent teacher! Cleared all geometry concepts clearly.'
@@ -297,19 +297,7 @@ const initialTransactions = [
 }];
 
 
-const initialBucket = [
-{
-  id: 'bkt-1',
-  serviceId: 'srv-101',
-  serviceName: 'Plumber',
-  categoryName: 'Plumbing',
-  subCategoryName: 'Tap Repair & Washbasin Fix',
-  price: 299,
-  timeSlot: '10:00 AM - 12:00 PM',
-  serviceDate: 'Tomorrow, 08 Sep',
-  paymentChoice: 'Prepaid',
-  quantity: 1
-}];
+const initialBucket = [];
 
 
 const AppContext = createContext(undefined);

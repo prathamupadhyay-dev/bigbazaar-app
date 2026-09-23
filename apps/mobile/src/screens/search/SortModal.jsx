@@ -12,13 +12,12 @@ import Spacing from '../../constants/spacing';
 
 
 const SORT_OPTIONS = [
-'Ending Time: Ending soonest',
-'Ending Time: Ending latest',
-'Newly Listed',
-'Current Bid: Low to High',
-'Current Bid: High to Low',
-'Retail Price: Low to High',
-'Retail Price: High to Low'];
+  'Newest first',
+  'Recently updated',
+  'Price: Low to High',
+  'Price: High to Low',
+  'Top Rated'
+];
 
 
 export default function SortModal({ visible, onClose }) {

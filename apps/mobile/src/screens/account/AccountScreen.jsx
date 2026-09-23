@@ -60,15 +60,6 @@ export const AccountScreen = () => {
         <View style={styles.quickActions}>
             <TouchableOpacity
             style={styles.quickActionItem}
-            onPress={() => navigation.navigate('OrderHistory')}>
-            
-              <View style={[styles.quickActionIcon, { backgroundColor: '#ECFDF5' }]}>
-                <Ionicons name="receipt-outline" size={20} color={Colors.success} />
-              </View>
-              <Text style={styles.quickActionText}>My Orders</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-            style={styles.quickActionItem}
             onPress={() => navigation.navigate('Bookings')}>
             
               <View style={[styles.quickActionIcon, { backgroundColor: '#DBEAFE' }]}>
@@ -95,14 +86,12 @@ export const AccountScreen = () => {
               {renderMenuItem('pricetags-outline', 'My Ads', () => navigation.navigate('MyAds'))}
               {renderMenuItem('add-circle-outline', 'Sell an Item', () => navigation.navigate('PostAd'))}
               {renderMenuItem('chatbubbles-outline', 'Chats', () => navigation.navigate('Chat'))}
-              {renderMenuItem('cube-outline', 'Delivery Address', () => navigation.navigate('AddressManagement'))}
+              {renderMenuItem('cube-outline', 'Saved Addresses', () => navigation.navigate('AddressManagement'))}
               {renderMenuItem('card-outline', 'Payments & Refunds', () => navigation.navigate('PaymentManagement'))}
               {renderMenuItem('lock-closed-outline', 'App Lock & Security', () => navigation.navigate('SecuritySettings'))}
               {renderMenuItem('receipt-outline', 'Receipts', () => navigation.navigate('Receipts'))}
-              {renderMenuItem('heart-outline', 'Wishlist', () => navigation.navigate('Watchlist'), Colors.error)}
             </>
           }
-          {renderMenuItem('cart-outline', 'Cart', () => navigation.navigate('Bucket'))}
           {renderMenuItem('help-circle-outline', 'FAQ', () => navigation.navigate('FAQ'))}
           {renderMenuItem('mail-outline', 'Support', () => navigation.navigate('HelpSupport'))}
           {isAuthenticated && renderMenuItem('trash-outline', 'Delete Account', () => navigation.navigate('DeleteAccount'), '#DC2626')}

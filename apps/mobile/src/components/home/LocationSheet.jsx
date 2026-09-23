@@ -16,6 +16,7 @@ export const LocationSheet = ({ visible, onClose }) => {
   const [locationQuery, setLocationQuery] = useState('');
   const { activeAddress, setActiveAddress } = useApp();
   const locationSuggestions = [
+    { city: 'Kottayam', area: 'Kumarakom', pincode: '686001' },
     { city: 'Indore', area: 'Vijay Nagar', pincode: '452010' },
     { city: 'Mumbai', area: 'Andheri West', pincode: '400053' },
     { city: 'Delhi', area: 'Connaught Place', pincode: '110001' },
@@ -35,7 +36,7 @@ export const LocationSheet = ({ visible, onClose }) => {
   };
 
   const useCurrentLocation = () => {
-    const detectedLocation = { city: 'Indore', street: 'Vijay Nagar', pincode: '452010' };
+    const detectedLocation = { city: 'Kottayam', street: 'Kumarakom', pincode: '686001' };
     setPincode(detectedLocation.pincode);
     setActiveAddress({ ...activeAddress, ...detectedLocation });
     onClose?.();
@@ -60,7 +61,7 @@ export const LocationSheet = ({ visible, onClose }) => {
             contentContainerStyle={styles.sheetContent}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Select Delivery Location</Text>
+            <Text style={styles.title}>Set Your Location</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color={Colors.textPrimary} />
             </TouchableOpacity>

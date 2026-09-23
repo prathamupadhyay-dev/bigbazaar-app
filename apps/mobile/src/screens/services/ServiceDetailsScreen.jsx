@@ -123,14 +123,14 @@ export default function ServiceDetailsScreen() {
           <TouchableOpacity style={styles.iconBtn} onPress={handleSave}>
             <Ionicons name={isSaved ? "heart" : "heart-outline"} size={24} color={isSaved ? Colors.error : Colors.textPrimary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Bucket')}>
+          {item.itemType === 'product' && <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Bucket')}>
             <Ionicons name="cart-outline" size={24} color={Colors.textPrimary} />
             {bucketCount > 0 &&
               <View style={styles.cartBadge}>
                 <Text style={styles.cartBadgeText}>{bucketCount}</Text>
               </View>
               }
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </View>
 

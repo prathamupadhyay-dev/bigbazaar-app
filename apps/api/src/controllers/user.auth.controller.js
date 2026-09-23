@@ -10,12 +10,28 @@ const generateToken = (id, role) => {
   });
 };
 
-export const register = async (req, res) => {
+export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const {
+      fullName,
+      name,
+      email,
+      password,
+      phoneNumber,
+      phone,
+      role = 'user',
+      userTypes = ['buyer'],
+      status = 'active'
+    } = req.body;
 
-    if (!name || !email || !password) {
-      res.status(400).json({ success: false, message: 'Please provide name, email and password' });
+    const resolvedName = fullName || name;
+    const resolvedPhone = phoneNumber || phone;
+
+    if (!resolvedName || !email || !password) {
+      res.status(400).json({
+        success: false,
+        message: 'Please provide fullName, email and password'
+      });
       return;
     }
 
@@ -27,20 +43,108 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await User.create({ name, email, password: hashedPassword });
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    const token = generateToken(String(user._id), user.role);
+    const user = await User.create({
+      fullName: resolvedName,
+      name: resolvedName,
+      email,
+      password: hashedPassword,
+      phoneNumber: resolvedPhone,
+      role,
+      userTypes: Array.isArray(userTypes) ? userTypes : [userTypes],
+      status,
+      otp,
+      otpExpires,
+      isVerified: false
+    });
+
+    console.log(`[AUTH] Generated OTP for ${email}: ${otp}`);
+
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'BigBazaar — Your Verification Code',
+        html: `
+          <h2>Welcome to BigBazaar!</h2>
+          <p>Hi ${resolvedName},</p>
+          <p>Your 6-digit verification code is:</p>
+          <h1 style="letter-spacing: 4px; color: #2563EB;">${otp}</h1>
+          <p>This code will expire in 10 minutes.</p>
+        `
+      });
+    } catch (mailErr) {
+      console.warn('[AUTH] Email sending skipped/failed, check console for OTP:', mailErr.message);
+    }
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
-      token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      message: 'Signup successful! OTP sent for verification.',
+      email,
+      otp: process.env.NODE_ENV !== 'production' ? otp : undefined
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      res.status(400).json({ success: false, message: 'Please provide email and otp' });
+      return;
+    }
+
+    const user = await User.findOne({ email }).select('+otp +otpExpires +password');
+    if (!user) {
+      res.status(404).json({ success: false, message: 'User not found' });
+      return;
+    }
+
+    const isExpired = user.otpExpires && new Date(user.otpExpires) < new Date();
+    if (isExpired) {
+      res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
+      return;
+    }
+
+    if (user.otp !== String(otp).trim()) {
+      res.status(400).json({ success: false, message: 'Invalid OTP code' });
+      return;
+    }
+
+    user.isVerified = true;
+    user.status = 'active';
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    const token = generateToken(String(user._id), user.role);
+
+    res.status(200).json({
+      success: true,
+      message: 'OTP verified successfully',
+      token,
+      user: {
+        id: user._id,
+        fullName: user.fullName || user.name,
+        name: user.fullName || user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+        userTypes: user.userTypes,
+        status: user.status
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const register = signup;
 
 export const login = async (req, res) => {
   try {

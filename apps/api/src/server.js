@@ -17,7 +17,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => callback(null, true),
   credentials: true,
 }));
 app.use(express.json());
@@ -26,6 +26,9 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API is running' });
 });
 
+// Auth routes matching POST /auth/signup and POST /auth/verify-otp
+app.use('/auth', userAuthRoutes);
+app.use('/api/auth', userAuthRoutes);
 app.use('/api/v1/auth/user', userAuthRoutes);
 app.use('/api/v1/auth/admin', adminAuthRoutes);
 

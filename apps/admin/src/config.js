@@ -5,7 +5,7 @@ const isLocal = typeof window !== 'undefined' && (
   window.location.hostname.startsWith('10.')
 );
 
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || (isLocal ? 'http://localhost:4001' : 'https://backend.affurnishings.co.nz');
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || (isLocal ? 'http://localhost:3000' : 'https://api.mybigbazaar.com');
 
 export const STOREFRONT_URL = import.meta.env.VITE_STOREFRONT_URL || (isLocal ? 'http://localhost:5174' : 'https://affurnishings.co.nz');
 

@@ -8,45 +8,12 @@ import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
 
 const NOTIFICATIONS = [
-{
-  id: '1',
-  title: 'You have new matches to your saved searches.',
-  subtitle: 'Tap to see more.',
-  date: 'Sep 7 06:09 PM',
-  unread: true
-},
-{
-  id: '2',
-  title: 'Congratulations! You were the high bidder!',
-  subtitle: "'SEGO Unisex Vintage Baseball Cap with Hair Extensions for Women Synthetic Hair Attached Hairpiece Olive Green Baseball Cap Wig Adjustable Hat Wigs for Women 6 Inch 10P22T Medium Brown Mix Dark Blonde'",
-  date: 'Sep 7 04:46 PM',
-  imageUrl: 'https://images.unsplash.com/photo-1512403754473-27835f7b9984?auto=format&fit=crop&w=100&q=80',
-  unread: true
-},
-{
-  id: '3',
-  title: 'An item on your watchlist is about to end!',
-  subtitle: "'SEGO Unisex Vintage Baseball Cap with Hair Extensions for Women Synthetic Hair Attached Hairpiece Olive Green Baseball Cap Wig Adjustable Hat Wigs for Women 6 Inch 10P22T Medium Brown Mix Dark Blonde'",
-  date: 'Sep 7 04:44 PM',
-  imageUrl: 'https://images.unsplash.com/photo-1512403754473-27835f7b9984?auto=format&fit=crop&w=100&q=80',
-  unread: true
-},
-{
-  id: '4',
-  title: 'Congratulations! You were the high bidder!',
-  subtitle: "'SEVENCOLORS Short Pixie Wigs for White Women Natural Looking Layered Brown Blonde Highlights Wig Synthetic Hair Wavy Womens Wigs'",
-  date: 'Sep 7 02:41 PM',
-  imageUrl: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=100&q=80',
-  unread: true
-},
-{
-  id: '5',
-  title: 'An item on your watchlist is about to end!',
-  subtitle: "'SEVENCOLORS Short Pixie Wigs for White Women Natural Looking Layered Brown Blonde Highlights Wig Synthetic Hair Wavy Womens Wigs'",
-  date: 'Sep 7 02:39 PM',
-  imageUrl: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=100&q=80',
-  unread: true
-}];
+  { id: '1', title: 'New message from Anil about your listing', subtitle: 'Open the chat to reply safely and arrange a meetup.', date: 'Today 10:20 AM', unread: true },
+  { id: '2', title: 'Offer received on Used commuter bicycle', subtitle: 'Review the offer and reply to the buyer from Chat.', date: 'Today 09:45 AM', unread: true },
+  { id: '3', title: 'Your listing is now visible nearby', subtitle: 'Buyers in Kottayam can now discover your listing.', date: 'Yesterday 06:15 PM', unread: false },
+  { id: '4', title: 'Booking confirmed', subtitle: 'Your plumbing visit is scheduled for tomorrow, 10:00 AM.', date: 'Yesterday 04:40 PM', unread: false },
+  { id: '5', title: 'Service reminder', subtitle: 'Your cleaning professional will arrive this Saturday.', date: 'Sep 7 02:39 PM', unread: false }
+];
 
 
 export default function NotificationsScreen() {

@@ -17,6 +17,7 @@ import ProductDetailsScreen from '../screens/products/ProductDetailsScreen';
 import OrderHistoryScreen from '../screens/orders/OrderHistoryScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
+import VerifyOtpScreen from '../screens/auth/VerifyOtpScreen';
 import MyAdsScreen from '../screens/ads/MyAdsScreen';
 import PostAdScreen from '../screens/ads/PostAdScreen';
 import ChatScreen from '../screens/chat/ChatScreen';
@@ -65,6 +66,7 @@ export default function RootNavigator() {
       <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="VerifyOtp" component={VerifyOtpScreen} />
       <Stack.Screen name="MyAds" component={MyAdsScreen} />
       <Stack.Screen name="PostAd" component={PostAdScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />

@@ -57,7 +57,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
   const initialCat = route.params?.categoryName || 'Plumber';
   const initialSub = route.params?.subCategoryName || '';
 
-  const { activeAddress, addToBucket, createInstantBooking } = useApp();
+  const { activeAddress, createInstantBooking } = useApp();
 
   const [category, setCategory] = useState(initialCat);
   const currentSubList = SUB_CATEGORIES[category] || SUB_CATEGORIES['Plumber'];
@@ -86,26 +86,6 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
   const handleTogglePhoto = () => {
     setHasPhoto(!hasPhoto);
   };
-
-  const handleAddToBucket = () => {
-    addToBucket({
-      serviceId: `srv-${Date.now()}`,
-      serviceName: category,
-      categoryName: category,
-      subCategoryName: selectedSub,
-      price: activeSubObj.price,
-      timeSlot: selectedTimeSlot,
-      serviceDate: selectedDate,
-      paymentChoice,
-      problemDescription,
-      quantity: 1
-    });
-    Alert.alert('Added to Bucket', `${selectedSub} has been added to your bucket.`, [
-    { text: 'Keep Exploring', onPress: () => navigation.goBack() },
-    { text: 'View Bucket', onPress: () => navigation.navigate('Bucket') }]
-    );
-  };
-
   const handleConfirmBooking = () => {
     const bookingId = createInstantBooking({
       serviceName: category,
@@ -189,7 +169,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
                   <Ionicons
                     name={isSelected ? 'radio-button-on' : 'radio-button-off'}
                     size={20}
-                    color={isSelected ? '#0A84FF' : Colors.disabled}
+                    color={isSelected ? Colors.brandPurple : Colors.disabled}
                     style={styles.radioIcon} />
                   
                   <Text style={[styles.subName, isSelected && styles.selectedSubName]}>{sub.name}</Text>
@@ -233,12 +213,12 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
                 <Ionicons
                   name="time-outline"
                   size={18}
-                  color={isSelected ? Colors.primary : Colors.textSecondary}
+                  color={isSelected ? Colors.brandPurple : Colors.textSecondary}
                   style={styles.slotIcon} />
                 
                 <Text style={[styles.slotText, isSelected && styles.selectedSlotText]}>{slot}</Text>
                 {isSelected &&
-                <Ionicons name="checkmark-circle" size={18} color={Colors.primary} style={styles.checkIcon} />
+                <Ionicons name="checkmark-circle" size={18} color={Colors.brandPurple} style={styles.checkIcon} />
                 }
               </TouchableOpacity>);
 
@@ -281,7 +261,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
             <Ionicons
               name={hasPhoto ? 'checkmark-circle' : 'camera-outline'}
               size={20}
-              color={hasPhoto ? '#10B981' : Colors.primary} />
+              color={hasPhoto ? '#10B981' : Colors.brandPurple} />
             
             <Text style={[styles.photoUploadText, hasPhoto && { color: '#10B981' }]}>
               {hasPhoto ? 'Photo Attached (tap to remove)' : 'Upload Problem Photo / Bill (Optional)'}
@@ -292,7 +272,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
         {/* Step 7: Payment Choice */}
         <View style={styles.section}>
           <View style={styles.policyBox}>
-            <View style={styles.policyTitleRow}><Ionicons name="shield-checkmark-outline" size={18} color={Colors.primary} /><Text style={styles.policyTitle}>Booking policy</Text></View>
+            <View style={styles.policyTitleRow}><Ionicons name="shield-checkmark-outline" size={18} color={Colors.brandPurple} /><Text style={styles.policyTitle}>Booking policy</Text></View>
             <Text style={styles.policyText}>Free cancellation up to 2 hours before the slot. Any prepaid refund is returned to the original payment method after review.</Text>
           </View>
           <Text style={styles.sectionTitle}>7. Payment Choice</Text>
@@ -304,7 +284,7 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
               <Ionicons
                 name="card-outline"
                 size={22}
-                color={paymentChoice === 'Prepaid' ? Colors.primary : Colors.textSecondary} />
+                color={paymentChoice === 'Prepaid' ? Colors.brandPurple : Colors.textSecondary} />
               
               <Text style={[styles.paymentCardTitle, paymentChoice === 'Prepaid' && styles.selectedPaymentText]}>
                 Prepaid (UPI / Card)
@@ -319,12 +299,12 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
               <Ionicons
                 name="cash-outline"
                 size={22}
-                color={paymentChoice === 'Cash on Delivery' ? '#0A84FF' : Colors.textSecondary} />
+                color={paymentChoice === 'Cash on Delivery' ? Colors.brandPurple : Colors.textSecondary} />
               
               <Text
                 style={[
                 styles.paymentCardTitle,
-                paymentChoice === 'Cash on Delivery' && { color: '#0A84FF' }]
+                paymentChoice === 'Cash on Delivery' && { color: Colors.brandPurple }]
                 }>
                 
                 Cash on Delivery
@@ -349,10 +329,6 @@ export const ServiceBookingScreen = ({ route, navigation }) => {
 
       {/* Footer Actions */}
       <View style={styles.footerActions}>
-        <TouchableOpacity style={styles.addToBucketBtn} onPress={handleAddToBucket}>
-          <Ionicons name="basket-outline" size={20} color="#0A84FF" />
-          <Text style={styles.addToBucketText}>Add to Bucket</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity style={styles.confirmBookingBtn} onPress={handleConfirmBooking}>
           <Text style={styles.confirmBookingText}>Confirm Booking</Text>
@@ -420,7 +396,7 @@ const styles = StyleSheet.create({
     marginRight: Spacing.xs
   },
   selectedPill: {
-    backgroundColor: '#0A84FF'
+    backgroundColor: Colors.brandPurple
   },
   pillText: {
     ...Typography.captionBold,
@@ -442,7 +418,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent'
   },
   selectedSubCard: {
-    borderColor: '#0A84FF',
+    borderColor: Colors.brandPurple,
     backgroundColor: '#E5F1FF'
   },
   subLeft: {
@@ -461,7 +437,7 @@ const styles = StyleSheet.create({
   },
   selectedSubName: {
     fontWeight: '700',
-    color: '#0A84FF'
+    color: Colors.brandPurple
   },
   subPrice: {
     fontSize: 15,
@@ -483,15 +459,15 @@ const styles = StyleSheet.create({
     borderColor: Colors.border
   },
   selectedDateChip: {
-    backgroundColor: Colors.primaryLight,
-    borderColor: Colors.primary
+    backgroundColor: 'rgba(110,76,199,0.10)',
+    borderColor: Colors.brandPurple
   },
   dateText: {
     ...Typography.captionBold,
     color: Colors.textSecondary
   },
   selectedDateText: {
-    color: Colors.primary
+    color: Colors.brandPurple
   },
   slotCard: {
     flexDirection: 'row',
@@ -505,8 +481,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.border
   },
   selectedSlotCard: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primaryLight
+    borderColor: Colors.brandPurple,
+    backgroundColor: 'rgba(110,76,199,0.10)'
   },
   slotIcon: {
     marginRight: Spacing.sm
@@ -519,14 +495,14 @@ const styles = StyleSheet.create({
   },
   selectedSlotText: {
     fontWeight: '700',
-    color: Colors.primary
+    color: Colors.brandPurple
   },
   checkIcon: {
     marginLeft: Spacing.xs
   },
   changeAddressLink: {
     ...Typography.captionBold,
-    color: Colors.primary
+    color: Colors.brandPurple
   },
   addressBox: {
     flexDirection: 'row',
@@ -577,12 +553,12 @@ const styles = StyleSheet.create({
   },
   photoUploadText: {
     ...Typography.captionBold,
-    color: Colors.primary,
+    color: Colors.brandPurple,
     marginLeft: Spacing.xs
   },
   policyBox: { backgroundColor: '#EFF6FF', borderRadius: 10, padding: Spacing.sm, marginBottom: Spacing.md, borderWidth: 1, borderColor: '#BFDBFE' },
   policyTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
-  policyTitle: { ...Typography.captionBold, color: Colors.primary },
+  policyTitle: { ...Typography.captionBold, color: Colors.brandPurple },
   policyText: { ...Typography.caption, color: Colors.textSecondary, lineHeight: 17 },
   paymentOptionsRow: {
     flexDirection: 'row',
@@ -598,8 +574,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   selectedPaymentCard: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primaryLight
+    borderColor: Colors.brandPurple,
+    backgroundColor: 'rgba(110,76,199,0.10)'
   },
   paymentCardTitle: {
     ...Typography.captionBold,
@@ -608,7 +584,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   selectedPaymentText: {
-    color: Colors.primary
+    color: Colors.brandPurple
   },
   paymentCardSub: {
     fontSize: 10,
@@ -659,24 +635,6 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.border,
     gap: 10
   },
-  addToBucketBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: Spacing.md,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#0A84FF',
-    backgroundColor: '#E5F1FF',
-    flex: 1
-  },
-  addToBucketText: {
-    ...Typography.bodyBold,
-    color: '#0A84FF',
-    fontSize: 14,
-    marginLeft: 6
-  },
   confirmBookingBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -684,7 +642,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: Spacing.md,
     borderRadius: 12,
-    backgroundColor: '#0A84FF',
+    backgroundColor: Colors.brandPurple,
     flex: 1.2
   },
   confirmBookingText: {

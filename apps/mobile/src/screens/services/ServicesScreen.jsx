@@ -250,12 +250,7 @@ export const ServicesScreen = () => {
           <Text style={styles.headerTitle}>All Services</Text>
           <Text style={styles.headerSubtitle}>Verified professionals with upfront pricing</Text>
         </View>
-        <TouchableOpacity
-          style={styles.headerBucketBtn}
-          onPress={() => navigation.navigate('Bucket')}>
-          
-          <Ionicons name="basket-outline" size={22} color={Colors.brandPurple} />
-        </TouchableOpacity>
+
       </View>
 
       {/* Search Input */}
@@ -263,7 +258,7 @@ export const ServicesScreen = () => {
         <Ionicons name="search-outline" size={18} color={Colors.textSecondary} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder={`Search in ${activeCategory.name}...`}
+          placeholder={`Search ${activeCategory.name} services...`}
           placeholderTextColor={Colors.textSecondary}
           value={searchQuery}
           onChangeText={setSearchQuery} />
@@ -339,7 +334,7 @@ export const ServicesScreen = () => {
                 <Text style={styles.perkText}>30-Day Guarantee</Text>
               </View>
               <View style={styles.perk}>
-                <Ionicons name="checkmark-circle" size={14} color="#0284C7" />
+                <Ionicons name="checkmark-circle" size={14} color={Colors.brandPurple} />
                 <Text style={styles.perkText}>Standard Rate</Text>
               </View>
             </View>
@@ -529,7 +524,7 @@ const styles = StyleSheet.create({
   priceTag: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#0284C7'
+    color: Colors.brandPurple
   },
   serviceDesc: {
     ...Typography.caption,

@@ -18,13 +18,12 @@ export const ProductDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const product = route.params?.product;
-  const { watchlist, toggleWatchlist, bucket, addToBucket, requireAuth } = useApp();
+  const { watchlist, toggleWatchlist, requireAuth } = useApp();
 
   const [imageExpanded, setImageExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('Blue');
-  const [quantity, setQuantity] = useState(1);
   const [offerModalVisible, setOfferModalVisible] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
 
@@ -43,8 +42,6 @@ export const ProductDetailsScreen = () => {
   }
 
   const isSaved = watchlist.includes(product.id);
-  const isInCart = bucket.some((b) => b.serviceId === product.id);
-  const cartItem = bucket.find((b) => b.serviceId === product.id);
 
   const images = [
   product.imageUrl,
@@ -83,47 +80,6 @@ export const ProductDetailsScreen = () => {
       );
     });
   };
-
-  const handleAddToCart = () => {
-    requireAuth(navigation, () => {
-      const priceValue = parseFloat(product.price.replace(/[^0-9.]/g, ''));
-      addToBucket({
-        serviceId: product.id,
-        serviceName: product.title,
-        categoryName: product.category,
-        subCategoryName: product.condition,
-        price: priceValue,
-        quantity: quantity,
-        size: selectedSize,
-        color: selectedColor,
-        imageUrl: product.imageUrl
-      });
-      Alert.alert('Added to Cart', `${product.title} has been added to your cart.`, [
-      { text: 'Continue Shopping' },
-      { text: 'View Cart', onPress: () => navigation.navigate('Bucket') }]
-      );
-    });
-  };
-
-  const handleBuyNow = () => {
-    requireAuth(navigation, () => {
-      if (!isInCart) {
-        addToBucket({
-          serviceId: product.id,
-          serviceName: product.title,
-          categoryName: product.category,
-          subCategoryName: product.condition,
-          price: parseFloat(product.price.replace(/[^0-9.]/g, '')),
-          quantity,
-          size: selectedSize,
-          color: selectedColor,
-          imageUrl: product.imageUrl,
-        });
-      }
-      navigation.navigate('Checkout');
-    });
-  };
-
   const handleChat = () => {
     requireAuth(navigation, () => {
       navigation.navigate('Chat', { sellerName: product.sellerName, listingTitle: product.title });
@@ -325,23 +281,15 @@ export const ProductDetailsScreen = () => {
         <View style={{ height: 120 }} />
       </ScrollView>
 
-      {/* Bottom Action Bar */}
+      {/* Seller actions */}
       <View style={styles.bottomBar}>
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity style={styles.qtyBtn} onPress={() => setQuantity(Math.max(1, quantity - 1))}>
-            <Ionicons name="remove" size={20} color={Colors.textPrimary} />
-          </TouchableOpacity>
-          <Text style={styles.qtyText}>{quantity}</Text>
-          <TouchableOpacity style={styles.qtyBtn} onPress={() => setQuantity(quantity + 1)}>
-            <Ionicons name="add" size={20} color={Colors.textPrimary} />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity style={styles.addToCartBtn} onPress={handleAddToCart}>
-          <Ionicons name="cart-outline" size={20} color={Colors.white} />
-          <Text style={styles.addToCartText}>{isInCart ? 'Update Cart' : 'Add to Cart'}</Text>
+        <TouchableOpacity style={styles.classifiedAction} onPress={handleChat}>
+          <Ionicons name="chatbubble-outline" size={19} color={Colors.brandBlue} />
+          <Text style={styles.classifiedActionText}>Chat seller</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buyNowBtn} onPress={handleBuyNow}>
-          <Text style={styles.buyNowText}>Buy Now</Text>
+        <TouchableOpacity style={styles.offerAction} onPress={handleMakeOffer}>
+          <Ionicons name="pricetag-outline" size={19} color={Colors.white} />
+          <Text style={styles.offerActionText}>Make an offer</Text>
         </TouchableOpacity>
       </View>
 
@@ -791,6 +739,10 @@ const styles = StyleSheet.create({
     ...Typography.button,
     color: Colors.white
   },
+  classifiedAction: { flex: 1, minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 12, borderWidth: 1, borderColor: Colors.brandBlue, backgroundColor: Colors.surfaceRaised },
+  classifiedActionText: { ...Typography.button, color: Colors.brandBlue, marginLeft: 6 },
+  offerAction: { flex: 1, minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 12, marginLeft: Spacing.sm, backgroundColor: Colors.brandBlue },
+  offerActionText: { ...Typography.button, color: Colors.white, marginLeft: 6 },
   modalContainer: {
     flex: 1,
     backgroundColor: '#000'

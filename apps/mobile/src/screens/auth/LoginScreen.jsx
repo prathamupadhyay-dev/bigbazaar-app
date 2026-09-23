@@ -9,6 +9,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
+import { loginApi } from '../../services/authApi';
 
 
 
@@ -67,26 +68,71 @@ export const LoginScreen = () => {
 
     setIsLoading(true);
 
-    // Mock login delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      if (loginMethod === 'email') {
+        const res = await loginApi({ email, password });
+        updateUser({
+          fullName: res.user?.fullName || res.user?.name || email.split('@')[0],
+          email: res.user?.email || email,
+          mobileNumber: res.user?.phoneNumber || '+91 9876543210',
+          role: res.user?.role || 'Buyer',
+        });
+      } else {
+        // Phone login simulation
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        updateUser({
+          fullName: `User ${phone.slice(-4)}`,
+          email: `${phone}@bigbazaar.com`,
+          mobileNumber: `+91 ${phone}`,
+          role: 'Buyer',
+        });
+      }
 
-    // Mock successful login
-    updateUser({
-      fullName: loginMethod === 'email' ? email.split('@')[0] : `User ${phone.slice(-4)}`,
-      email: loginMethod === 'email' ? email : 'user@example.com',
-      mobileNumber: loginMethod === 'phone' ? `+91 ${phone}` : '+91 9876543210'
-    });
-    setAuthenticated(true);
-    setIsLoading(false);
+      setAuthenticated(true);
+      setIsLoading(false);
 
-    executePendingAction();
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    } else {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main', params: { screen: 'Home' } }]
-      });
+      executePendingAction();
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Main', params: { screen: 'Home' } }],
+        });
+      }
+    } catch (err) {
+      setIsLoading(false);
+      // If server is offline, allow demo login with a notice
+      if (err.message?.includes('Network request failed') || err.message?.includes('Failed to fetch') || err.name === 'AbortError') {
+        Alert.alert(
+          'Offline Mode',
+          'Could not reach server. Logging in using demo session.',
+          [
+            {
+              text: 'Continue',
+              onPress: () => {
+                updateUser({
+                  fullName: loginMethod === 'email' ? email.split('@')[0] : `User ${phone.slice(-4)}`,
+                  email: loginMethod === 'email' ? email : 'user@example.com',
+                  mobileNumber: loginMethod === 'phone' ? `+91 ${phone}` : '+91 9876543210',
+                });
+                setAuthenticated(true);
+                executePendingAction();
+                if (navigation.canGoBack()) {
+                  navigation.goBack();
+                } else {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Main', params: { screen: 'Home' } }],
+                  });
+                }
+              },
+            },
+          ]
+        );
+      } else {
+        Alert.alert('Login Failed', err.message || 'Invalid email or password.');
+      }
     }
   };
 
@@ -131,7 +177,7 @@ export const LoginScreen = () => {
               <Ionicons name="bag-handle" size={40} color={Colors.primary} />
             </View>
             <Text style={styles.welcomeText}>Welcome Back!</Text>
-            <Text style={styles.subtitleText}>Sign in to continue shopping</Text>
+            <Text style={styles.subtitleText}>Sign in to buy, sell, and book services</Text>
           </View>
 
           {/* Login Method Toggle */}

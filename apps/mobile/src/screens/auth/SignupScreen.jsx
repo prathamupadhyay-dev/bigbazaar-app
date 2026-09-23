@@ -9,14 +9,13 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Colors from '../../constants/colors';
 import Typography from '../../constants/typography';
 import Spacing from '../../constants/spacing';
-
-
+import { signupApi } from '../../services/authApi';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
   const { updateUser, setAuthenticated, executePendingAction } = useApp();
 
-  const [signupMethod, setSignupMethod] = useState('email');
+  const [accountType, setAccountType] = useState('buyer'); // 'buyer' | 'seller'
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -74,13 +73,11 @@ export const SignupScreen = () => {
     const nameError = validateFullName(fullName);
     if (nameError) newErrors.fullName = nameError;
 
-    if (signupMethod === 'email') {
-      const emailError = validateEmail(email);
-      if (emailError) newErrors.email = emailError;
-    } else {
-      const phoneError = validatePhone(phone);
-      if (phoneError) newErrors.phone = phoneError;
-    }
+    const emailError = validateEmail(email);
+    if (emailError) newErrors.email = emailError;
+
+    const phoneError = validatePhone(phone);
+    if (phoneError) newErrors.phone = phoneError;
 
     const passwordError = validatePassword(password);
     if (passwordError) newErrors.password = passwordError;
@@ -101,26 +98,31 @@ export const SignupScreen = () => {
 
     setIsLoading(true);
 
-    // Mock signup delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Mock successful signup
-    updateUser({
-      fullName: fullName.trim(),
-      email: signupMethod === 'email' ? email : 'user@example.com',
-      mobileNumber: signupMethod === 'phone' ? `+91 ${phone}` : '+91 9876543210'
-    });
-    setAuthenticated(true);
-    setIsLoading(false);
-
-    executePendingAction();
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    } else {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main', params: { screen: 'Home' } }]
+    try {
+      const res = await signupApi({
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        phoneNumber: phone.trim(),
+        role: 'user',
+        userTypes: [accountType],
+        status: 'active',
       });
+
+      setIsLoading(false);
+
+      navigation.navigate('VerifyOtp', {
+        email: email.trim().toLowerCase(),
+        fullName: fullName.trim(),
+        phoneNumber: phone.trim(),
+        otp: res.otp,
+      });
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert(
+        'Signup Error',
+        error.message || 'Could not complete registration. Please try again.'
+      );
     }
   };
 
@@ -157,32 +159,30 @@ export const SignupScreen = () => {
             <Text style={styles.subtitleText}>Create an account to start shopping</Text>
           </View>
 
-          {/* Signup Method Toggle */}
+          {/* Account Type (userTypes) Toggle */}
           <View style={styles.methodToggle}>
             <TouchableOpacity
-              style={[styles.methodBtn, signupMethod === 'email' && styles.methodBtnActive]}
-              onPress={() => setSignupMethod('email')}>
-              
+              style={[styles.methodBtn, accountType === 'buyer' && styles.methodBtnActive]}
+              onPress={() => setAccountType('buyer')}>
               <Ionicons
-                name="mail-outline"
+                name="cart-outline"
                 size={18}
-                color={signupMethod === 'email' ? Colors.white : Colors.textSecondary} />
-              
-              <Text style={[styles.methodText, signupMethod === 'email' && styles.methodTextActive]}>
-                Email
+                color={accountType === 'buyer' ? Colors.white : Colors.textSecondary}
+              />
+              <Text style={[styles.methodText, accountType === 'buyer' && styles.methodTextActive]}>
+                Buyer
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.methodBtn, signupMethod === 'phone' && styles.methodBtnActive]}
-              onPress={() => setSignupMethod('phone')}>
-              
+              style={[styles.methodBtn, accountType === 'seller' && styles.methodBtnActive]}
+              onPress={() => setAccountType('seller')}>
               <Ionicons
-                name="call-outline"
+                name="storefront-outline"
                 size={18}
-                color={signupMethod === 'phone' ? Colors.white : Colors.textSecondary} />
-              
-              <Text style={[styles.methodText, signupMethod === 'phone' && styles.methodTextActive]}>
-                Phone
+                color={accountType === 'seller' ? Colors.white : Colors.textSecondary}
+              />
+              <Text style={[styles.methodText, accountType === 'seller' && styles.methodTextActive]}>
+                Seller / Provider
               </Text>
             </TouchableOpacity>
           </View>
@@ -203,19 +203,18 @@ export const SignupScreen = () => {
                     setFullName(text);
                     if (errors.fullName) setErrors({ ...errors, fullName: '' });
                   }}
-                  autoCapitalize="words" />
-                
+                  autoCapitalize="words"
+                />
               </View>
               {errors.fullName && <Text style={styles.errorText}>{errors.fullName}</Text>}
             </View>
 
-            {/* Email or Phone */}
-            {signupMethod === 'email' ?
+            {/* Email Address */}
             <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Email Address</Text>
-                <View style={[styles.inputContainer, errors.email && styles.inputError]}>
-                  <Ionicons name="mail-outline" size={20} color={Colors.textSecondary} />
-                  <TextInput
+              <Text style={styles.inputLabel}>Email Address</Text>
+              <View style={[styles.inputContainer, errors.email && styles.inputError]}>
+                <Ionicons name="mail-outline" size={20} color={Colors.textSecondary} />
+                <TextInput
                   style={styles.input}
                   placeholder="Enter your email"
                   placeholderTextColor={Colors.textSecondary}
@@ -226,19 +225,20 @@ export const SignupScreen = () => {
                   }}
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  autoCorrect={false} />
-                
-                </View>
-                {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-              </View> :
+                  autoCorrect={false}
+                />
+              </View>
+              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+            </View>
 
+            {/* Phone Number */}
             <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
-                <View style={[styles.inputContainer, errors.phone && styles.inputError]}>
-                  <Text style={styles.phoneCode}>+91</Text>
-                  <TextInput
+              <Text style={styles.inputLabel}>Phone Number</Text>
+              <View style={[styles.inputContainer, errors.phone && styles.inputError]}>
+                <Text style={styles.phoneCode}>+91</Text>
+                <TextInput
                   style={styles.input}
-                  placeholder="Enter your phone number"
+                  placeholder="Enter 10-digit phone number"
                   placeholderTextColor={Colors.textSecondary}
                   value={phone}
                   onChangeText={(text) => {
@@ -246,12 +246,11 @@ export const SignupScreen = () => {
                     if (errors.phone) setErrors({ ...errors, phone: '' });
                   }}
                   keyboardType="phone-pad"
-                  maxLength={10} />
-                
-                </View>
-                {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
+                  maxLength={10}
+                />
               </View>
-            }
+              {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
+            </View>
 
             {/* Password */}
             <View style={styles.inputGroup}>
